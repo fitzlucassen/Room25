@@ -1,0 +1,28 @@
+@font-face
+{
+    font-family: "Segoe UI";
+    src: url("Font/Segoe UI.ttf");
+}
+
+#global{
+    height: 100%;
+    margin: auto;
+    background: #f2f2f2;
+}
+header{
+    padding: 40px;
+}
+header h1{
+    font-size: 100px;
+    letter-spacing: 2px;
+    font-weight: normal;
+    font-family: "Segoe UI";
+    color: #e2e2e2;
+    text-align: center;
+    text-shadow: 1px 1px 2px rgba(140,140,140,0.8);
+}
+header p{
+    text-align: center;
+    color: #aaaaFF;
+    font-family: Georgia;
+}

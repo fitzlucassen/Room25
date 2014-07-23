@@ -1,0 +1,9 @@
+{
+  "name": "Room25",
+  "version": "0.0.1",
+  "description": "Le jeu online",
+  "dependencies": {
+    "express": "~4.6.1",
+    "socket.io": "~1.0.6"
+  }
+}
