@@ -1,4 +1,4 @@
-room25
+PanicRoom
 ======
 
 La version online multijoueur du jeu room5
