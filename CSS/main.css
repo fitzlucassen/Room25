@@ -47,7 +47,8 @@ ul.personnage{
 }
 .personnage li img{
     height: 250px;
-    width: 100%;
+    margin: auto;
+    display:block;
 }
 #popin-grayback{
     position: fixed;

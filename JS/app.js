@@ -17,4 +17,19 @@ $(document).ready(function() {
             $('#popin-grayback').fadeOut('slow');
     });
 
+    $('body').on('mouseover', '.personnage li', function() {
+
+        $this = $(this);
+        $('.personnage li').each(function() {
+            if ($this[0] != $(this)[0]) {
+                $(this).stop().animate({
+                    'opacity': '0.6'
+                }, 200);
+            }
+        });
+    }).on('mouseleave', '.personnage li', function() {
+        $('.personnage li').stop().animate({
+            'opacity': '1'
+        }, 200);
+    });
 });

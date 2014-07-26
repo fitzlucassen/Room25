@@ -7,6 +7,7 @@ var server = http.createServer(app).listen(1337);
 var io = require('socket.io').listen(server);
 
 var users = [];
+var nbUser = -1;
 var User = function(name) {
     this.id = 0;
     this.name = name;
@@ -22,7 +23,7 @@ io.sockets.on('connection', function(socket) {
 
     socket.on('readyToPlay', function(name) {
         me = new User(name.name);
-        me.id = users.length;
+        me.id = ++nbUser;
 
         users[me.id] = me;
 
