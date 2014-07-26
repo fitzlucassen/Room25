@@ -1,0 +1,18 @@
+<div ng-controller="CharacterCtrl">
+	<ul class="personnage">
+		<li ng-repeat="character in characters | filter:{player: -1}">
+			<span class="name">{{character.name}}</span>
+			<img src="{{character.image}}" alt="Personnage {{character.name}}"/>
+		</li>
+	</ul>
+
+	<input type="text" name="userID" value="" ng-model="currentUserID" class="userID"/>
+
+	<div id="popin-grayback">
+		<div id="popin" class="yourName">
+			<h2>Bienvenue ! Afin de choisir un personnage, veuillez choisir un pseudo.</h2>
+			<input type="text" placeholder="Votre pseudo" id="newName" ng-model="currentPlayer" />
+			<input type="button" value="Valider" id="getMyName"/>
+		</div>
+	</div>
+</div>

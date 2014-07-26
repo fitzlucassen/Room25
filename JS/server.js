@@ -1,10 +1,11 @@
-var http = require('http');
-var httpServer = http.createServer(function(req, res) {
-    console.log('Un utilisateur a affiche la page');
-});
-httpServer.listen(1337);
+var express = require('express'),
+    http = require('http');
 
-var io = require('socket.io').listen(httpServer);
+var app = express();
+var server = http.createServer(app).listen(1337);
+
+var io = require('socket.io').listen(server);
+
 var users = [];
 var User = function(name) {
     this.id = 0;
@@ -20,14 +21,14 @@ io.sockets.on('connection', function(socket) {
     var me = false;
 
     socket.on('readyToPlay', function(name) {
-        me = new User(name);
+        me = new User(name.name);
         me.id = users.length;
 
         users[me.id] = me;
 
         io.sockets.emit('connectedUser', me);
 
-        console.log('Le visiteur ' + me.id + ' s\'est connecté');
+        console.log('Le visiteur ' + me.id + ' : ' + me.name + ' s\'est connecté');
     });
 
     socket.on('disconnect', function() {
@@ -40,6 +41,12 @@ io.sockets.on('connection', function(socket) {
         io.sockets.emit('disconnectedUser', me);
     });
 });
+
+exports = module.exports = server;
+// delegates use() function
+exports.use = function() {
+    app.use.apply(app, arguments);
+};
 
 function idInArray(array, id) {
     for (var a in array) {

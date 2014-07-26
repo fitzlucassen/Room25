@@ -2,11 +2,10 @@ function MainView() {
 
 }
 
-MainView.prototype.appendUser = function(user) {
-    if ($('.' + user.id).length == 0) {
-
-    }
-}
+MainView.prototype.appendUserID = function(user) {
+    $('.userID').val(user.id);
+    $('.userID').trigger('change');
+};
 MainView.prototype.deleteUser = function(user) {
     $('.' + user.id).remove();
-}
+};

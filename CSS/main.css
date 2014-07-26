@@ -26,3 +26,51 @@ header p{
     color: #aaaaFF;
     font-family: Georgia;
 }
+
+ul.personnage{
+    display: block;
+    text-align: center;
+}
+.personnage li{
+    width: 200px;
+    height: 300px;
+    display: inline-block;
+    list-style: none;
+    cursor: pointer;
+}
+.personnage li span.name{
+    display: block;
+    font-weight: normal;
+    font-family: 'Segoe UI';
+    font-size: 24px;
+    padding: 5px 0;
+}
+.personnage li img{
+    height: 250px;
+    width: 100%;
+}
+#popin-grayback{
+    position: fixed;
+    background: rgba(0,0,0,0.8);
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    top: 0;
+    left: 0;
+}
+#popin{
+    margin: 100px auto;
+    width: 600px;
+    height: auto;
+    background: #fff;
+    padding: 10px;
+    
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    -o-border-radius: 3px;
+    -ms-border-radius: 3px;
+}
+.userID{
+    opacity: 0;
+}

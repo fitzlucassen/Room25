@@ -34,15 +34,20 @@
 <!-- END CSS -->
 
 <!-- SCRIPTS -->
-<script type="text/javascript" src="JS/Base/jquery-1.10.min.js"></script>
+<script type="text/javascript" src="JS/Base/jquery-1.11.1.min.js"></script>
 <script type="text/javascript" src="JS/Base/jquery-ui-1.10.custom.min.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular.min.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular-route.min.js"></script> 
 <script type="text/javascript" src="JS/Base/helper.js"></script>
 
 <script type="text/javascript" src="http://localhost:1337/socket.io/socket.io.js"></script>
-<script type="text/javascript" src="JS/clientController.js"></script>
-<script type="text/javascript" src="JS/mainMiew.js"></script>
+<script type="text/javascript" src="JS/client.js"></script>
+<script type="text/javascript" src="JS/mainView.js"></script>
 <script type="text/javascript" src="JS/errorView.js"></script>
 <script type="text/javascript" src="JS/app.js"></script>
+
+<script type="text/javascript" src="JS/mainController.js"></script>
+<script type="text/javascript" src="JS/characterController.js"></script>
 
 <!--[if lt IE 9]>
 	<script src="JS/Base/html5shiv.js"></script>
