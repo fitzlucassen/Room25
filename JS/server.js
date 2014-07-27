@@ -15,6 +15,7 @@ var User = function(name) {
         x: 2,
         y: 2
     };
+    this.character = '';
 };
 
 io.sockets.on('connection', function(socket) {
@@ -32,11 +33,22 @@ io.sockets.on('connection', function(socket) {
         console.log('Le visiteur ' + me.id + ' : ' + me.name + ' s\'est connecté');
     });
 
+    socket.on('characterChoosen', function(object) {
+        me.character = object.name;
+
+        io.sockets.emit('newCharacter', {
+            id: object.id,
+            name: object.name,
+            pseudo: me.name
+        });
+    });
+
     socket.on('disconnect', function() {
         if (!me) {
             return false;
         }
 
+        console.log(me.id + ' : ' + me.name + ' s\'est déconnecté');
         delete users[me.id];
         users.splice(me.id, 1);
         io.sockets.emit('disconnectedUser', me);

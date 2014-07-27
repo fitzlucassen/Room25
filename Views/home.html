@@ -1,6 +1,7 @@
 <div ng-controller="CharacterCtrl">
 	<ul class="personnage">
-		<li ng-repeat="character in characters | filter:{player: -1}">
+		<!--<li ng-repeat="character in characters | filter:{player: -1}" ng-click="registerCharacter(character.name)">-->
+		<li ng-repeat="character in characters" ng-click="registerCharacter(character.name, $event)">
 			<span class="name">{{character.name}}</span>
 			<img src="{{character.image}}" alt="Personnage {{character.name}}"/>
 		</li>
@@ -10,7 +11,8 @@
 
 	<div id="popin-grayback">
 		<div id="popin" class="yourName">
-			<h2>Bienvenue ! Afin de choisir un personnage, veuillez choisir un pseudo.</h2>
+			<h2>Bienvenue !<br/>Afin de choisir un personnage, veuillez choisir un pseudo.</h2>
+			<br/>
 			<input type="text" placeholder="Votre pseudo" id="newName" ng-model="currentPlayer" />
 			<input type="button" value="Valider" id="getMyName"/>
 		</div>

@@ -32,4 +32,11 @@ $(document).ready(function() {
             'opacity': '1'
         }, 200);
     });
+
+    $('body').on('click', 'ul.personnage li, .characterTaken', function(e) {
+        e.stopPropagation();
+
+        if (!$(this).hasClass('characterTaken'))
+            Client.characterChoosen($(this).children('span').text(), $('.userID').val());
+    });
 });

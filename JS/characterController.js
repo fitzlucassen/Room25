@@ -28,4 +28,13 @@ angular.module('Room25App')
         $scope.$watch('currentUserID', function(newValue, oldValue) {
             $scope.currentUserID = newValue;
         }, true);
+
+        $scope.registerCharacter = function(name, e) {
+            if ($(e.target).children('.characterTaken').length == 0 || $(e.target).hasClass('characterTaken') || $(e.target).parent().hasClass('.characterTaken')) {
+                angular.forEach($scope.characters, function(value, key) {
+                    if (value.name == name)
+                        value.player = $scope.currentUserID;
+                });
+            }
+        };
     });

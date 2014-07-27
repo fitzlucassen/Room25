@@ -6,7 +6,9 @@
     "express": "~4.6.1",
     "socket.io": "~1.0.6",
     "grunt-contrib-concat": "~0.5.0",
-    "grunt-contrib-watch": "~0.6.1"
+    "grunt-contrib-watch": "~0.6.1",
+    "grunt-connect-socket.io": "~0.7.1",
+    "grunt-express": "~1.4.1"
   },
   "devDependencies": {
     "grunt-contrib-connect": "~0.8.0"

@@ -13,10 +13,20 @@ ClientController.prototype.initialize = function() {
     this.socket.on('disconnectedUser', function(user) {
         that.view.deleteUser(user);
     });
+    this.socket.on('newCharacter', function(object) {
+        that.view.deleteCharacter(object.name, object.pseudo);
+    });
 };
 
 ClientController.prototype.newUser = function(name) {
     this.socket.emit('readyToPlay', {
         name: name
+    });
+};
+
+ClientController.prototype.characterChoosen = function(name, id) {
+    this.socket.emit('characterChoosen', {
+        name: name,
+        id: id
     });
 };
