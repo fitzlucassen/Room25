@@ -1,44 +1,50 @@
 module.exports = function(grunt) {
     var path = require("path");
     // Je préfère définir mes imports tout en haut
-    grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-cssmin');
+    grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-connect-socket.io');
     grunt.loadNpmTasks('grunt-express');
 
-    var jsSrc = ['./JS/*.js'];
-    var jsDist = './JS/_built.js';
+    var jsSrc = ['JS/*.js'];
+    var jsDist = 'JS/_built.js';
+
+    var cssSrc = ['CSS/*.css'];
+    var cssDist = 'CSS/_built.css';
 
     // Configuration de Grunt
     grunt.initConfig({
-        concat: {
+        jshint: {
+            all: ['Gruntfile.js', jsSrc, '!JS/server.js', '!' + jsDist]
+        },
+        uglify: {
             options: {
-                separator: ';'
+                separator: ';',
+                mangle: false
             },
             compile: { // On renomme vu qu'on a pas de mode dev/dist. Dist étant une autre tâche : uglify
                 src: jsSrc, // Vu qu'on doit l'utiliser deux fois, autant en faire une variable.
                 dest: jsDist // Il existe des hacks plus intéressants mais ce n'est pas le sujet du post.
             }
         },
-        uglify: {
-            options: {
-                separator: ';'
-            },
-            compile: {
-                src: jsSrc,
-                dest: jsDist
+        cssmin: {
+            compile: { // On renomme vu qu'on a pas de mode dev/dist. Dist étant une autre tâche : uglify
+                src: cssSrc, // Vu qu'on doit l'utiliser deux fois, autant en faire une variable.
+                dest: cssDist // Il existe des hacks plus intéressants mais ce n'est pas le sujet du post.
             }
         },
         watch: {
             scripts: {
-                files: '**/*.js',
+                files: ['**/*.js', '!JS/server.js', '!' + jsDist],
                 tasks: ['scripts:dev']
-            }
+            },
         },
         express: {
             roomServer: {
                 options: {
-                    server: path.resolve('./JS/server'),
+                    server: path.resolve('JS/server'),
                     keepalive: true,
                     port: 1337,
                     hostname: 'localhost',
@@ -46,14 +52,13 @@ module.exports = function(grunt) {
                 }
             }
         }
-    })
+    });
 
     grunt.registerTask('default', ['dev', 'watch']);
     grunt.registerTask('dev', ['scripts:dev']);
     grunt.registerTask('dist', ['scripts:dist']);
-    grunt.registerTask('roomServer', ['express', 'express-keepalive']);
 
     // J'aime bien avoir des noms génériques
-    grunt.registerTask('scripts:dev', ['concat:compile']);
-    grunt.registerTask('scripts:dist', ['uglify:compile']);
-}
+    grunt.registerTask('scripts:dev', ['jshint', 'uglify:compile', 'cssmin:compile']);
+    grunt.registerTask('roomServer', ['express', 'express-keepalive']);
+};
