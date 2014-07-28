@@ -14,7 +14,7 @@ ClientController.prototype.initialize = function() {
         that.view.deleteUser(user);
     });
     this.socket.on('newCharacter', function(object) {
-        that.view.deleteCharacter(object.name, object.pseudo);
+        that.view.deleteCharacter(object.id, object.name, object.pseudo);
     });
 };
 

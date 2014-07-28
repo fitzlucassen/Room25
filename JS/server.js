@@ -28,7 +28,7 @@ io.sockets.on('connection', function(socket) {
 
         users[me.id] = me;
 
-        io.sockets.emit('connectedUser', me);
+        socket.emit('connectedUser', me);
 
         console.log('Le visiteur ' + me.id + ' : ' + me.name + ' s\'est connecté');
     });

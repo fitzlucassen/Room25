@@ -7,14 +7,14 @@ MainView.prototype.appendUserID = function(user) {
     $('.userID').trigger('change');
 };
 
-MainView.prototype.deleteCharacter = function(name, pseudo) {
+MainView.prototype.deleteCharacter = function(id, name, pseudo) {
     $('ul.personnage li').each(function() {
         if ($(this).children('span').text() == name) {
-            $(this).append('<div class="characterTaken"><p>' + pseudo + '</p></div>');
+            $(this).append('<div class="characterTaken characterTaken-' + id + '"><p>' + pseudo + '</p></div>');
         }
     });
 };
 
 MainView.prototype.deleteUser = function(user) {
-    $('.' + user.id).remove();
+    $('.characterTaken-' + user.id).remove();
 };
