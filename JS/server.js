@@ -75,12 +75,13 @@ io.sockets.on('connection', function(socket) {
     });
 
     // QUand un utilisateur se deconnecte
-    socket.on('disconnect', function() {
+    socket.on('disconnect', function(reason) {
         if (!me) {
             return false;
         }
 
-        console.log('L\'utilisateur ' + me.id + ' : ' + me.name + ' s\'est déconnecté');
+        console.log('L\'utilisateur ' + me.id + ' : ' + me.name + ' s\'est déconnecté.');
+        console.log(reason);
 
         // On supprime l'utilisateur du tableau
         users.splice(findInArray(users, me.id), 1);

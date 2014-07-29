@@ -21,12 +21,8 @@ MainView.prototype.deleteUser = function(user) {
 MainView.prototype.refreshUsers = function(users) {
     for (var u in users) {
         if (users.hasOwnProperty(u)) {
-            if (users[u].character != '') {
-                $('ul.personnage li').each(function() {
-                    if ($(this).children('span').text() == users[u].character) {
-                        $(this).append('<div class="characterTaken characterTaken-' + users[u].id + '"><p>' + users[u].name + '</p></div>');
-                    }
-                });
+            if (users[u].character !== '') {
+                $('ul.personnage li').each(appendCharacterTaken, users, u, $(this));
             }
         }
     }
@@ -45,13 +41,25 @@ MainView.prototype.redirectToGame = function(object) {
     $('.readyToPlay').val(1);
     $('.readyToPlay').trigger('change');
 
-    this.showPlayers(object);
+    var that = this;
+    setTimeout(function() {
+        that.showPlayers(object);
+    }, 500);
 };
 
 MainView.prototype.showPlayers = function(object) {
     for (var u in object.users) {
         if (object.users.hasOwnProperty(u)) {
-            $('.gameContainer').append('<div class="character">' + object.users[u].name + '</div>')
+            if (object.users[u].id === object.me.id)
+                $('.gameContainer').append('<div class="character character-' + object.users[u].id + '">' + object.users[u].name + '</div>');
+            else
+                $('.gameContainer').append('<div class="myCharacter character character-' + object.users[u].id + '">' + object.users[u].name + '</div>');
         }
     }
 };
+
+function appendCharacterTaken(users, u, element) {
+    if (element.children('span').text() == users[u].character) {
+        element.append('<div class="characterTaken characterTaken-' + users[u].id + '"><p>' + users[u].name + '</p></div>');
+    }
+}
