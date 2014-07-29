@@ -18,3 +18,17 @@ MainView.prototype.deleteCharacter = function(id, name, pseudo) {
 MainView.prototype.deleteUser = function(user) {
     $('.characterTaken-' + user.id).remove();
 };
+
+MainView.prototype.refreshUsers = function(users) {
+    for (var u in users) {
+        if (users.hasOwnProperty(u)) {
+            if (users[u].character != '') {
+                $('ul.personnage li').each(function() {
+                    if ($(this).children('span').text() == users[u].character) {
+                        $(this).append('<div class="characterTaken characterTaken-' + users[u].id + '"><p>' + users[u].name + '</p></div>');
+                    }
+                });
+            }
+        }
+    }
+};
