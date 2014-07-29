@@ -32,3 +32,12 @@ MainView.prototype.refreshUsers = function(users) {
         }
     }
 };
+
+MainView.prototype.showButton = function() {
+    $('.btn').fadeIn(200, function() {
+        $('.btn').css('display', 'block');
+    });
+};
+MainView.prototype.deleteButton = function() {
+    $('.btn').fadeOut(200);
+};

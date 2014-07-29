@@ -17,6 +17,12 @@ ClientController.prototype.initialize = function() {
     this.socket.on('newCharacter', function(object) {
         that.view.deleteCharacter(object.id, object.name, object.pseudo);
     });
+    this.socket.on('cantPlay', function(users) {
+        that.view.deleteButton();
+    });
+    this.socket.on('letsPlay', function(users) {
+        that.view.showButton();
+    });
 };
 
 ClientController.prototype.newUser = function(name) {

@@ -35,7 +35,7 @@ io.sockets.on('connection', function(socket) {
         // On incrémente son id
         me.id = ++nbUser;
         // On l'ajoute au tableau des user
-        users[me.id] = me;
+        users.push(me);
 
         // Et on emet le signal pour la personne qui vient de se connecter qu'on l'a bien enregistré
         socket.emit('connectedUser', {
@@ -43,7 +43,7 @@ io.sockets.on('connection', function(socket) {
             users: users
         });
 
-        console.log('Le visiteur ' + me.id + ' : ' + me.name + ' s\'est connecté');
+        console.log('L\'utilisateur ' + me.id + ' : ' + me.name + ' s\'est connecté');
     });
 
     // Quand un utilisateur à choisi un personnage
@@ -59,6 +59,11 @@ io.sockets.on('connection', function(socket) {
             name: object.name,
             pseudo: me.name
         });
+
+        if (moreThanFourPlayers(users)) {
+            console.log("Le jeu peut démarrer");
+            io.sockets.emit('letsPlay', users);
+        }
     });
 
     // QUand un utilisateur se deconnecte
@@ -67,14 +72,18 @@ io.sockets.on('connection', function(socket) {
             return false;
         }
 
-        console.log(me.id + ' : ' + me.name + ' s\'est déconnecté');
+        console.log('L\'utilisateur ' + me.id + ' : ' + me.name + ' s\'est déconnecté');
 
         // On supprime l'utilisateur du tableau
-        delete users[me.id];
-        users.splice(me.id, 1);
+        users.splice(findInArray(users, me.id), 1);
+        debugArray(users);
 
         // Et on émet à tous les autres joueurs qu'un utilisateur s'est deconnecté
         io.sockets.emit('disconnectedUser', me);
+
+        if (!moreThanFourPlayers(users)) {
+            io.sockets.emit('cantPlay', users);
+        }
     });
 });
 
@@ -84,12 +93,24 @@ exports.use = function() {
     app.use.apply(app, arguments);
 };
 
-function idInArray(array, id) {
+function moreThanFourPlayers(array) {
+    var cpt = 0;
     for (var a in array) {
-        if (array[a] == id || a == id)
-            return true;
+        if (array.hasOwnProperty(a)) {
+            if (array[a].character != '')
+                cpt++;
+        }
     }
-    return false;
+    return cpt >= 4;
+}
+
+function findInArray(array, val) {
+    for (var a in array) {
+        if (array.hasOwnProperty(a)) {
+            if (array[a].id == val)
+                return a;
+        }
+    }
 }
 
 function debugArray(array) {

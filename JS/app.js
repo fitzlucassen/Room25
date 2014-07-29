@@ -36,7 +36,9 @@ $(document).ready(function() {
     $('body').on('click', 'ul.personnage li, .characterTaken', function(e) {
         e.stopPropagation();
 
-        if (!$(this).hasClass('characterTaken'))
+        if (!$(this).hasClass('characterTaken')) {
+            $('.characterTaken-' + $('.userID').val()).remove();
             Client.characterChoosen($(this).children('span').text(), $('.userID').val());
+        }
     });
 });
