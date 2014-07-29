@@ -1,0 +1,20 @@
+.character{
+	width: 50px;
+	height: 35px;
+	background: rgba(30,30,30,0.8);
+	color: white;
+	font-family: 'Segoe UI';
+	font-size: 12px;
+
+	border-radius: 50px;
+	-webkit-border-radius: 50px;
+	-moz-border-radius: 50px;
+	-o-border-radius: 50px;
+	-ms-border-radius: 50px;
+
+	text-align: center;
+	padding-top: 15px;
+}
+.myCharacter{
+	background: rgba(150,30,30,0.8);
+}

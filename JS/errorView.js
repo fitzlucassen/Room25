@@ -11,4 +11,4 @@ ErrorView.prototype.manageLoginError = function() {
         '-o-box-shadow': '0 0 5px red'
     });
     $('#newName').attr('placeholder', 'Requis, lettre uniquement. \' et - autorisés.');
-}
+};

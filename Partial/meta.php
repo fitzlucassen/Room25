@@ -31,6 +31,8 @@
 <!-- CSS -->
 <link type="text/css" rel="stylesheet" href="CSS/Base/reset.css" />
 <link type="text/css" rel="stylesheet" href="CSS/main.css" />
+<link type="text/css" rel="stylesheet" href="CSS/character.css" />
+<link type="text/css" rel="stylesheet" href="CSS/game.css" />
 <!-- END CSS -->
 
 <!-- SCRIPTS -->
