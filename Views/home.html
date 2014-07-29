@@ -1,14 +1,14 @@
 <div ng-controller="CharacterCtrl">
 	<ul class="personnage">
 		<!--<li ng-repeat="character in characters | filter:{player: -1}" ng-click="registerCharacter(character.name)">-->
-		<li ng-repeat="character in characters" ng-click="registerCharacter(character.name, $event)">
+		<li ng-repeat="character in characters">
 			<span class="name">{{character.name}}</span>
 			<img src="{{character.image}}" alt="Personnage {{character.name}}"/>
 		</li>
 	</ul>
 
-	<input type="text" name="userID" value="" ng-model="currentUserID" class="userID"/>
-	<input type="text" name="disconnecterID" value="" ng-model="currentUserID" class="disconnecterID"/>
+	<input type="text" name="userID" value="" class="userID"/>
+	<input type="text" name="readyToPlay" value="" ng-model="readyToPlay" class="readyToPlay"/>
 
 	<input type="button" value="Jouer" class="btn" />
 

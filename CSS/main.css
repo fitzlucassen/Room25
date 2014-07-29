@@ -124,7 +124,7 @@ ul.personnage{
     -o-border-radius: 2px;
     -ms-border-radius: 2px;
 }
-.userID, .disconnecterID{
+.userID, .readyToPlay{
     opacity: 0;
 }
 .characterTaken{

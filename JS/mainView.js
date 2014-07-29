@@ -4,7 +4,6 @@ function MainView() {
 
 MainView.prototype.appendUserID = function(user) {
     $('.userID').val(user.id);
-    $('.userID').trigger('change');
 };
 
 MainView.prototype.deleteCharacter = function(id, name, pseudo) {
@@ -40,4 +39,9 @@ MainView.prototype.showButton = function() {
 };
 MainView.prototype.deleteButton = function() {
     $('.btn').fadeOut(200);
+};
+
+MainView.prototype.redirectToGame = function(object) {
+    $('.readyToPlay').val(1);
+    $('.readyToPlay').trigger('change');
 };

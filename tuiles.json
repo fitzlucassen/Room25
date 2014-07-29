@@ -1,0 +1,8 @@
+[{
+    "name": "Case vide",
+    "image": "/Images/tuiles/vide.gif",
+    "position": {
+        "x": 0,
+        "y": 0
+    }
+}]

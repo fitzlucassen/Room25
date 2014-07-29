@@ -62,8 +62,16 @@ io.sockets.on('connection', function(socket) {
 
         if (moreThanFourPlayers(users)) {
             console.log("Le jeu peut démarrer");
-            io.sockets.emit('letsPlay', users);
+            io.sockets.emit('letsPlay');
         }
+    });
+
+    // Signal de début de partie
+    socket.on('emitPlay', function() {
+        io.sockets.emit('play', {
+            me: me,
+            users: users
+        });
     });
 
     // QUand un utilisateur se deconnecte
@@ -82,7 +90,7 @@ io.sockets.on('connection', function(socket) {
         io.sockets.emit('disconnectedUser', me);
 
         if (!moreThanFourPlayers(users)) {
-            io.sockets.emit('cantPlay', users);
+            io.sockets.emit('cantPlay');
         }
     });
 });

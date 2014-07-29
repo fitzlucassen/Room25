@@ -5,10 +5,11 @@
     app.config(function($routeProvider) {
         $routeProvider
             .when('/', {
-                templateUrl: 'Views/home.html'
+                templateUrl: 'Views/home.html',
             })
             .when('/game', {
-                templateUrl: 'Views/game.html'
+                templateUrl: 'Views/game.html',
+                reloadOnSearch: false
             })
             .otherwise({
                 redirectTo: '/'

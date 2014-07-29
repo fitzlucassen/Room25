@@ -10,7 +10,7 @@ $(document).ready(function() {
         var patt = /[a-zA-Z\-\']+/;
 
         if (!patt.test($('#newName').val())) {
-            manageError();
+            ErrView.manageLoginError();
             return false;
         }
 
@@ -48,15 +48,8 @@ $(document).ready(function() {
             Client.characterChoosen($(this).children('span').text(), $('.userID').val());
         }
     });
-});
 
-function manageError() {
-    $('#newName').css({
-        'color': 'red',
-        'box-shadow': '0 0 5px red',
-        '-webkit-box-shadow': '0 0 5px red',
-        '-moz-box-shadow': '0 0 5px red',
-        '-o-box-shadow': '0 0 5px red'
+    $('body').on('click', '.btn', function(e) {
+        Client.play();
     });
-    $('#newName').attr('placeholder', 'Requis, lettre uniquement. \' et - autorisés.');
-}
+});

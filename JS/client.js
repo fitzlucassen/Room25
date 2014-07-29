@@ -17,11 +17,14 @@ ClientController.prototype.initialize = function() {
     this.socket.on('newCharacter', function(object) {
         that.view.deleteCharacter(object.id, object.name, object.pseudo);
     });
-    this.socket.on('cantPlay', function(users) {
+    this.socket.on('cantPlay', function() {
         that.view.deleteButton();
     });
-    this.socket.on('letsPlay', function(users) {
+    this.socket.on('letsPlay', function() {
         that.view.showButton();
+    });
+    this.socket.on('play', function(object) {
+        that.view.redirectToGame(object);
     });
 };
 
@@ -36,4 +39,8 @@ ClientController.prototype.characterChoosen = function(name, id) {
         name: name,
         id: id
     });
+};
+
+ClientController.prototype.play = function() {
+    this.socket.emit('emitPlay');
 };
