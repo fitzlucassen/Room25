@@ -179,3 +179,23 @@ ul.personnage{
     background: #2980b9;
     border: 1px solid #3498db;
 }
+
+/*************/
+/** TUILES ***/
+/*************/
+.gameboard
+{
+    width: 625px;
+    height: 625px;
+    margin: auto;
+}
+
+.gameboard .tuile img
+{
+    width: 125px;
+    height: 125px;
+}
+.gameboard .tuile img
+{
+    float: left;
+}
