@@ -44,4 +44,14 @@ MainView.prototype.deleteButton = function() {
 MainView.prototype.redirectToGame = function(object) {
     $('.readyToPlay').val(1);
     $('.readyToPlay').trigger('change');
+
+    this.showPlayers(object);
+};
+
+MainView.prototype.showPlayers = function(object) {
+    for (var u in object.users) {
+        if (object.users.hasOwnProperty(u)) {
+            $('.gameContainer').append('<div class="character">' + object.users[u].name + '</div>')
+        }
+    }
 };

@@ -49,6 +49,7 @@
 
 <script type="text/javascript" src="JS/mainController.js"></script>
 <script type="text/javascript" src="JS/characterController.js"></script>
+<script type="text/javascript" src="JS/gameController.js"></script>
 
 <!--[if lt IE 9]>
 	<script src="JS/Base/html5shiv.js"></script>
