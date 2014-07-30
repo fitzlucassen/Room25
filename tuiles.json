@@ -1,251 +1,226 @@
 [{
-	"id": 1,
+    "id": 1,
     "name": "salle vide",
     "image": "/Images/tuiles/vide.gif",
-    "enable": false,
+    "enable": "false",
     "position": {
         "x": 0,
         "y": 0
     }
-},
-{
-	"id": 2,
+}, {
+    "id": 2,
     "name": "salle vide",
     "image": "/Images/tuiles/vide.gif",
-    "enable": false,
+    "enable": "false",
     "position": {
         "x": 1,
         "y": 0
     }
-},
-{
-	"id": 3,
+}, {
+    "id": 3,
     "name": "salle vide",
     "image": "/Images/tuiles/vide.gif",
-    "enable": false,
+    "enable": "false",
     "position": {
         "x": 2,
         "y": 0
     }
-},
-{
-	"id": 4,
+}, {
+    "id": 4,
     "name": "salle vide",
     "image": "/Images/tuiles/vide.gif",
-    "enable": false,
+    "enable": "false",
     "position": {
         "x": 3,
         "y": 0
     }
-},
-{
-	"id": 5,
+}, {
+    "id": 5,
     "name": "salle vide",
     "image": "/Images/tuiles/vide.gif",
-    "enable": false,
+    "enable": "false",
     "position": {
         "x": 4,
         "y": 0
     }
-},
-{
-	"id": 6,
+}, {
+    "id": 6,
     "name": "salle vide",
     "image": "/Images/tuiles/vide.gif",
-    "enable": false,
+    "enable": "false",
     "position": {
         "x": 0,
         "y": 1
     }
-}
-{
-	"id": 7,
+}, {
+    "id": 7,
     "name": "chambre noire",
     "image": "/Images/tuiles/noire.gif",
-    "enable": false,
+    "enable": "false",
     "position": {
         "x": 1,
         "y": 1
     }
-},
-{
-	"id": 8,
+}, {
+    "id": 8,
     "name": "chambre froide",
     "image": "/Images/tuiles/froide.gif",
-    "enable": false,
+    "enable": "false",
     "position": {
         "x": 2,
         "y": 1
     }
-},
-{
-	"id": 9,
+}, {
+    "id": 9,
     "name": "chambre froide",
     "image": "/Images/tuiles/froide.gif",
-    "enable": false,
+    "enable": "false",
     "position": {
         "x": 3,
         "y": 1
     }
-},
-{
-	"id": 10,
+}, {
+    "id": 10,
     "name": "salle piégée",
     "image": "/Images/tuiles/piege.gif",
-    "enable": false,
+    "enable": "false",
     "position": {
         "x": 4,
         "y": 1
     }
-},
-{
-	"id": 11,
+}, {
+    "id": 11,
     "name": "salle piégée",
     "image": "/Images/tuiles/piege.gif",
-    "enable": false,
+    "enable": "false",
     "position": {
         "x": 0,
         "y": 2
     }
-},
-{
-	"id": 12,
+}, {
+    "id": 12,
     "name": "salle inondable",
     "image": "/Images/tuiles/inondable.gif",
-    "enable": false,
+    "enable": "false",
     "position": {
         "x": 1,
         "y": 2
     }
-},
-{
-	"id": 13,
+}, {
+    "id": 13,
     "name": "salle centrale",
     "image": "/Images/tuiles/centrale.gif",
-    "enable": true,
+    "enable": "true",
     "position": {
         "x": 2,
         "y": 2
     }
-},
-{
-	"id": 14,
+}, {
+    "id": 14,
     "name": "salle inondable",
     "image": "/Images/tuiles/inondable.gif",
-    "enable": false,
+    "enable": "false",
     "position": {
         "x": 3,
         "y": 2
     }
-},
-{
-	"id": 15,
+}, {
+    "id": 15,
     "name": "salle d'acide",
     "image": "/Images/tuiles/acide.gif",
-    "enable": false,
+    "enable": "false",
     "position": {
         "x": 4,
         "y": 2
     }
-},
-{
-	"id": 16,
+}, {
+    "id": 16,
     "name": "salle d'acide",
     "image": "/Images/tuiles/acide.gif",
-    "enable": false,
+    "enable": "false",
     "position": {
         "x": 0,
         "y": 3
     }
-},
-{
-	"id": 17,
+}, {
+    "id": 17,
     "name": "salle mortelle",
     "image": "/Images/tuiles/mortelle.gif",
-    "enable": false,
+    "enable": "false",
     "position": {
         "x": 1,
         "y": 3
     }
-},
-{
-	"id": 18,
+}, {
+    "id": 18,
     "name": "salle mortelle",
     "image": "/Images/tuiles/mortelle.gif",
-    "enable": false,
+    "enable": "false",
     "position": {
         "x": 2,
         "y": 3
     }
-},
-{
-	"id": 19,
+}, {
+    "id": 19,
     "name": "salle vortex",
     "image": "/Images/tuiles/vortex.gif",
-    "enable": false,
+    "enable": "false",
     "position": {
         "x": 3,
         "y": 3
     }
-},
-{
-	"id": 20,
+}, {
+    "id": 20,
     "name": "salle de vision",
     "image": "/Images/tuiles/vision.gif",
-    "enable": false,
+    "enable": "false",
     "position": {
         "x": 4,
         "y": 3
     }
-},
-{
-	"id": 21,
+}, {
+    "id": 21,
     "name": "salle de contrôle",
     "image": "/Images/tuiles/controle.gif",
-    "enable": false,
+    "enable": "false",
     "position": {
         "x": 0,
         "y": 4
     }
-},
-{
-	"id": 22,
+}, {
+    "id": 22,
     "name": "salle illusion",
     "image": "/Images/tuiles/illusion.gif",
-    "enable": false,
+    "enable": "false",
     "position": {
         "x": 1,
         "y": 4
     }
-},
-{
-	"id": 23,
+}, {
+    "id": 23,
     "name": "salle mobile",
     "image": "/Images/tuiles/mobile.gif",
-    "enable": false,
+    "enable": "false",
     "position": {
         "x": 2,
         "y": 4
     }
-},
-{
-	"id": 24,
+}, {
+    "id": 24,
     "name": "room 25",
     "image": "/Images/tuiles/sortie.gif",
-    "enable": false,
+    "enable": "false",
     "position": {
         "x": 3,
         "y": 4
     }
-},
-{
-	"id": 25,
+}, {
+    "id": 25,
     "name": "chambre noire",
     "image": "/Images/tuiles/noire.gif",
-    "enable": false,
+    "enable": "false",
     "position": {
         "x": 4,
         "y": 4
     }
-},
-]
+}]

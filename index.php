@@ -9,10 +9,6 @@
     </head>
     <body>
 		<div id="global" ng-app="Room25App">
-		    <header id="header">
-				<h1>Room 25</h1>
-		    </header>
-
 		    <div id="game" ng-view>
 
 		    </div>

@@ -1,5 +1,6 @@
 function MainView() {
-
+    this.caseWidth = 175;
+    this.caseHeight = 175;
 }
 
 MainView.prototype.appendUserID = function(user) {
@@ -48,14 +49,21 @@ MainView.prototype.redirectToGame = function(object) {
 };
 
 MainView.prototype.showPlayers = function(object) {
+    var that = this;
+    var cpt = 0;
     for (var u in object.users) {
         if (object.users.hasOwnProperty(u)) {
-            if (object.users[u].id === object.me.id)
-                $('.gameContainer').append('<div class="character character-' + object.users[u].id + '">' + object.users[u].name + '</div>');
+            if (object.users[u].id !== object.me.id)
+                $('.gameboard').append('<div class="character character-' + object.users[u].id + '">' + object.users[u].name + '</div>');
             else
-                $('.gameContainer').append('<div class="myCharacter character character-' + object.users[u].id + '">' + object.users[u].name + '</div>');
+                $('.gameboard').append('<div class="myCharacter character character-' + object.users[u].id + '">' + object.users[u].name + '</div>');
+
+            $('.character').css('left', (2 * that.caseWidth) + 'px');
+            $('.character').css('top', (2 * that.caseHeight) + 'px');
+            cpt++;
         }
     }
+
 };
 
 function appendCharacterTaken(users, u, element) {
