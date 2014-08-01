@@ -58,8 +58,8 @@ MainView.prototype.showPlayers = function(object) {
             else
                 $('.gameboard').append('<div class="myCharacter character character-' + object.users[u].id + '">' + object.users[u].name + '</div>');
 
-            $('.character').css('left', (2 * that.caseWidth) + 'px');
-            $('.character').css('top', (2 * that.caseHeight) + 'px');
+            $('.character-' + object.users[u].id).css('left', ((2 * that.caseWidth) + (cpt * $('.character').outerWidth())) + 'px');
+            $('.character-' + object.users[u].id).css('top', (2 * that.caseHeight) + 'px');
             cpt++;
         }
     }

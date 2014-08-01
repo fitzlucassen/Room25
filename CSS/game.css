@@ -1,3 +1,6 @@
+.containerBloc{
+	height: 100%;
+}
 .character{
 	position: absolute;
 	top: 0;
@@ -22,6 +25,50 @@
 .myCharacter{
 	background: rgba(150,30,30,0.8);
 }
+.identity{
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	width: 100px;
+	height: 150px;
+	background: #fff;
+}
+.panel{
+	position: relative;
+	border-top: 1px solid black;
+	background: rgba(0,0,0,0.8);
+	width: 100%;
+	height: 200px;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+}
+.pseudo{
+	position: absolute;
+	top: 20px;
+	left: 20px;
+
+}
+.tourDe{
+	position: absolute;
+	top: 20px;
+	right: 20px;
+
+
+}
+.actions{
+	margin: 20px auto;
+	width: 300px;
+	height: 100px;
+
+
+}
+.actions .action{
+	display: inline-block;
+	vertical-align: top;
+	width: 70px;
+	height: 100px;
+}
 /*************/
 /** TUILES ***/
 /*************/
@@ -32,7 +79,11 @@
     height: 875px;
     margin: auto;
 }
-
+.gameboard .tuile{
+	position: absolute;
+	top: 0;
+	left: 0;
+}
 .gameboard .tuile img
 {
     width: 175px;

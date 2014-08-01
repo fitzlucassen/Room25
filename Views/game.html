@@ -1,8 +1,29 @@
-<div ng-controller="GameCtrl">
+<div ng-controller="GameCtrl" id="containerBloc">
+	<div class="identity">
+		<img src="" alt="identity"/>
+	</div>
+
 	<div class="gameboard">
-		<div class="tuile" ng-repeat="tuile in tuiles">
+
+		<div class="tuile" ng-repeat="tuile in tuiles" style="top: {{tuile.position.y * 175}}px;left:{{tuile.position.x * 175}}px">
 			<img id="tuile-{{tuile.id}}" src="{{tuile.image}}" alt="Tuile : {{tuile.name}}" ng-show="tuile.enable"/>
 			<img src="/Images/tuiles/cache.gif" alt="Tuile : {{tuile.name}}" ng-hide="tuile.enable"/>
+		</div>
+	</div>
+
+	<div class="panel">
+		<div class="pseudo">
+			<p>pseudo</p>
+		</div>
+
+		<div class="actions">
+			<div class="action" ng-repeat="action in actions">
+				<img src="{{action.image}}" alt="{{action.name}}" title="{{action.name}}"/>
+			</div>
+		</div>
+
+		<div class="tourDe">
+			<p>Tour de </p>
 		</div>
 	</div>
 </div>

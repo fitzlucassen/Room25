@@ -6,7 +6,8 @@
     "position": {
         "x": 0,
         "y": 0
-    }
+    },
+    "last": false
 }, {
     "id": 2,
     "name": "salle vide",
@@ -15,7 +16,9 @@
     "position": {
         "x": 1,
         "y": 0
-    }
+    },
+    "last": false
+
 }, {
     "id": 3,
     "name": "salle vide",
@@ -24,7 +27,8 @@
     "position": {
         "x": 2,
         "y": 0
-    }
+    },
+    "last": false
 }, {
     "id": 4,
     "name": "salle vide",
@@ -33,7 +37,8 @@
     "position": {
         "x": 3,
         "y": 0
-    }
+    },
+    "last": false
 }, {
     "id": 5,
     "name": "salle vide",
@@ -42,7 +47,8 @@
     "position": {
         "x": 4,
         "y": 0
-    }
+    },
+    "last": false
 }, {
     "id": 6,
     "name": "salle vide",
@@ -51,7 +57,8 @@
     "position": {
         "x": 0,
         "y": 1
-    }
+    },
+    "last": false
 }, {
     "id": 7,
     "name": "chambre noire",
@@ -60,7 +67,8 @@
     "position": {
         "x": 1,
         "y": 1
-    }
+    },
+    "last": false
 }, {
     "id": 8,
     "name": "chambre froide",
@@ -69,7 +77,8 @@
     "position": {
         "x": 2,
         "y": 1
-    }
+    },
+    "last": false
 }, {
     "id": 9,
     "name": "chambre froide",
@@ -78,7 +87,8 @@
     "position": {
         "x": 3,
         "y": 1
-    }
+    },
+    "last": false
 }, {
     "id": 10,
     "name": "salle piégée",
@@ -87,7 +97,8 @@
     "position": {
         "x": 4,
         "y": 1
-    }
+    },
+    "last": false
 }, {
     "id": 11,
     "name": "salle piégée",
@@ -96,7 +107,8 @@
     "position": {
         "x": 0,
         "y": 2
-    }
+    },
+    "last": false
 }, {
     "id": 12,
     "name": "salle inondable",
@@ -105,7 +117,8 @@
     "position": {
         "x": 1,
         "y": 2
-    }
+    },
+    "last": false
 }, {
     "id": 13,
     "name": "salle centrale",
@@ -114,7 +127,8 @@
     "position": {
         "x": 2,
         "y": 2
-    }
+    },
+    "last": null
 }, {
     "id": 14,
     "name": "salle inondable",
@@ -123,7 +137,8 @@
     "position": {
         "x": 3,
         "y": 2
-    }
+    },
+    "last": false
 }, {
     "id": 15,
     "name": "salle d'acide",
@@ -132,7 +147,8 @@
     "position": {
         "x": 4,
         "y": 2
-    }
+    },
+    "last": false
 }, {
     "id": 16,
     "name": "salle d'acide",
@@ -141,7 +157,8 @@
     "position": {
         "x": 0,
         "y": 3
-    }
+    },
+    "last": false
 }, {
     "id": 17,
     "name": "salle mortelle",
@@ -150,7 +167,8 @@
     "position": {
         "x": 1,
         "y": 3
-    }
+    },
+    "last": false
 }, {
     "id": 18,
     "name": "salle mortelle",
@@ -159,7 +177,8 @@
     "position": {
         "x": 2,
         "y": 3
-    }
+    },
+    "last": false
 }, {
     "id": 19,
     "name": "salle vortex",
@@ -168,7 +187,8 @@
     "position": {
         "x": 3,
         "y": 3
-    }
+    },
+    "last": false
 }, {
     "id": 20,
     "name": "salle de vision",
@@ -177,7 +197,8 @@
     "position": {
         "x": 4,
         "y": 3
-    }
+    },
+    "last": true
 }, {
     "id": 21,
     "name": "salle de contrôle",
@@ -186,7 +207,8 @@
     "position": {
         "x": 0,
         "y": 4
-    }
+    },
+    "last": false
 }, {
     "id": 22,
     "name": "salle illusion",
@@ -195,7 +217,8 @@
     "position": {
         "x": 1,
         "y": 4
-    }
+    },
+    "last": false
 }, {
     "id": 23,
     "name": "salle mobile",
@@ -204,7 +227,8 @@
     "position": {
         "x": 2,
         "y": 4
-    }
+    },
+    "last": false
 }, {
     "id": 24,
     "name": "room 25",
@@ -213,7 +237,8 @@
     "position": {
         "x": 3,
         "y": 4
-    }
+    },
+    "last": true
 }, {
     "id": 25,
     "name": "chambre noire",
@@ -222,5 +247,6 @@
     "position": {
         "x": 4,
         "y": 4
-    }
+    },
+    "last": false
 }]

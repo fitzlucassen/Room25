@@ -1,0 +1,17 @@
+[{
+    "id": 1,
+    "name": "Regarder",
+    "image": "/Images/actions/regarder.gif"
+}, {
+    "id": 2,
+    "name": "Déplacer",
+    "image": "/Images/actions/deplacer.gif"
+}, {
+    "id": 3,
+    "name": "Pousser",
+    "image": "/Images/actions/pousser.gif"
+}, {
+    "id": 4,
+    "name": "Contrôller",
+    "image": "/Images/actions/controller.gif"
+}]
