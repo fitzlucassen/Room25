@@ -1,11 +1,14 @@
+var LastCoords = [];
+var OtherCoords = [];
+
 $(document).ready(function() {
     var View = new MainView();
     var ErrView = new ErrorView();
     var Client = new ClientController(View);
 
-
     Client.initialize();
 
+    // Vérification login + envoi de l'évènement nouveau joueur
     $('body').on('click', '#getMyName', function() {
         var patt = /[a-zA-Z\-\']+/;
 
@@ -18,12 +21,7 @@ $(document).ready(function() {
         $('#popin-grayback').fadeOut('slow');
     });
 
-    $('body').on('click', '#popin, #popin-grayback', function(e) {
-        e.stopPropagation();
-        if ($(this).hasClass('grayback'))
-            $('#popin-grayback').fadeOut('slow');
-    });
-
+    // RoolHover d'un personnage (animation)
     $('body').on('mouseover', '.personnage li', function() {
 
         $this = $(this);
@@ -40,6 +38,7 @@ $(document).ready(function() {
         }, 200);
     });
 
+    // Clique sur un personnage. On émet l'évènement
     $('body').on('click', 'ul.personnage li, .characterTaken', function(e) {
         e.stopPropagation();
 
@@ -49,6 +48,7 @@ $(document).ready(function() {
         }
     });
 
+    // Au clique sur le bouton, on lance le jeu
     $('body').on('click', '.btn', function(e) {
         Client.play();
     });

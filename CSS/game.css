@@ -47,14 +47,16 @@
 	position: absolute;
 	top: 20px;
 	left: 20px;
-
+	color: white;
+	font-family: "Segoe UI";
+	
 }
 .tourDe{
 	position: absolute;
 	top: 20px;
 	right: 20px;
-
-
+	color: white;
+	font-family: "Segoe UI";
 }
 .actions{
 	margin: 20px auto;

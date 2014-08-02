@@ -21,6 +21,7 @@ var User = function(name) {
         y: 2
     };
     this.character = '';
+    this.identity = '';
 };
 
 // Au chargement de la page
@@ -60,17 +61,22 @@ io.sockets.on('connection', function(socket) {
             pseudo: me.name
         });
 
-        if (moreThanFourPlayers(users)) {
-            console.log("Le jeu peut démarrer");
-            io.sockets.emit('letsPlay');
-        }
+        //if (moreThanFourPlayers(users)) {
+        console.log("Le jeu peut démarrer");
+        io.sockets.emit('letsPlay');
+        //}
     });
 
     // Signal de début de partie
     socket.on('emitPlay', function() {
+        var arrayCoords = manageCoords();
+        var identites = manageIdentity(users);
+
         io.sockets.emit('play', {
             me: me,
-            users: users
+            users: users,
+            lastCardsCoords: arrayCoords[0],
+            otherCoords: arrayCoords[1]
         });
     });
 
@@ -122,8 +128,167 @@ function findInArray(array, val) {
     }
 }
 
+function findInArrayPosition(val, array) {
+    for (var a in array) {
+        if (array.hasOwnProperty(a)) {
+            if (array[a].x == val.x && array[a].y == val.y)
+                return a;
+        }
+    }
+}
+
 function debugArray(array) {
     for (var a in array) {
         console.log(a + ' -> ' + array[a]);
+    }
+}
+
+function getCoordsPossible() {
+    return [{
+        x: 0,
+        y: 0
+    }, {
+        x: 1,
+        y: 0
+    }, {
+        x: 0,
+        y: 1
+    }, {
+        x: 4,
+        y: 0
+    }, {
+        x: 3,
+        y: 0
+    }, {
+        x: 4,
+        y: 1
+    }, {
+        x: 4,
+        y: 4
+    }, {
+        x: 4,
+        y: 3
+    }, {
+        x: 3,
+        y: 4
+    }, {
+        x: 1,
+        y: 4
+    }, {
+        x: 0,
+        y: 4
+    }, {
+        x: 0,
+        y: 3
+    }, ];
+}
+
+function getOtherCoordsPossible() {
+    return [{
+        x: 2,
+        y: 0
+    }, {
+        x: 1,
+        y: 1
+    }, {
+        x: 2,
+        y: 1
+    }, {
+        x: 3,
+        y: 1
+    }, {
+        x: 0,
+        y: 2
+    }, {
+        x: 1,
+        y: 2
+    }, {
+        x: 3,
+        y: 2
+    }, {
+        x: 4,
+        y: 2
+    }, {
+        x: 1,
+        y: 3
+    }, {
+        x: 2,
+        y: 3
+    }, {
+        x: 3,
+        y: 3
+    }, {
+        x: 2,
+        y: 4
+    }, ];
+}
+
+function mixRandomlyPositions(coords) {
+    var j = 0;
+    var valI = '';
+    var valJ = valI;
+    var l = coords.length - 1;
+
+    while (l > -1) {
+        j = Math.floor(Math.random() * l);
+        valI = coords[l];
+        valJ = coords[j];
+        coords[l] = valJ;
+        coords[j] = valI;
+        l = l - 1;
+    }
+    return coords;
+}
+
+function deleteLastCardsCoords(arrayFrom, array) {
+    var arrayReturn = [];
+
+    // Et pour chacune des tuiles restante
+    for (var t in arrayFrom) {
+        if (arrayFrom.hasOwnProperty(t)) {
+            // On vérifie que la coordonnées n'est pas déjà prise
+            if (!findInArrayPosition(arrayFrom[t], array)) {
+                arrayReturn.push(arrayFrom[t]);
+            }
+        }
+    }
+    return arrayReturn;
+}
+
+function manageCoords() {
+    // On récupère les coordonnées autorisées pour ces cartes
+    var coordsPossible = getCoordsPossible();
+    // On mélange ces coordonnées au hasard
+    coordsPossible = mixRandomlyPositions(coordsPossible);
+    var lastCardsCoords = [];
+    // Et on récupère les deux premières
+    lastCardsCoords.push(coordsPossible[0]);
+    lastCardsCoords.push(coordsPossible[1]);
+
+    // On récupère les autres coordonnées
+    var otherCoords = getOtherCoordsPossible();
+    // On concatène les deux tableaux de coordonnées
+    otherCoords = otherCoords.concat(coordsPossible);
+    // On mélange le tableau de coordonnées au hasard
+    otherCoords = mixRandomlyPositions(otherCoords);
+    otherCoords = deleteLastCardsCoords(otherCoords, lastCardsCoords);
+
+    return [lastCardsCoords, otherCoords];
+}
+
+function manageIdentity(users) {
+    var identities;
+
+    if (users.lentg == 4) {
+        identities = ['prisonnier', 'prisonnier', 'prisonnier', 'gardien'];
+    } else {
+        identities = ['prisonnier', 'prisonnier', 'prisonnier', 'gardien', 'gardien'];
+    }
+
+    identities = mixRandomlyPositions(identities);
+    for (var u in users) {
+        if (users.hasOwnProperty(u)) {
+            users[u].identity = identities[u];
+        }
     }
 }

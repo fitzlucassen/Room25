@@ -24,6 +24,9 @@ ClientController.prototype.initialize = function() {
         that.view.showButton();
     });
     this.socket.on('play', function(object) {
+        LastCoords = object.lastCardsCoords;
+        OtherCoords = object.otherCoords;
+
         that.view.redirectToGame(object);
     });
 };
