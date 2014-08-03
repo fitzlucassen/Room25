@@ -100,7 +100,7 @@ header p{
     -o-border-radius: 2px;
     -ms-border-radius: 2px;
 }
-.userID, .readyToPlay{
+.userID, .readyToPlay, .coordsReady{
     opacity: 0;
 }
 

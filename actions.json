@@ -1,17 +1,17 @@
 [{
     "id": 1,
     "name": "Regarder",
-    "image": "/Images/actions/regarder.gif"
+    "image": "/Images/actions/regarder.png"
 }, {
     "id": 2,
     "name": "Déplacer",
-    "image": "/Images/actions/deplacer.gif"
+    "image": "/Images/actions/deplacer.png"
 }, {
     "id": 3,
     "name": "Pousser",
-    "image": "/Images/actions/pousser.gif"
+    "image": "/Images/actions/pousser.png"
 }, {
     "id": 4,
     "name": "Contrôller",
-    "image": "/Images/actions/controller.gif"
+    "image": "/Images/actions/controller.png"
 }]

@@ -279,7 +279,7 @@ function manageCoords() {
 function manageIdentity(users) {
     var identities;
 
-    if (users.lentg == 4) {
+    if (users.length == 4) {
         identities = ['prisonnier', 'prisonnier', 'prisonnier', 'gardien'];
     } else {
         identities = ['prisonnier', 'prisonnier', 'prisonnier', 'gardien', 'gardien'];

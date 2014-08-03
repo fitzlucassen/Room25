@@ -29,9 +29,9 @@
 	position: absolute;
 	top: 10px;
 	left: 10px;
+}
+.identity img{
 	width: 100px;
-	height: 150px;
-	background: #fff;
 }
 .panel{
 	position: relative;
@@ -60,16 +60,17 @@
 }
 .actions{
 	margin: 20px auto;
-	width: 300px;
+	width: 320px;
 	height: 100px;
-
-
 }
 .actions .action{
 	display: inline-block;
 	vertical-align: top;
+	margin: 5px;
+}
+.actions .action img{
 	width: 70px;
-	height: 100px;
+
 }
 /*************/
 /** TUILES ***/
