@@ -22,6 +22,7 @@ var User = function(name) {
     };
     this.character = '';
     this.identity = '';
+    this.ready = false;
 };
 
 // Au chargement de la page
@@ -80,6 +81,13 @@ io.sockets.on('connection', function(socket) {
         });
     });
 
+    socket.on('playerReady', function(object) {
+        users[findInArray(users, object.id)].ready = true;
+        if (everyoneIsOk(users)) {
+            io.sockets.emit('everyoneIsOk');
+        }
+    });
+
     // QUand un utilisateur se deconnecte
     socket.on('disconnect', function(reason) {
         if (!me) {
@@ -107,6 +115,19 @@ exports = module.exports = server;
 exports.use = function() {
     app.use.apply(app, arguments);
 };
+
+function everyoneIsOk(array) {
+    var ready = true;
+    for (var a in array) {
+        if (array.hasOwnProperty(a)) {
+            if (!array[a].ready) {
+                ready = false;
+                break;
+            }
+        }
+    }
+    return ready;
+}
 
 function moreThanFourPlayers(array) {
     var cpt = 0;

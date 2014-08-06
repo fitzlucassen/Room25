@@ -97,6 +97,39 @@ MainView.prototype.showIdentity = function(users, meID) {
     }
 };
 
+MainView.prototype.animateAction = function(element, toggle) {
+    if (toggle) {
+        element.animate({
+            'margin-top': '20px'
+        }, 300);
+        element.addClass('ok').addClass('actionOk-' + $('.action.ok').length);
+    } else {
+        element.animate({
+            'margin-top': '5px'
+        }, 300);
+        element.removeClass('actionOk-' + element.attr('class').split(' ').last().split('-').last()).removeClass('ok');
+    }
+};
+
+MainView.prototype.showButtonOk = function() {
+    $('.btnOk').fadeIn('slow', function() {
+        $('.btnOk').css('display', 'block');
+    });
+};
+
+MainView.prototype.hideButtonOk = function() {
+    $('.btnOk').fadeOut('slow');
+};
+
+MainView.prototype.disableActions = function() {
+    $('.actions').append('<div class="loading"><p>En attente des autres joueurs...</p><img src="Images/loader.gif" alt="loader"></div>');
+};
+
+MainView.prototype.hideActions = function() {
+    $('.loading img').remove();
+    $('.loading p').html('C\'est parti !');
+};
+
 function appendCharacterTaken(users, u, element) {
     if (element.children('span').text() == users[u].character) {
         element.append('<div class="characterTaken characterTaken-' + users[u].id + '"><p>' + users[u].name + '</p></div>');

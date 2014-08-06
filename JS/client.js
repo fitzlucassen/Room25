@@ -23,6 +23,9 @@ ClientController.prototype.initialize = function() {
     this.socket.on('letsPlay', function() {
         that.view.showButton();
     });
+    this.socket.on('everyoneIsOk', function() {
+        that.view.hideActions();
+    });
     this.socket.on('play', function(object) {
         LastCoords = object.lastCardsCoords;
         OtherCoords = object.otherCoords;
@@ -34,6 +37,12 @@ ClientController.prototype.initialize = function() {
 ClientController.prototype.newUser = function(name) {
     this.socket.emit('readyToPlay', {
         name: name
+    });
+};
+
+ClientController.prototype.validateAction = function(id) {
+    this.socket.emit('playerReady', {
+        id: id
     });
 };
 

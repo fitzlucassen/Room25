@@ -59,17 +59,17 @@
                 var otherTuile = getTuiles(data, false);
 
                 // Et pour chacune des tuiles restante
-                for (var t in otherTuile) {
-                    if (otherTuile.hasOwnProperty(t)) {
+                for (var tu in otherTuile) {
+                    if (otherTuile.hasOwnProperty(tu)) {
                         // Et on fixe sa position
-                        otherTuile[t].position.x = other[t].x;
-                        otherTuile[t].position.y = other[t].y;
+                        otherTuile[tu].position.x = other[tu].x;
+                        otherTuile[tu].position.y = other[tu].y;
                     }
                 }
 
                 // Et on renvoi le tableau sans oublié la case départ
                 return realTuile.concat(otherTuile).concat(getTuiles(data, null));
-            }
+            };
 
             function getTuiles(data, last) {
                 var array = [];

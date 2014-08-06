@@ -52,4 +52,22 @@ $(document).ready(function() {
     $('body').on('click', '.btn', function(e) {
         Client.play();
     });
+
+    // Au clique sur une action on la met en avant
+    $('body').on('click', '.action', function(e) {
+
+        if ($('.action.ok').length < 2 || $(this).hasClass('ok')) {
+            View.animateAction($(this), !$(this).hasClass('ok'));
+
+            if ($('.action.ok').length > 0)
+                View.showButtonOk();
+            else
+                View.hideButtonOk();
+        }
+    });
+
+    $('body').on('click', '.btnOk', function(e) {
+        View.disableActions();
+        Client.validateAction($('.userID').val());
+    });
 });
