@@ -5,7 +5,7 @@ function MainView() {
 
 // On garde le UserID courant caché dans le DOM
 MainView.prototype.appendUserID = function(user) {
-    $('.userID').val(user.id);
+    $('.userID').val(user.id + '');
 };
 
 // On ajoute un user sur un personnage
@@ -68,7 +68,7 @@ MainView.prototype.showPlayers = function(object) {
     var cpt = 0;
     for (var u in object.users) {
         if (object.users.hasOwnProperty(u)) {
-            if (object.users[u].id !== object.me.id)
+            if (object.users[u].id != $('.userID').val())
                 $('.gameboard').append('<div class="character character-' + object.users[u].id + '">' + object.users[u].name + '</div>');
             else
                 $('.gameboard').append('<div class="myCharacter character character-' + object.users[u].id + '">' + object.users[u].name + '</div>');
@@ -128,6 +128,10 @@ MainView.prototype.disableActions = function() {
 MainView.prototype.hideActions = function() {
     $('.loading img').remove();
     $('.loading p').html('C\'est parti !');
+};
+
+MainView.prototype.appendTurnOf = function(u) {
+    $('.tourDe p').html('Tour de ' + u.name);
 };
 
 function appendCharacterTaken(users, u, element) {

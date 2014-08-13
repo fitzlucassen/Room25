@@ -23,6 +23,9 @@ var User = function(name) {
     this.character = '';
     this.identity = '';
     this.ready = false;
+    this.order = 0;
+    this.action1 = '';
+    this.action2 = '';
 };
 
 // Au chargement de la page
@@ -72,6 +75,7 @@ io.sockets.on('connection', function(socket) {
     socket.on('emitPlay', function() {
         var arrayCoords = manageCoords();
         var identites = manageIdentity(users);
+        users = managePlayerOrder(users);
 
         io.sockets.emit('play', {
             me: me,
@@ -83,8 +87,11 @@ io.sockets.on('connection', function(socket) {
 
     socket.on('playerReady', function(object) {
         users[findInArray(users, object.id)].ready = true;
+        users[findInArray(users, object.id)].action1 = object.action1;
+        users[findInArray(users, object.id)].action2 = object.action2;
+
         if (everyoneIsOk(users)) {
-            io.sockets.emit('everyoneIsOk');
+            io.sockets.emit('everyoneIsOk', users);
         }
     });
 
@@ -312,4 +319,14 @@ function manageIdentity(users) {
             users[u].identity = identities[u];
         }
     }
+}
+
+function managePlayerOrder(users){
+    users = mixRandomlyPositions(users);
+    for(var i in users){
+        if (users.hasOwnProperty(i)) {
+            users[i].order = i;
+        }
+    }
+    return users;
 }

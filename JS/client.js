@@ -23,8 +23,19 @@ ClientController.prototype.initialize = function() {
     this.socket.on('letsPlay', function() {
         that.view.showButton();
     });
-    this.socket.on('everyoneIsOk', function() {
+    this.socket.on('everyoneIsOk', function(users) {
         that.view.hideActions();
+        var u = {};
+
+        for (var a in users) {
+            if (users.hasOwnProperty(a)) {
+                if (users[a].order == 1){
+                    u = users[a];
+                    break;
+                }
+            }
+        }
+        that.view.appendTurnOf(u);
     });
     this.socket.on('play', function(object) {
         LastCoords = object.lastCardsCoords;
@@ -40,9 +51,11 @@ ClientController.prototype.newUser = function(name) {
     });
 };
 
-ClientController.prototype.validateAction = function(id) {
+ClientController.prototype.validateAction = function(id, action1, action2) {
     this.socket.emit('playerReady', {
-        id: id
+        id: id,
+        action1: action1,
+        action2: action2
     });
 };
 

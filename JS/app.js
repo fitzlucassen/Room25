@@ -68,6 +68,11 @@ $(document).ready(function() {
 
     $('body').on('click', '.btnOk', function(e) {
         View.disableActions();
-        Client.validateAction($('.userID').val());
+
+        var action2 = '';
+        if($('.actionOk-2').length > 0)
+            action2 = $('.actionOk-2').children('img').attr('alt');
+        
+        Client.validateAction($('.userID').val(), $('.actionOk-1').children('img').attr('alt'), action2);
     });
 });
