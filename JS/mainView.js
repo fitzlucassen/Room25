@@ -86,6 +86,7 @@ MainView.prototype.showPlayers = function(object) {
 
 };
 
+// On affiche pour chaque joueur son identitée
 MainView.prototype.showIdentity = function(users, meID) {
     for (var u in users) {
         if (users.hasOwnProperty(u)) {
@@ -97,6 +98,7 @@ MainView.prototype.showIdentity = function(users, meID) {
     }
 };
 
+// On anime les actions
 MainView.prototype.animateAction = function(element, toggle) {
     if (toggle) {
         element.animate({
@@ -111,29 +113,35 @@ MainView.prototype.animateAction = function(element, toggle) {
     }
 };
 
+// On montre le bouton de validation des actions
 MainView.prototype.showButtonOk = function() {
     $('.btnOk').fadeIn('slow', function() {
         $('.btnOk').css('display', 'block');
     });
 };
 
+// On cache le bouton de validation des actions
 MainView.prototype.hideButtonOk = function() {
     $('.btnOk').fadeOut('slow');
 };
 
+// On désactive les actions (loader par dessus)
 MainView.prototype.disableActions = function() {
     $('.actions').append('<div class="loading"><p>En attente des autres joueurs...</p><img src="Images/loader.gif" alt="loader"></div>');
 };
 
+// On desactive le loader (tout le monde est prêt)
 MainView.prototype.hideActions = function() {
     $('.loading img').remove();
     $('.loading p').html('C\'est parti !');
 };
 
+// Affiche le tour de
 MainView.prototype.appendTurnOf = function(u) {
     $('.tourDe p').html('Tour de ' + u.name);
 };
 
+// Affiche un film par dessus un personnage représentant le joueur qui l'a prit
 function appendCharacterTaken(users, u, element) {
     if (element.children('span').text() == users[u].character) {
         element.append('<div class="characterTaken characterTaken-' + users[u].id + '"><p>' + users[u].name + '</p></div>');

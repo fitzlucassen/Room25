@@ -21,7 +21,7 @@ $(document).ready(function() {
         $('#popin-grayback').fadeOut('slow');
     });
 
-    // RoolHover d'un personnage (animation)
+    // RollHover d'un personnage (animation)
     $('body').on('mouseover', '.personnage li', function() {
 
         $this = $(this);
@@ -66,6 +66,7 @@ $(document).ready(function() {
         }
     });
 
+    // Au clique sur le bouton des actions on les valide
     $('body').on('click', '.btnOk', function(e) {
         View.disableActions();
 

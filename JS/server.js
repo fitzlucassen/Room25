@@ -85,17 +85,22 @@ io.sockets.on('connection', function(socket) {
         });
     });
 
+    // Quand un joueur a défini ses actions
     socket.on('playerReady', function(object) {
         users[findInArray(users, object.id)].ready = true;
         users[findInArray(users, object.id)].action1 = object.action1;
         users[findInArray(users, object.id)].action2 = object.action2;
 
+        console.log('L\'utilisateur ' + me.id + ' : ' + me.name + ' est prêt.');
+
+        // Si tout le monde est ok on joue
         if (everyoneIsOk(users)) {
+            console.log('Tout le monde est prêt.');
             io.sockets.emit('everyoneIsOk', users);
         }
     });
 
-    // QUand un utilisateur se deconnecte
+    // Quand un utilisateur se deconnecte
     socket.on('disconnect', function(reason) {
         if (!me) {
             return false;
