@@ -133,12 +133,20 @@ MainView.prototype.disableActions = function() {
 // On desactive le loader (tout le monde est prêt)
 MainView.prototype.hideActions = function() {
     $('.loading img').remove();
+    $('.btnOk').fadeOut('slow');
     $('.loading p').html('C\'est parti !');
 };
 
 // Affiche le tour de
 MainView.prototype.appendTurnOf = function(u) {
     $('.tourDe p').html('Tour de ' + u.name);
+
+    if(u.id == $('.userID').val()){
+        $('.loading').remove();
+        $('.actions .action').fadeOut('slow');
+
+        $('.action img[alt="' + u.action1 + '"]').parent().fadeIn(100).append('<p>' + $('.action img[alt="' + u.action1 + '"]').parent().attr('data-first-sentence') + '</p>');
+    }
 };
 
 // Affiche un film par dessus un personnage représentant le joueur qui l'a prit
