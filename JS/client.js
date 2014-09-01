@@ -42,7 +42,7 @@ ClientController.prototype.initialize = function() {
                 }
             }
         }
-        that.view.appendTurnOf(u);
+        that.view.appendTurnOf(u, users);
     });
 
     // Si on a reçu le signal de jeu

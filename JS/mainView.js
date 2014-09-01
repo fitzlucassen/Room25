@@ -138,7 +138,7 @@ MainView.prototype.hideActions = function() {
 };
 
 // Affiche le tour de
-MainView.prototype.appendTurnOf = function(u) {
+MainView.prototype.appendTurnOf = function(u, users) {
     $('.tourDe p').html('Tour de ' + u.name);
 
     if(u.id == $('.userID').val()){
@@ -146,6 +146,8 @@ MainView.prototype.appendTurnOf = function(u) {
         $('.actions .action').fadeOut('slow');
 
         $('.action img[alt="' + u.action1 + '"]').parent().fadeIn(100).append('<p>' + $('.action img[alt="' + u.action1 + '"]').parent().attr('data-first-sentence') + '</p>');
+
+        manageTurn(u, users);
     }
 };
 
@@ -154,4 +156,194 @@ function appendCharacterTaken(users, u, element) {
     if (element.children('span').text() == users[u].character) {
         element.append('<div class="characterTaken characterTaken-' + users[u].id + '"><p>' + users[u].name + '</p></div>');
     }
+}
+
+function manageTurn(u, users){
+    // Affiche les cases possible
+    var coords = [];
+
+    if(u.action1 !== ''){
+        if(u.action1 === 'Déplacer'){
+            coords = getCoordsDeplacerRegarder(u);
+            appendSelect(coords);
+        }
+        else if(u.action1 === 'Pousser'){
+            for(var a in users){
+                if(users.hasOwnProperty(a)){
+                    if(users[a].id !== u.id)
+                        coords.push(users[a]);
+                }
+            }
+        }
+        else if(u.action1 === 'Regarder'){
+            coords = getCoordsDeplacerRegarder(u);
+            appendSelect(coords);
+        }
+        else if(u.action1 === 'Contrôller'){
+            coords = getCoordsController(u);
+            appendSelect(coords);
+        }
+    }
+    else {
+        if(u.action2 === 'Déplacer'){
+            coords = getCoordsDeplacerRegarder(u);
+            appendSelect(coords);
+        }
+        else if(u.action2 === 'Pousser'){
+            for(var a in users){
+                if(users.hasOwnProperty(a)){
+                    if(users[a].id !== u.id)
+                        coords.push(users[a]);
+                }
+            }
+        }
+        else if(u.action2 === 'Regarder'){
+            coords = getCoordsDeplacerRegarder(u);
+            appendSelect(coords);
+        }
+        else if(u.action2 === 'Contrôller'){
+            coords = getCoordsController(u);
+            appendSelect(coords);
+        }
+    }
+}
+function appendSelect(coords){
+    for(var c in coords){
+        if(coords.hasOwnProperty(c)){
+            $('.tuile[data-position="'+ coords[c].x + '-' + coords[c].y + '"').append('<div class="selectMe"></div>');
+            $('.selectMe').animate({'width': '175px', 'height':'175px'}, 500);
+        }
+    }
+}
+
+function getCoordsController(u){
+    var coords = [];
+
+    if(u.position.x !== 2 && u.position.y !== 2){
+        coords.push(
+            {
+                x: u.position.x,
+                y: 0
+            },
+            {
+                x: u.position.x,
+                y: 1
+            },
+            {
+                x: u.position.x,
+                y: 2
+            },
+            {
+                x: u.position.x,
+                y: 3
+            },
+            {
+                x: u.position.x,
+                y: 4
+            }
+        );
+        coords.push(
+            {
+                x: 0,
+                y: u.position.y
+            },
+            {
+                x: 1,
+                y: u.position.y
+            },
+            {
+                x: 2,
+                y: u.position.y
+            },
+            {
+                x: 3,
+                y: u.position.y
+            },
+            {
+                x: 4,
+                y: u.position.y
+            }
+        );
+    }
+    else if(u.position.x !== 2 && u.position.y === 2){
+        coords.push(
+            {
+                x: 0,
+                y: u.position.y
+            },
+            {
+                x: 1,
+                y: u.position.y
+            },
+            {
+                x: 2,
+                y: u.position.y
+            },
+            {
+                x: 3,
+                y: u.position.y
+            },
+            {
+                x: 4,
+                y: u.position.y
+            }
+        );
+    }
+    else if(u.position.x === 2 && u.position.y !== 2){
+        coords.push(
+            {
+                x: u.position.x,
+                y: 0
+            },
+            {
+                x: u.position.x,
+                y: 1
+            },
+            {
+                x: u.position.x,
+                y: 2
+            },
+            {
+                x: u.position.x,
+                y: 3
+            },
+            {
+                x: u.position.x,
+                y: 4
+            }
+        );
+    }
+
+    return coords;
+}
+
+function getCoordsDeplacerRegarder(u){
+    var coords = [];
+
+    if(u.position.x > 0){
+        coords.push({
+            x: u.position.x - 1,
+            y: u.position.y
+        });
+    }
+    if(u.position.x < 4){
+        coords.push({
+            x: u.position.x + 1,
+            y: u.position.y
+        });
+    }
+    if(u.position.y > 0){
+        coords.push({
+            x: u.position.x,
+            y: u.position.y - 1
+        });
+    }
+    if(u.position.y < 4){
+        coords.push({
+            x: u.position.x,
+            y: u.position.y + 1
+        });
+    }
+
+    return coords;
 }
