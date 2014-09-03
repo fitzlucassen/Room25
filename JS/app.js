@@ -76,4 +76,9 @@ $(document).ready(function() {
         
         Client.validateAction($('.userID').val(), $('.actionOk-1').children('img').attr('alt'), action2);
     });
+
+    // Au clique sur une case proposée
+    $('body').on('click', '.tuile .selectMe, .character .characterSelectMe', function(){
+        Client.emitAction($(this));
+    });
 });

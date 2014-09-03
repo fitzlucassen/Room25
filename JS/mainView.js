@@ -151,6 +151,12 @@ MainView.prototype.appendTurnOf = function(u, users) {
     }
 };
 
+MainView.prototype.nextSentence = function(object) {
+    $('.action img[alt="' + object.action + '"]').parent().children('p').html($('.action img[alt="' + object.action + '"]').parent().attr('data-second-sentence'));
+
+    manageComplexAction(object);
+}
+
 // Affiche un film par dessus un personnage représentant le joueur qui l'a prit
 function appendCharacterTaken(users, u, element) {
     if (element.children('span').text() == users[u].character) {
@@ -165,53 +171,73 @@ function manageTurn(u, users){
     if(u.action1 !== ''){
         if(u.action1 === 'Déplacer'){
             coords = getCoordsDeplacerRegarder(u);
-            appendSelect(coords);
+            appendSelect(coords, u.action1);
         }
         else if(u.action1 === 'Pousser'){
             for(var a in users){
                 if(users.hasOwnProperty(a)){
-                    if(users[a].id !== u.id)
+                    if(users[a].id !== u.id && users[a].position.x === u.position.x && users[a].position.y === u.position.y)
                         coords.push(users[a]);
                 }
             }
+            appendCharacterSelectMe(coords, u.action1);
         }
         else if(u.action1 === 'Regarder'){
             coords = getCoordsDeplacerRegarder(u);
-            appendSelect(coords);
+            appendSelect(coords, u.action1);
         }
         else if(u.action1 === 'Contrôller'){
             coords = getCoordsController(u);
-            appendSelect(coords);
+            appendSelect(coords, u.action1);
         }
     }
     else {
         if(u.action2 === 'Déplacer'){
             coords = getCoordsDeplacerRegarder(u);
-            appendSelect(coords);
+            appendSelect(coords, u.action2);
         }
         else if(u.action2 === 'Pousser'){
             for(var a in users){
                 if(users.hasOwnProperty(a)){
-                    if(users[a].id !== u.id)
+                    if(users[a].id !== u.id && users[a].position.x === u.position.x && users[a].position.y === u.position.y)
                         coords.push(users[a]);
                 }
             }
+            appendCharacterSelectMe(coords, u.action2);
         }
         else if(u.action2 === 'Regarder'){
             coords = getCoordsDeplacerRegarder(u);
-            appendSelect(coords);
+            appendSelect(coords, u.action2);
         }
         else if(u.action2 === 'Contrôller'){
             coords = getCoordsController(u);
-            appendSelect(coords);
+            appendSelect(coords, u.action2);
         }
     }
 }
-function appendSelect(coords){
+
+function manageComplexAction(object){
+    if(object.action === 'Pousser'){
+
+    }
+    else if(object.action === 'Contrôller'){
+        
+    }
+}
+
+function appendSelect(coords, action){
     for(var c in coords){
         if(coords.hasOwnProperty(c)){
-            $('.tuile[data-position="'+ coords[c].x + '-' + coords[c].y + '"').append('<div class="selectMe"></div>');
+            $('.tuile[data-position="'+ coords[c].x + '-' + coords[c].y + '"').append('<div class="selectMe" data-action="' + action + '"></div>');
             $('.selectMe').animate({'width': '175px', 'height':'175px'}, 500);
+        }
+    }
+}
+
+function appendCharacterSelectMe(coords, action){
+    for(var c in coords){
+        if(coords.hasOwnProperty(c)){
+            $('.character-' + coords[c].id).append('<div class="characterSelectMe" data-action="' + action + '"></div>');
         }
     }
 }

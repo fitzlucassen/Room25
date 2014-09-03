@@ -14,7 +14,7 @@
     "id": 3,
     "name": "Pousser",
     "image": "/Images/actions/pousser.png",
-    "phrase1": "Qui voulez-vous pousser ?",
+    "phrase1": "Qui voulez-vous pousser ? (cliquez sur un joueur de votre case)",
     "phrase2": "Où voulez-vous pousser ce joueur ?"
 }, {
     "id": 4,

@@ -82,3 +82,33 @@ ClientController.prototype.characterChoosen = function(name, id) {
 ClientController.prototype.play = function() {
     this.socket.emit('emitPlay');
 };
+
+// effectue l'action du joueur
+ClientController.prototype.emitAction = function(element){
+    var action = element.attr('data-action');
+
+    if(action === 'Déplacer' || action === 'Regarder'){
+        this.socket.emit('doAction', {
+            id: $('.userID').val(),
+            action: action,
+            coords: element.parent().attr('data-position')
+        });
+        $('.selectMe').remove();
+    }
+    else if(action === 'Contrôller') {
+        that.view.nextSentence({
+            id: $('.userID').val(),
+            action: action,
+            coords: element.parent().attr('data-position')
+        });
+    }
+    else {
+        var idTarget = element.parent().removeClass('character').attr('class').split('-')[1];
+
+        that.view.nextSentence({
+            id: $('.userID').val(),
+            action: action,
+            idTarget: idTarget
+        });
+    }
+};
