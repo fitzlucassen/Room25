@@ -81,4 +81,21 @@ $(document).ready(function() {
     $('body').on('click', '.tuile .selectMe, .character .characterSelectMe', function(){
         Client.emitAction($(this));
     });
+
+    $('body').on('click', 'span.direction', function(){
+    	var element = $(this);
+    	var action = 'Contrôller';
+    	var sens = element.removeClass('direction').attr('class');
+    	var position = element.parent().attr('data-position');
+    	element.addClass('direction');
+
+    	Client.emitComplexAction({
+    		element: element,
+    		action: action,
+    		sens: sens,
+    		position: position
+    	});
+
+    	return false;
+    });
 });

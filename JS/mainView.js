@@ -218,10 +218,17 @@ function manageTurn(u, users){
 
 function manageComplexAction(object){
     if(object.action === 'Pousser'){
-
+    	coords = getCoordsDeplacerRegarder(object.user);
+        appendSelect(coords, object.action);
     }
     else if(object.action === 'Contrôller'){
-        
+        $('.tourDe').append(
+        '<p data-position=' + object.coords + '>' +
+        	'<span class="top direction">&uarr;</span>' +
+        	'<span class="right direction">&rarr;</span>' +
+        	'<span class="bottom direction">&darr;</span>' +
+        	'<span class="left direction">&harr;</span>' +
+        '</p>');
     }
 }
 
@@ -338,6 +345,42 @@ function getCoordsController(u){
                 y: 4
             }
         );
+    }
+    else {
+    	coords.push(
+    		{
+                x: 2,
+                y: 0
+            },
+            {
+                x: 2,
+                y: 1
+            },
+            {
+                x: 2,
+                y: 3
+            },
+            {
+                x: 2,
+                y: 4
+            },
+            {
+                x: 0,
+                y: 2
+            },
+            {
+                x: 1,
+                y: 2
+            },
+            {
+                x: 3,
+                y: 2
+            },
+            {
+                x: 4,
+                y: 2
+            }
+    	);
     }
 
     return coords;

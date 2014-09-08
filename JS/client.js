@@ -52,6 +52,14 @@ ClientController.prototype.initialize = function() {
 
         that.view.redirectToGame(object);
     });
+
+    this.socket.on('doNextSentence', function(object){
+        that.view.nextSentence({
+            user: object.user,
+            action: object.action,
+            idTarget: object.idTarget
+        });
+    });
 };
 
 // Nouvel utilisateur avec un pseudo
@@ -96,19 +104,40 @@ ClientController.prototype.emitAction = function(element){
         $('.selectMe').remove();
     }
     else if(action === 'Contrôller') {
-        that.view.nextSentence({
+        this.view.nextSentence({
             id: $('.userID').val(),
             action: action,
             coords: element.parent().attr('data-position')
         });
     }
-    else {
+    else if(action === 'Pousser' && element.parent().hasClass('character')){
         var idTarget = element.parent().removeClass('character').attr('class').split('-')[1];
+        element.parent().addClass('character');
 
-        that.view.nextSentence({
+        this.socket.emit('getUserAndDoNextSentence', {
             id: $('.userID').val(),
             action: action,
             idTarget: idTarget
         });
     }
+    else {
+        this.socket.emit('doAction', {
+            id: $('.userID').val(),
+            action: action,
+            coords: element.parent().attr('data-position'),
+            character: $('.characterSelectMe').parent().removeClass('character').attr('class').split('-')[1]
+        });
+        $('.characterSelectMe').parent().addClass('character');
+        $('.selectMe').remove();
+    }
+};
+
+// effectue l'action du joueur
+ClientController.prototype.emitComplexAction = function(object){
+    this.socket.emit('doAction', {
+        id: $('.userID').val(),
+        action: object.action,
+        sens: object.sens,
+        coords: object.position
+    });
 };

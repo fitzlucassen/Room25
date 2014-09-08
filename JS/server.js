@@ -100,6 +100,16 @@ io.sockets.on('connection', function(socket) {
         }
     });
 
+    socket.on('getUserAndDoNextSentence', function(object) {
+        var u = findInArray(users, object.id);
+
+        socket.emit('doNextSentence', {
+            user: users[u],
+            action: object.action,
+            idTarget: object.idTarget
+        });
+    });
+
     // Quand un utilisateur se deconnecte
     socket.on('disconnect', function(reason) {
         if (!me) {
