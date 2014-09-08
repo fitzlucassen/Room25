@@ -346,7 +346,7 @@ function getCoordsController(u){
             }
         );
     }
-    else {
+/*    else {
     	coords.push(
     		{
                 x: 2,
@@ -381,7 +381,7 @@ function getCoordsController(u){
                 y: 2
             }
     	);
-    }
+    }*/
 
     return coords;
 }
