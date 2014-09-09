@@ -42,7 +42,7 @@ ClientController.prototype.initialize = function() {
                 }
             }
         }
-        that.view.appendTurnOf(u, users);
+        that.view.appendTurnOf(u, users, 1);
     });
 
     // Si on a reçu le signal de jeu
@@ -53,12 +53,42 @@ ClientController.prototype.initialize = function() {
         that.view.redirectToGame(object);
     });
 
+    // On affiche la deuxieme partie de l'action
     this.socket.on('doNextSentence', function(object){
         that.view.nextSentence({
             user: object.user,
             action: object.action,
             idTarget: object.idTarget
         });
+    });
+
+    // On effectue un déplacement
+    this.socket.on('playerDeplacer', function(object){
+        that.view.deplacer(object.user);
+    });
+    // On effectue l'action pousser
+    this.socket.on('playerPousser', function(object){
+        that.view.pousser(object.user);
+    });
+    // On regarde
+    this.socket.on('playerRegarder', function(object){
+        that.view.regarder(object.user, object.coords);
+    });
+
+    // On passe au joueur suivant
+    this.socket.on('nextPlayer', function(object){
+        that.view.hideActions();
+
+        that.view.appendTurnOf(object.user, object.users, 1);
+    });
+    this.socket.on('nextPlayer2', function(object){
+        that.view.hideActions();
+
+        that.view.appendTurnOf(object.user, object.users, 2);
+    });
+    // On passe au tour suivant
+    this.socket.on('nextTurn', function(object){
+        that.view.nextTurn(object);
     });
 };
 

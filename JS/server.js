@@ -100,6 +100,7 @@ io.sockets.on('connection', function(socket) {
         }
     });
 
+    // Retourne le user grâce à l'id fourni puis emet l'event nextsentence
     socket.on('getUserAndDoNextSentence', function(object) {
         var u = findInArray(users, object.id);
 
@@ -108,6 +109,125 @@ io.sockets.on('connection', function(socket) {
             action: object.action,
             idTarget: object.idTarget
         });
+    });
+
+    // Une action doit être effectué
+    socket.on('doAction', function(object){
+        var u = users[findInArray(users, object.id)];
+        u.action1 = '';
+
+        console.log(u.id + ' --> ' + u.name + ' effectue l\'action ' + object.action);
+
+        // Si c'est l'action déplacer
+        if(object.action === 'Déplacer'){
+            u.position.x = object.coords.split('-')[0];
+            u.position.y = object.coords.split('-')[1];
+
+            io.sockets.emit('playerDeplacer', {
+                user: u,
+            });
+        }
+
+        // Si c'est l'action pousser
+        else if(object.action === 'Pousser'){
+            var uTarget = users[findInArray(users, object.idTarget)];
+            uTarget.position.x = object.coords.split('-')[0];
+            uTarget.position.y = object.coords.split('-')[1];
+
+            users[findInArray(users, object.idTarget)] = uTarget;
+
+            io.sockets.emit('playerPousser', {
+                user: u,
+            });
+        }
+
+        // Si c'est l'action regarder
+        else if(object.action === 'Regarder'){
+            io.sockets.emit('playerRegarder', {
+                user: u,
+                coords: object.coords
+            });
+        }
+
+        // On update le user
+        users[findInArray(users, object.id)] = u;
+
+        // Si c'est la deuxième action, on remet tout le monde à zéro pour le prochain tour
+        if(u.action2 === object.action){
+            u.action2 = '';
+
+            u.ready = false;
+
+            // On update le user
+            users[findInArray(users, object.id)] = u;
+
+            if(everyoneIsNOk(users)){
+                io.sockets.emit('nextTurn', {
+                    users: users
+                });
+            }
+        }
+
+        
+        // On récupère le prochain joueur
+        var nextOne = getByOrder(users, (u.order * 1) + 1);
+        // Si on est à la fin de l'array on repasse à l'index 0
+        if(!nextOne)
+            nextOne = getByOrder(users, 0);
+
+        // Si il y a une action1 on emet l'event
+        if(nextOne.action1 != ''){
+            console.log('Tour de ' + nextOne.id + ' --> ' + nextOne.name);
+
+            io.sockets.emit('nextPlayer', {
+                user: nextOne,
+                users: users
+            });
+        }
+        // Sinon c'est qu'on passe à la deuxieme action
+        else {
+            // Si tout le monde a joué ses deux actions on repasse à la prévision
+            if(everyoneIsNOk(users)){
+                io.sockets.emit('nextTurn', {
+                    users: users
+                });
+            }
+            // Sinon on récupère le prochain joueur
+            else {
+                var o = nextOne.order;
+                while(nextOne && nextOne.action2 === '' || nextOne.action2 === null){
+                    nextOne = getByOrder(users, ((o * 1) + 1));
+                    o++;
+                }
+
+                // Si on a trouvé un joeur avec une deuxieme action
+                if(nextOne){
+                    console.log('Tour de ' + nextOne.id + ' --> ' + nextOne.name);
+
+                    // Et on le fait jouer
+                    if(nextOne.action2 != '' && nextOne.action2 != null){
+                        io.sockets.emit('nextPlayer2', {
+                            user: nextOne,
+                            users: users
+                        });
+                    }
+                }
+                // Sinon c'est la fin du tour
+                else {
+                    console.log('Fin du tour');
+                    for(var b in users){
+                        if(users.hasOwnProperty(b)){
+                            users[b].ready = false;
+                            users[b].action1 = '';
+                            users[b].action2 = '';
+                        }
+                    }
+                    io.sockets.emit('nextTurn', {
+                        users: users
+                    });
+                }
+            }
+        }
     });
 
     // Quand un utilisateur se deconnecte
@@ -138,6 +258,20 @@ exports.use = function() {
     app.use.apply(app, arguments);
 };
 
+function getByOrder(users, order){
+    var u = null;
+
+    for (var a in users) {
+        if (users.hasOwnProperty(a)) {
+            if (users[a].order == order){
+                u = users[a];
+                break;
+            }
+        }
+    }
+    return u;
+}
+
 function everyoneIsOk(array) {
     var ready = true;
     for (var a in array) {
@@ -149,6 +283,19 @@ function everyoneIsOk(array) {
         }
     }
     return ready;
+}
+
+function everyoneIsNOk(array) {
+    var notReady = true;
+    for (var a in array) {
+        if (array.hasOwnProperty(a)) {
+            if (array[a].ready) {
+                notReady = false;
+                break;
+            }
+        }
+    }
+    return notReady;
 }
 
 function moreThanFourPlayers(array) {

@@ -62,6 +62,19 @@ MainView.prototype.redirectToGame = function(object) {
     }, 500);
 };
 
+// Action contrôller
+MainView.prototype.nextTurn = function(object) {
+	$('.actions .action').fadeIn('slow');
+	$('.actions .action').children('p').remove();
+
+	$('.actions .action').each(function(){
+		$(this).removeClass('ok').removeClass('actionOk-1').removeClass('actionOk-2');
+		$(this).css({
+			'margin-top': '5px'
+		});
+	});
+};
+
 // On montre tous les joueurs sur la case départ
 MainView.prototype.showPlayers = function(object) {
     var that = this;
@@ -83,7 +96,6 @@ MainView.prototype.showPlayers = function(object) {
             cpt++;
         }
     }
-
 };
 
 // On affiche pour chaque joueur son identitée
@@ -138,24 +150,88 @@ MainView.prototype.hideActions = function() {
 };
 
 // Affiche le tour de
-MainView.prototype.appendTurnOf = function(u, users) {
+MainView.prototype.appendTurnOf = function(u, users, actionNumber) {
     $('.tourDe p').html('Tour de ' + u.name);
 
     if(u.id == $('.userID').val()){
         $('.loading').remove();
         $('.actions .action').fadeOut('slow');
 
-        $('.action img[alt="' + u.action1 + '"]').parent().fadeIn(100).append('<p>' + $('.action img[alt="' + u.action1 + '"]').parent().attr('data-first-sentence') + '</p>');
+        if(actionNumber == 1)
+        	$('.action img[alt="' + u.action1 + '"]').parent().fadeIn(100).append('<p>' + $('.action img[alt="' + u.action1 + '"]').parent().attr('data-first-sentence') + '</p>');
+        else
+        	$('.action img[alt="' + u.action2 + '"]').parent().fadeIn(100).append('<p>' + $('.action img[alt="' + u.action2 + '"]').parent().attr('data-first-sentence') + '</p>');
 
         manageTurn(u, users);
     }
 };
 
+ // Affiche la seconde phrase d'une  action complexe
 MainView.prototype.nextSentence = function(object) {
     $('.action img[alt="' + object.action + '"]').parent().children('p').html($('.action img[alt="' + object.action + '"]').parent().attr('data-second-sentence'));
 
     manageComplexAction(object);
-}
+};
+
+// action se déplacer
+MainView.prototype.deplacer = function(user) {
+	var that = this;
+	$('.character-' + user.id).animate({
+		top: (that.caseHeight * user.position.y) + 'px',
+		left: (that.caseWidth * user.position.x) + 'px'
+	}, 500);
+
+	var imgs = $('.tuile[data-position="' + user.position.x + '-' + user.position.y + '"]').children('img');
+	imgs.first().removeClass('ng-hide');
+	imgs.first().fadeIn('slow');
+	imgs.last().fadeOut('slow');
+};
+
+// Action pousser
+MainView.prototype.pousser = function(user) {
+	var that = this;
+	$('.character-' + user.id).animate({
+		top: (that.caseHeight * user.position.y) + 'px',
+		left: (that.caseWidth * user.position.x) + 'px'
+	}, 500);
+
+	var imgs = $('.tuile[data-position="' + user.position.x + '-' + user.position.y + '"]').children('img');
+	imgs.first().removeClass('ng-hide');
+	imgs.first().fadeIn('slow');
+	imgs.last().fadeOut('slow');
+};
+
+// Action regarder
+MainView.prototype.regarder = function(user, coords) {
+	var that = this;
+	var position = {
+		x: coords.split('-')[0],
+		y: coords.split('-')[1]
+	};
+
+	if(user.id == $('.userID').val()){
+		var imgs = $('.tuile[data-position="' + position.x + '-' + position.y + '"]').children('img');
+		imgs.first().removeClass('ng-hide');
+		imgs.first().fadeIn('slow');
+		imgs.last().fadeOut('slow');
+
+		setTimeout(function(){
+			imgs.first().addClass('ng-hide');
+			imgs.first().fadeOut('slow');
+			imgs.last().fadeIn('slow');
+		}, 3000);
+	}
+};
+
+// Action contrôller
+MainView.prototype.controller = function(user, coords, sens) {
+};
+
+
+/*************
+ * FUNCTIONS *
+ *************/
+
 
 // Affiche un film par dessus un personnage représentant le joueur qui l'a prit
 function appendCharacterTaken(users, u, element) {
@@ -164,6 +240,7 @@ function appendCharacterTaken(users, u, element) {
     }
 }
 
+// Gère le tour d'une personne
 function manageTurn(u, users){
     // Affiche les cases possible
     var coords = [];
@@ -216,6 +293,7 @@ function manageTurn(u, users){
     }
 }
 
+// gère une action complète
 function manageComplexAction(object){
     if(object.action === 'Pousser'){
     	coords = getCoordsDeplacerRegarder(object.user);
@@ -252,7 +330,7 @@ function appendCharacterSelectMe(coords, action){
 function getCoordsController(u){
     var coords = [];
 
-    if(u.position.x !== 2 && u.position.y !== 2){
+    if(u.position.x != 2 && u.position.y != 2){
         coords.push(
             {
                 x: u.position.x,
@@ -298,7 +376,7 @@ function getCoordsController(u){
             }
         );
     }
-    else if(u.position.x !== 2 && u.position.y === 2){
+    else if(u.position.x != 2 && u.position.y == 2){
         coords.push(
             {
                 x: 0,
@@ -322,7 +400,7 @@ function getCoordsController(u){
             }
         );
     }
-    else if(u.position.x === 2 && u.position.y !== 2){
+    else if(u.position.x == 2 && u.position.y != 2){
         coords.push(
             {
                 x: u.position.x,
@@ -389,28 +467,28 @@ function getCoordsController(u){
 function getCoordsDeplacerRegarder(u){
     var coords = [];
 
-    if(u.position.x > 0){
+    if((u.position.x * 1) > 0){
         coords.push({
-            x: u.position.x - 1,
-            y: u.position.y
+            x: (u.position.x * 1) - 1,
+            y: (u.position.y * 1)
         });
     }
-    if(u.position.x < 4){
+    if((u.position.x * 1) < 4){
         coords.push({
-            x: u.position.x + 1,
-            y: u.position.y
+            x: (u.position.x * 1) + 1,
+            y: (u.position.y * 1)
         });
     }
-    if(u.position.y > 0){
+    if((u.position.y * 1) > 0){
         coords.push({
-            x: u.position.x,
-            y: u.position.y - 1
+            x: (u.position.x * 1),
+            y: (u.position.y * 1) - 1
         });
     }
-    if(u.position.y < 4){
+    if((u.position.y * 1) < 4){
         coords.push({
-            x: u.position.x,
-            y: u.position.y + 1
+            x: (u.position.x * 1),
+            y: (u.position.y * 1) + 1
         });
     }
 
