@@ -137,7 +137,7 @@ io.sockets.on('connection', function(socket) {
             users[findInArray(users, object.idTarget)] = uTarget;
 
             io.sockets.emit('playerPousser', {
-                user: u,
+                user: uTarget,
             });
         }
 
@@ -169,6 +169,80 @@ io.sockets.on('connection', function(socket) {
         }
 
         
+        // On récupère le prochain joueur
+        var nextOne = getByOrder(users, (u.order * 1) + 1);
+        // Si on est à la fin de l'array on repasse à l'index 0
+        if(!nextOne)
+            nextOne = getByOrder(users, 0);
+
+        // Si il y a une action1 on emet l'event
+        if(nextOne.action1 != ''){
+            console.log('Tour de ' + nextOne.id + ' --> ' + nextOne.name);
+
+            io.sockets.emit('nextPlayer', {
+                user: nextOne,
+                users: users
+            });
+        }
+        // Sinon c'est qu'on passe à la deuxieme action
+        else {
+            // Si tout le monde a joué ses deux actions on repasse à la prévision
+            if(everyoneIsNOk(users)){
+                io.sockets.emit('nextTurn', {
+                    users: users
+                });
+            }
+            // Sinon on récupère le prochain joueur
+            else {
+                var o = (nextOne.order * 1);
+                while(nextOne && (nextOne.action2 === '' || nextOne.action2 === null)){
+                    nextOne = getByOrder(users, ((o * 1) + 1));
+                    o++;
+                }
+
+                // Si on a trouvé un joeur avec une deuxieme action
+                if(nextOne){
+                    console.log('Tour de ' + nextOne.id + ' --> ' + nextOne.name);
+
+                    // Et on le fait jouer
+                    if(nextOne.action2 != '' && nextOne.action2 != null){
+                        io.sockets.emit('nextPlayer2', {
+                            user: nextOne,
+                            users: users
+                        });
+                    }
+                }
+                // Sinon c'est la fin du tour
+                else {
+                    console.log('Fin du tour');
+                    for(var b in users){
+                        if(users.hasOwnProperty(b)){
+                            users[b].ready = false;
+                            users[b].action1 = '';
+                            users[b].action2 = '';
+                        }
+                    }
+                    io.sockets.emit('nextTurn', {
+                        users: users
+                    });
+                }
+            }
+        }
+    });
+
+    socket.on('noPossibilities', function(object){
+        var u = object.user;
+
+        console.log(u.id + ' --> ' + u.name + ' effectue l\'action' + (u.action1 === '' ? u.action2 : u.action1) + ' sans possibilité...');
+
+        if(u.action1 === ''){
+            u.action2 = '';
+            u.ready = false;
+        }
+        u.action1 = '';
+        // On update le user
+        users[findInArray(users, u.id)] = u;
+
         // On récupère le prochain joueur
         var nextOne = getByOrder(users, (u.order * 1) + 1);
         // Si on est à la fin de l'array on repasse à l'index 0

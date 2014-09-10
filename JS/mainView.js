@@ -5,7 +5,7 @@ function MainView() {
 
 // On garde le UserID courant caché dans le DOM
 MainView.prototype.appendUserID = function(user) {
-    $('.userID').val(user.id + '');
+    $('.userID').attr('value', user.id);
 };
 
 // On ajoute un user sur un personnage
@@ -61,7 +61,7 @@ MainView.prototype.redirectToGame = function(object) {
 
     var that = this;
     setTimeout(function() {
-        $('.userID').val(userId);
+        $('.userID').attr('value', userId);
         that.showPlayers(object);
         that.showIdentity(object.users, userId);
         $('.coordsReady').val(1);
@@ -218,15 +218,18 @@ MainView.prototype.regarder = function(user, coords) {
 
 	if(user.id == $('.userID').val()){
 		var imgs = $('.tuile[data-position="' + position.x + '-' + position.y + '"]').children('img');
-		imgs.first().removeClass('ng-hide');
-		imgs.first().fadeIn('slow');
-		imgs.last().fadeOut('slow');
 
-		setTimeout(function(){
-			imgs.first().addClass('ng-hide');
-			imgs.first().fadeOut('slow');
-			imgs.last().fadeIn('slow');
-		}, 3000);
+		if(imgs.first().hasClass('ng-hide')){
+			imgs.first().removeClass('ng-hide');
+			imgs.first().fadeIn('slow');
+			imgs.last().fadeOut('slow');
+
+			setTimeout(function(){
+				imgs.first().addClass('ng-hide');
+				imgs.first().fadeOut('slow');
+				imgs.last().fadeIn('slow');
+			}, 3000);
+		}
 	}
 };
 
@@ -279,10 +282,10 @@ function manageTurn(u, users){
             appendSelect(coords, u.action2);
         }
         else if(u.action2 === 'Pousser'){
-            for(var a in users){
-                if(users.hasOwnProperty(a)){
-                    if(users[a].id !== u.id && users[a].position.x === u.position.x && users[a].position.y === u.position.y)
-                        coords.push(users[a]);
+            for(var b in users){
+                if(users.hasOwnProperty(b)){
+                    if(users[b].id !== u.id && users[b].position.x === u.position.x && users[b].position.y === u.position.y)
+                        coords.push(users[b]);
                 }
             }
             appendCharacterSelectMe(coords, u.action2);

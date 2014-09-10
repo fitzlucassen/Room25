@@ -43,8 +43,8 @@ ClientController.prototype.initialize = function() {
             }
         }
         that.view.appendTurnOf(u, users, 1);
-        if($('.selectMe').length == 0){
-            that.emit('noPossibilities', object);
+        if($('.selectMe').length === 0 && $('.characterSelectMe').length === 0 && u.id == $('.userID').val()){
+            that.socket.emit('noPossibilities', {user: u});
         }
     });
 
@@ -83,16 +83,16 @@ ClientController.prototype.initialize = function() {
         that.view.hideActions();
 
         that.view.appendTurnOf(object.user, object.users, 1);
-        if($('.selectMe').length == 0){
-            that.emit('noPossibilities', object);
+        if($('.selectMe').length === 0 && $('.characterSelectMe').length === 0 && object.user.id == $('.userID').val()){
+            that.socket.emit('noPossibilities', object);
         }
     });
     this.socket.on('nextPlayer2', function(object){
         that.view.hideActions();
 
         that.view.appendTurnOf(object.user, object.users, 2);
-        if($('.selectMe').length == 0){
-            that.emit('noPossibilities', object);
+        if($('.selectMe').length === 0 && $('.characterSelectMe').length === 0 && object.user.id == $('.userID').val()){
+            that.socket.emit('noPossibilities', object);
         }
     });
     // On passe au tour suivant
@@ -164,10 +164,11 @@ ClientController.prototype.emitAction = function(element){
             id: $('.userID').val(),
             action: action,
             coords: element.parent().attr('data-position'),
-            character: $('.characterSelectMe').parent().removeClass('character').attr('class').split('-')[1]
+            idTarget: $('.characterSelectMe').parent().removeClass('character').attr('class').split('-')[1]
         });
         $('.characterSelectMe').parent().addClass('character');
         $('.selectMe').remove();
+        $('.characterSelectMe').remove();
     }
 };
 
