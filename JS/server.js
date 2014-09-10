@@ -194,8 +194,8 @@ io.sockets.on('connection', function(socket) {
             }
             // Sinon on récupère le prochain joueur
             else {
-                var o = nextOne.order;
-                while(nextOne && nextOne.action2 === '' || nextOne.action2 === null){
+                var o = (nextOne.order * 1);
+                while(nextOne && (nextOne.action2 === '' || nextOne.action2 === null)){
                     nextOne = getByOrder(users, ((o * 1) + 1));
                     o++;
                 }

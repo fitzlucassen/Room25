@@ -43,6 +43,9 @@ ClientController.prototype.initialize = function() {
             }
         }
         that.view.appendTurnOf(u, users, 1);
+        if($('.selectMe').length == 0){
+            that.emit('noPossibilities', object);
+        }
     });
 
     // Si on a reçu le signal de jeu
@@ -80,11 +83,17 @@ ClientController.prototype.initialize = function() {
         that.view.hideActions();
 
         that.view.appendTurnOf(object.user, object.users, 1);
+        if($('.selectMe').length == 0){
+            that.emit('noPossibilities', object);
+        }
     });
     this.socket.on('nextPlayer2', function(object){
         that.view.hideActions();
 
         that.view.appendTurnOf(object.user, object.users, 2);
+        if($('.selectMe').length == 0){
+            that.emit('noPossibilities', object);
+        }
     });
     // On passe au tour suivant
     this.socket.on('nextTurn', function(object){

@@ -27,7 +27,14 @@ MainView.prototype.refreshUsers = function(users) {
     for (var u in users) {
         if (users.hasOwnProperty(u)) {
             if (users[u].character !== '') {
-                $('ul.personnage li').each(appendCharacterTaken, users, u, $(this));
+                $('ul.personnage li').each(function(){
+                	var element = $(this);
+
+				    if (element.children('span').text() == users[u].character) {
+				    	if($('.characterTaken-' + users[u].id).length === 0)
+				        	element.append('<div class="characterTaken characterTaken-' + users[u].id + '"><p>' + users[u].name + '</p></div>');
+				    }
+                });
             }
         }
     }
@@ -234,10 +241,8 @@ MainView.prototype.controller = function(user, coords, sens) {
 
 
 // Affiche un film par dessus un personnage représentant le joueur qui l'a prit
-function appendCharacterTaken(users, u, element) {
-    if (element.children('span').text() == users[u].character) {
-        element.append('<div class="characterTaken characterTaken-' + users[u].id + '"><p>' + users[u].name + '</p></div>');
-    }
+function appendCharacterTaken(u, users) {
+	
 }
 
 // Gère le tour d'une personne
