@@ -69,7 +69,7 @@ MainView.prototype.redirectToGame = function(object) {
     }, 500);
 };
 
-// Action contrôller
+// Tour d'après
 MainView.prototype.nextTurn = function(object) {
 	$('.actions .action').fadeIn('slow');
 	$('.actions .action').children('p').remove();
@@ -186,7 +186,11 @@ MainView.prototype.deplacer = function(user) {
 	$('.character-' + user.id).animate({
 		top: (that.caseHeight * user.position.y) + 'px',
 		left: (that.caseWidth * user.position.x) + 'px'
-	}, 500);
+	}, 500, function(){
+        while(that.someoneHere(user)){
+            that.moveUser(user);
+        }
+    });
 
 	var imgs = $('.tuile[data-position="' + user.position.x + '-' + user.position.y + '"]').children('img');
 	imgs.first().removeClass('ng-hide');
@@ -234,7 +238,79 @@ MainView.prototype.regarder = function(user, coords) {
 };
 
 // Action contrôller
-MainView.prototype.controller = function(user, coords, sens) {
+MainView.prototype.controller = function(users, coords, sens) {
+    var that = this;
+
+    if(sens == 'left' || sens == 'right'){
+        $('.tuile').each(function(){
+            var x = $(this).attr('data-position').split('-')[0];
+            var y = $(this).attr('data-position').split('-')[1];
+
+            if(y == coords.split('-')[1]){
+
+                if(x == 0 && sens == 'left')
+                    x = 4;
+                else if(x == 4 && sens == 'right')
+                    x = 0;
+                else if(sens == 'left')
+                    x = (x * 1) - 1;
+                else
+                    x = (x * 1) + 1;
+
+                $(this).attr('data-position', x + '-' + y);
+                $(this).addClass('moved');
+            }
+        });
+    }
+    else if(sens == 'top' || sens == 'bottom'){
+        $('.tuile').each(function(){
+            var x = $(this).attr('data-position').split('-')[0];
+            var y = $(this).attr('data-position').split('-')[1];
+
+            if(x == coords.split('-')[0]){
+
+                if(y == 0 && sens == 'top')
+                    y = 4;
+                else if(y == 4 && sens == 'bottom')
+                    y = 0;
+                else if(sens == 'top')
+                    y = (y * 1) - 1;
+                else
+                    y = (y * 1) + 1;
+
+                $(this).attr('data-position', x + '-' + y);
+                $(this).addClass('moved');
+            }
+        });
+    }
+    $('.moved').each(function(){
+        $(this).animate({
+            'top': (($(this).attr('data-position').split('-')[1] * 1) * that.caseHeight) + 'px',
+            'left': (($(this).attr('data-position').split('-')[0] * 1) * that.caseWidth) + 'px'
+        }, 500);
+    });
+
+    for(var u in users){
+        if(users.hasOwnProperty(u)){
+            $('.character-' + users[u].id).animate({
+                'top': (users[u].position.y * 1) * that.caseHeight,
+                'left': (users[u].position.x * 1) * that.caseWidth
+            }, 500);
+        }
+    }
+    setTimeout(function(){
+        for(var u in users){
+            if(users.hasOwnProperty(u)){
+                while(that.someoneHere(users[u])){
+                    that.moveUser(users[u]);
+                }
+            }
+        }
+    }, 500);
+
+    setTimeout(function(){
+        $('.moved').removeClass('moved');
+    }, 200);
 };
 
 
@@ -242,11 +318,22 @@ MainView.prototype.controller = function(user, coords, sens) {
  * FUNCTIONS *
  *************/
 
+MainView.prototype.someoneHere = function(user){
+    var that =  this;
+    var anybody = false;
+    var $user = $('.character-' + user.id);
 
-// Affiche un film par dessus un personnage représentant le joueur qui l'a prit
-function appendCharacterTaken(u, users) {
-	
-}
+    $('.character').each(function(){
+        if($(this).css('top') == $user.css('top') && $(this).css('left') == $user.css('left') && !$(this).hasClass('character-' + user.id)){
+            anybody = true;
+        }
+    });
+    return anybody;
+};
+
+MainView.prototype.moveUser = function(user){
+    $('.character-' + user.id).css('left', (($('.character-' + user.id).css('left').substr(0, $('.character-' + user.id).css('left').length - 2) * 1) + 50) + 'px');
+};
 
 // Gère le tour d'une personne
 function manageTurn(u, users){
@@ -308,13 +395,20 @@ function manageComplexAction(object){
         appendSelect(coords, object.action);
     }
     else if(object.action === 'Contrôller'){
-        $('.tourDe').append(
-        '<p data-position=' + object.coords + '>' +
-        	'<span class="top direction">&uarr;</span>' +
-        	'<span class="right direction">&rarr;</span>' +
-        	'<span class="bottom direction">&darr;</span>' +
-        	'<span class="left direction">&harr;</span>' +
-        '</p>');
+        if(object.coords.split('-')[0] * 1 > object.user.position.x || object.coords.split('-')[0] * 1 < object.user.position.x){
+            $('.tourDe').append(
+                '<p class="sensArrows" data-position=' + object.coords + '>' +
+                    '<span class="right direction">&rarr;</span>' +
+                    '<span class="left direction">&larr;</span>' +
+                '</p>');
+        }
+        else {
+            $('.tourDe').append(
+                '<p class="sensArrows" data-position=' + object.coords + '>' +
+                    '<span class="top direction">&uarr;</span>' +
+                    '<span class="bottom direction">&darr;</span>' +
+                '</p>');
+        }
     }
 }
 
@@ -387,30 +481,6 @@ function getCoordsController(u){
     else if(u.position.x != 2 && u.position.y == 2){
         coords.push(
             {
-                x: 0,
-                y: u.position.y
-            },
-            {
-                x: 1,
-                y: u.position.y
-            },
-            {
-                x: 2,
-                y: u.position.y
-            },
-            {
-                x: 3,
-                y: u.position.y
-            },
-            {
-                x: 4,
-                y: u.position.y
-            }
-        );
-    }
-    else if(u.position.x == 2 && u.position.y != 2){
-        coords.push(
-            {
                 x: u.position.x,
                 y: 0
             },
@@ -432,7 +502,31 @@ function getCoordsController(u){
             }
         );
     }
-/*    else {
+    else if(u.position.x == 2 && u.position.y != 2){
+        coords.push(
+            {
+                x: 0,
+                y: u.position.y
+            },
+            {
+                x: 1,
+                y: u.position.y
+            },
+            {
+                x: 2,
+                y: u.position.y
+            },
+            {
+                x: 3,
+                y: u.position.y
+            },
+            {
+                x: 4,
+                y: u.position.y
+            }
+        );
+    }
+    else {
     	coords.push(
     		{
                 x: 2,
@@ -467,7 +561,7 @@ function getCoordsController(u){
                 y: 2
             }
     	);
-    }*/
+    }
 
     return coords;
 }

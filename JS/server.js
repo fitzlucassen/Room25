@@ -111,6 +111,17 @@ io.sockets.on('connection', function(socket) {
         });
     });
 
+    // Retourne le user grâce à l'id fourni puis emet l'event nextsentence
+    socket.on('getUserAndDoNextSentenceController', function(object) {
+        var u = findInArray(users, object.id);
+
+        socket.emit('doNextSentenceController', {
+            user: users[u],
+            action: object.action,
+            coords: object.coords
+        });
+    });
+
     // Une action doit être effectué
     socket.on('doAction', function(object){
         var u = users[findInArray(users, object.id)];
@@ -146,6 +157,25 @@ io.sockets.on('connection', function(socket) {
             io.sockets.emit('playerRegarder', {
                 user: u,
                 coords: object.coords
+            });
+        }
+        else if(object.action === 'Contrôller'){
+            var us = getUsersInTheSameRow(users, object.coords, object.sens);
+
+            for(var b in us){
+                if(us.hasOwnProperty(b)){
+                    console.log(users[us[b]].name + ' --> avant : ' + users[us[b]].position.x + '-' + users[us[b]].position.y);
+
+                    users[us[b]] = getNewUserPositionAfterController(users[us[b]], object.sens);
+
+                    console.log(users[us[b]].name + ' --> après : ' + users[us[b]].position.x + '-' + users[us[b]].position.y);
+                }
+            }
+
+            io.sockets.emit('playerController', {
+                users: users,
+                coords: object.coords,
+                sens: object.sens
             });
         }
 
@@ -331,6 +361,56 @@ exports = module.exports = server;
 exports.use = function() {
     app.use.apply(app, arguments);
 };
+
+function getNewUserPositionAfterController(u, sens){
+    if(sens == 'top'){
+        if(u.position.y > 0)
+            u.position.y = (u.position.y * 1) - 1;
+        else
+            u.position.y = 4;
+    }
+    else if(sens == 'bottom'){
+        if(u.position.y < 4)
+            u.position.y = (u.position.y * 1) + 1;
+        else
+            u.position.y = 0;
+    }
+    else if(sens == 'left'){
+        if(u.position.x > 0)
+            u.position.x = (u.position.x * 1) - 1;
+        else
+            u.position.x = 4;
+    }
+    else if(sens == 'right'){
+        if(u.position.x < 4)
+            u.position.x = (u.position.x * 1) + 1;
+        else
+            u.position.x = 0;
+    }
+
+    return u;
+}
+
+function getUsersInTheSameRow(users, coords, sens){
+    var r = [];
+    if(sens == 'top' || sens == 'bottom'){
+        for(var u in users){
+            if(users.hasOwnProperty(u)){
+                if(users[u].position.x == coords.split('-')[0])
+                    r.push(u);
+            }
+        }
+    }
+    else if(sens == 'left' || sens == 'right'){
+        for(var u in users){
+            if(users.hasOwnProperty(u)){
+                if(users[u].position.y == coords.split('-')[1])
+                    r.push(u);
+            }
+        }
+    }
+    return r;
+}
 
 function getByOrder(users, order){
     var u = null;

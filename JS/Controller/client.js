@@ -65,6 +65,15 @@ ClientController.prototype.initialize = function() {
         });
     });
 
+    // On affiche la deuxieme partie de l'action
+    this.socket.on('doNextSentenceController', function(object){
+        that.view.nextSentence({
+            user: object.user,
+            action: object.action,
+            coords: object.coords
+        });
+    });
+
     // On effectue un déplacement
     this.socket.on('playerDeplacer', function(object){
         that.view.deplacer(object.user);
@@ -77,6 +86,10 @@ ClientController.prototype.initialize = function() {
     this.socket.on('playerRegarder', function(object){
         that.view.regarder(object.user, object.coords);
     });
+    // On controlle
+    this.socket.on('playerController', function(object){
+        that.view.controller(object.users, object.coords, object.sens);
+    });
 
     // On passe au joueur suivant
     this.socket.on('nextPlayer', function(object){
@@ -87,6 +100,7 @@ ClientController.prototype.initialize = function() {
             that.socket.emit('noPossibilities', object);
         }
     });
+    // On passe au joueur suivant pour l'action 2
     this.socket.on('nextPlayer2', function(object){
         that.view.hideActions();
 
@@ -143,7 +157,7 @@ ClientController.prototype.emitAction = function(element){
         $('.selectMe').remove();
     }
     else if(action === 'Contrôller') {
-        this.view.nextSentence({
+        this.socket.emit('getUserAndDoNextSentenceController', {
             id: $('.userID').val(),
             action: action,
             coords: element.parent().attr('data-position')
@@ -180,4 +194,7 @@ ClientController.prototype.emitComplexAction = function(object){
         sens: object.sens,
         coords: object.position
     });
+
+    $('.selectMe').remove();
+    $('.sensArrows').remove();
 };

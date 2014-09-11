@@ -82,6 +82,7 @@ $(document).ready(function() {
         Client.emitAction($(this));
     });
 
+    // Au clique sur une direction
     $('body').on('click', 'span.direction', function(){
     	var element = $(this);
     	var action = 'Contrôller';

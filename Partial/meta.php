@@ -44,14 +44,14 @@
 
 <script type="text/javascript" src="http://localhost:1337/socket.io/socket.io.js"></script>
 <script type="text/javascript" src="JS/base64Manager.js"></script>
-<script type="text/javascript" src="JS/client.js"></script>
-<script type="text/javascript" src="JS/mainView.js"></script>
-<script type="text/javascript" src="JS/errorView.js"></script>
+<script type="text/javascript" src="JS/Controller/client.js"></script>
+<script type="text/javascript" src="JS/Controller/mainView.js"></script>
+<script type="text/javascript" src="JS/Controller/errorView.js"></script>
 <script type="text/javascript" src="JS/app.js"></script>
 
-<script type="text/javascript" src="JS/mainController.js"></script>
-<script type="text/javascript" src="JS/characterController.js"></script>
-<script type="text/javascript" src="JS/gameController.js"></script>
+<script type="text/javascript" src="JS/ngController/mainController.js"></script>
+<script type="text/javascript" src="JS/ngController/characterController.js"></script>
+<script type="text/javascript" src="JS/ngController/gameController.js"></script>
 
 <!--[if lt IE 9]>
 	<script src="JS/Base/html5shiv.js"></script>

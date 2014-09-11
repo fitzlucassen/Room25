@@ -8,7 +8,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-connect-socket.io');
     grunt.loadNpmTasks('grunt-express');
 
-    var jsSrc = ['JS/*.js'];
+    var jsSrc = ['JS/**/*.js'];
     var jsDist = 'JS/_built.js';
 
     var cssSrc = ['CSS/*.css'];
