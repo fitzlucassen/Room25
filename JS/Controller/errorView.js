@@ -1,4 +1,5 @@
-function ErrorView() {
+function ErrorView(helper) {
+	this.Helper = helper;
     this.divError = $('#error-view');
 }
 

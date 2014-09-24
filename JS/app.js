@@ -2,9 +2,10 @@ var LastCoords = [];
 var OtherCoords = [];
 
 $(document).ready(function() {
-    var View = new MainView();
-    var ErrView = new ErrorView();
-    var Client = new ClientController(View);
+    var Helper = new HelperController();
+    var View = new MainView(Helper);
+    var ErrView = new ErrorView(Helper);
+    var Client = new ClientController(View, Helper);
 
     Client.initialize();
 

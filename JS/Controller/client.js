@@ -1,6 +1,8 @@
-function ClientController(view) {
+function ClientController(view, helper) {
     this.socket = {};
     this.view = view;
+
+    this.Helper = helper;
 }
 
 ClientController.prototype.initialize = function() {
