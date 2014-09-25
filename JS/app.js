@@ -6,7 +6,9 @@ $(document).ready(function() {
     var View = new MainView(Helper);
     var ErrView = new ErrorView(Helper);
     var Client = new ClientController(View, Helper);
+    var CaseEffect = new CaseEffectController(Client);
 
+    View.setCaseEffect(CaseEffect);
     Client.initialize();
 
     // Vérification login + envoi de l'évènement nouveau joueur

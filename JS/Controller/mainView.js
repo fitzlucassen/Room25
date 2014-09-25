@@ -3,7 +3,12 @@ function MainView(helper) {
     this.caseHeight = 175;
 
     this.Helper = helper;
+    this.CaseEffect = null;
 }
+
+MainView.prototype.setCaseEffect = function(ce) {
+    this.CaseEffect = ce;
+};
 
 // On garde le UserID courant caché dans le DOM
 MainView.prototype.appendUserID = function(user) {
@@ -204,10 +209,13 @@ MainView.prototype.deplacer = function(user) {
         }
     });
 
-	var imgs = that.Helper.GetTuile(user.position.x, user.position.y).children('img');
+    var tuile = that.Helper.GetTuile(user.position.x, user.position.y);
+	var imgs = tuile.children('img');
 	imgs.first().removeClass('ng-hide');
 	imgs.first().fadeIn('slow');
 	imgs.last().fadeOut('slow');
+
+    that.CaseEffect.manageCaseEffect(user, tuile.attr('data-action'));
 };
 
 // Action pousser
@@ -218,10 +226,13 @@ MainView.prototype.pousser = function(user) {
 		left: (that.caseWidth * user.position.x) + 'px'
 	}, 500);
 
-	var imgs = that.Helper.GetTuile(user.position.x, user.position.y).children('img');
+    var tuile = that.Helper.GetTuile(user.position.x, user.position.y);
+	var imgs = tuile.children('img');
 	imgs.first().removeClass('ng-hide');
 	imgs.first().fadeIn('slow');
 	imgs.last().fadeOut('slow');
+
+    that.CaseEffect.manageCaseEffect(user, tuile.attr('data-action'));
 };
 
 // Action regarder

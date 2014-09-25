@@ -48,6 +48,7 @@
 <script type="text/javascript" src="JS/Controller/client.js"></script>
 <script type="text/javascript" src="JS/Controller/mainView.js"></script>
 <script type="text/javascript" src="JS/Controller/errorView.js"></script>
+<script type="text/javascript" src="JS/Controller/caseEffect.js"></script>
 <script type="text/javascript" src="JS/app.js"></script>
 
 <script type="text/javascript" src="JS/ngController/mainController.js"></script>
