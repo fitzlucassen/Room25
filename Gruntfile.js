@@ -8,7 +8,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-connect-socket.io');
     grunt.loadNpmTasks('grunt-express');
 
-    var jsSrc = ['JS/**/*.js'];
+    var jsSrc = ['JS/Controller/*.js', 'JS/ngController/*.js', 'JS/app.js', 'JS/base64Manager.js'];
     var jsDist = 'JS/_built.js';
 
     var cssSrc = ['CSS/*.css'];
@@ -17,7 +17,7 @@ module.exports = function(grunt) {
     // Configuration de Grunt
     grunt.initConfig({
         jshint: {
-            all: ['Gruntfile.js', jsSrc, '!JS/server.js', '!' + jsDist]
+            all: ['Gruntfile.js', jsSrc]
         },
         uglify: {
             options: {
@@ -37,7 +37,7 @@ module.exports = function(grunt) {
         },
         watch: {
             scripts: {
-                files: ['**/*.js', '!JS/server.js', '!' + jsDist],
+                files: [jsSrc],
                 tasks: ['scripts:dev']
             },
         },
