@@ -44,9 +44,11 @@
 
 <script type="text/javascript" src="http://localhost:1337/socket.io/socket.io.js"></script>
 <script type="text/javascript" src="JS/base64Manager.js"></script>
+<script type="text/javascript" src="JS/Controller/helper.js"></script>
 <script type="text/javascript" src="JS/Controller/client.js"></script>
 <script type="text/javascript" src="JS/Controller/mainView.js"></script>
 <script type="text/javascript" src="JS/Controller/errorView.js"></script>
+<script type="text/javascript" src="JS/Controller/caseEffect.js"></script>
 <script type="text/javascript" src="JS/app.js"></script>
 
 <script type="text/javascript" src="JS/ngController/mainController.js"></script>

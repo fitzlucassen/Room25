@@ -7,7 +7,8 @@
         "x": 0,
         "y": 0
     },
-    "last": false
+    "last": false,
+    "action": "nothing"
 }, {
     "id": 2,
     "name": "salle vide",
@@ -17,7 +18,8 @@
         "x": 1,
         "y": 0
     },
-    "last": false
+    "last": false,
+    "action": "nothing"
 
 }, {
     "id": 3,
@@ -28,7 +30,8 @@
         "x": 2,
         "y": 0
     },
-    "last": false
+    "last": false,
+    "action": "nothing"
 }, {
     "id": 4,
     "name": "salle vide",
@@ -38,7 +41,8 @@
         "x": 3,
         "y": 0
     },
-    "last": false
+    "last": false,
+    "action": "nothing"
 }, {
     "id": 5,
     "name": "salle vide",
@@ -48,7 +52,8 @@
         "x": 4,
         "y": 0
     },
-    "last": false
+    "last": false,
+    "action": "nothing"
 }, {
     "id": 6,
     "name": "salle vide",
@@ -58,7 +63,8 @@
         "x": 0,
         "y": 1
     },
-    "last": false
+    "last": false,
+    "action": "nothing"
 }, {
     "id": 7,
     "name": "chambre noire",
@@ -68,7 +74,8 @@
         "x": 1,
         "y": 1
     },
-    "last": false
+    "last": false,
+    "action": "noSee"
 }, {
     "id": 8,
     "name": "chambre froide",
@@ -78,7 +85,8 @@
         "x": 2,
         "y": 1
     },
-    "last": false
+    "last": false,
+    "action": "noSecondAction"
 }, {
     "id": 9,
     "name": "chambre froide",
@@ -88,7 +96,8 @@
         "x": 3,
         "y": 1
     },
-    "last": false
+    "last": false,
+    "action": "noSecondAction"
 }, {
     "id": 10,
     "name": "salle piégée",
@@ -98,7 +107,8 @@
         "x": 4,
         "y": 1
     },
-    "last": false
+    "last": false,
+    "action": "deathAfterNextAction"
 }, {
     "id": 11,
     "name": "salle piégée",
@@ -108,7 +118,8 @@
         "x": 0,
         "y": 2
     },
-    "last": false
+    "last": false,
+    "action": "deathAfterNextAction"
 }, {
     "id": 12,
     "name": "salle inondable",
@@ -118,7 +129,8 @@
         "x": 1,
         "y": 2
     },
-    "last": false
+    "last": false,
+    "action": "deathAfterNextTour"
 }, {
     "id": 13,
     "name": "salle centrale",
@@ -128,7 +140,8 @@
         "x": 2,
         "y": 2
     },
-    "last": null
+    "last": null,
+    "action": "nothing"
 }, {
     "id": 14,
     "name": "salle inondable",
@@ -138,7 +151,8 @@
         "x": 3,
         "y": 2
     },
-    "last": false
+    "last": false,
+    "action": "deathAfterNextTour"
 }, {
     "id": 15,
     "name": "salle d'acide",
@@ -148,7 +162,8 @@
         "x": 4,
         "y": 2
     },
-    "last": false
+    "last": false,
+    "action": "deathIfTwo"
 }, {
     "id": 16,
     "name": "salle d'acide",
@@ -158,7 +173,8 @@
         "x": 0,
         "y": 3
     },
-    "last": false
+    "last": false,
+    "action": "deathIfTwo"
 }, {
     "id": 17,
     "name": "salle mortelle",
@@ -168,7 +184,8 @@
         "x": 1,
         "y": 3
     },
-    "last": false
+    "last": false,
+    "action": "death"
 }, {
     "id": 18,
     "name": "salle mortelle",
@@ -178,7 +195,8 @@
         "x": 2,
         "y": 3
     },
-    "last": false
+    "last": false,
+    "action": "death"
 }, {
     "id": 19,
     "name": "salle vortex",
@@ -188,7 +206,8 @@
         "x": 3,
         "y": 3
     },
-    "last": false
+    "last": false,
+    "action": "goTo2-2"
 }, {
     "id": 20,
     "name": "salle de vision",
@@ -198,7 +217,8 @@
         "x": 4,
         "y": 3
     },
-    "last": true
+    "last": true,
+    "action": "doSee"
 }, {
     "id": 21,
     "name": "salle de contrôle",
@@ -208,7 +228,8 @@
         "x": 0,
         "y": 4
     },
-    "last": false
+    "last": false,
+    "action": "doController"
 }, {
     "id": 22,
     "name": "salle illusion",
@@ -218,7 +239,8 @@
         "x": 1,
         "y": 4
     },
-    "last": false
+    "last": false,
+    "action": "exchangeTuile"
 }, {
     "id": 23,
     "name": "salle mobile",
@@ -228,7 +250,8 @@
         "x": 2,
         "y": 4
     },
-    "last": false
+    "last": false,
+    "action": "goInAnotherTuile"
 }, {
     "id": 24,
     "name": "room 25",
@@ -238,7 +261,8 @@
         "x": 3,
         "y": 4
     },
-    "last": true
+    "last": true,
+    "action": "win"
 }, {
     "id": 25,
     "name": "chambre noire",
@@ -248,5 +272,6 @@
         "x": 4,
         "y": 4
     },
-    "last": false
+    "last": false,
+    "action": "noSee"
 }]

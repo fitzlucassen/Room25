@@ -1,11 +1,19 @@
-function MainView() {
+function MainView(helper) {
     this.caseWidth = 175;
     this.caseHeight = 175;
+
+    this.Helper = helper;
+    this.CaseEffect = null;
 }
+
+MainView.prototype.setCaseEffect = function(ce) {
+    this.CaseEffect = ce;
+};
 
 // On garde le UserID courant caché dans le DOM
 MainView.prototype.appendUserID = function(user) {
-    $('.userID').attr('value', user.id);
+    var that = this;
+    that.Helper.SetCurrentID(user.id);
 };
 
 // On ajoute un user sur un personnage
@@ -54,14 +62,14 @@ MainView.prototype.deleteButton = function() {
 
 // On redirige, sans rechargement, vers la page du jeu
 MainView.prototype.redirectToGame = function(object) {
-    var userId = $('.userID').val();
+    var that = this;
+    var userId = that.Helper.GetCurrentID();
 
     $('.readyToPlay').val(1);
     $('.readyToPlay').trigger('change');
 
-    var that = this;
     setTimeout(function() {
-        $('.userID').attr('value', userId);
+        that.Helper.SetCurrentID(userId);
         that.showPlayers(object);
         that.showIdentity(object.users, userId);
         $('.coordsReady').val(1);
@@ -93,12 +101,14 @@ MainView.prototype.showPlayers = function(object) {
             else
                 $('.gameboard').append('<div class="myCharacter character character-' + object.users[u].id + '">' + object.users[u].name + '</div>');
 
+            
+            var userDIV = that.Helper.GetCharacterDiv(object.users[u].id);
             if (cpt >= 3) {
-                $('.character-' + object.users[u].id).css('left', ((2 * that.caseWidth) + ((cpt - 3) * $('.character').outerWidth())) + 'px');
-                $('.character-' + object.users[u].id).css('top', ((2 * that.caseHeight) + $('.character').outerWidth()) + 'px');
+                userDIV.css('left', ((2 * that.caseWidth) + ((cpt - 3) * $('.character').outerWidth())) + 'px');
+                userDIV.css('top', ((2 * that.caseHeight) + $('.character').outerWidth()) + 'px');
             } else {
-                $('.character-' + object.users[u].id).css('left', ((2 * that.caseWidth) + (cpt * $('.character').outerWidth())) + 'px');
-                $('.character-' + object.users[u].id).css('top', (2 * that.caseHeight) + 'px');
+                userDIV.css('left', ((2 * that.caseWidth) + (cpt * $('.character').outerWidth())) + 'px');
+                userDIV.css('top', (2 * that.caseHeight) + 'px');
             }
             cpt++;
         }
@@ -158,16 +168,21 @@ MainView.prototype.hideActions = function() {
 
 // Affiche le tour de
 MainView.prototype.appendTurnOf = function(u, users, actionNumber) {
+    var that = this;
     $('.tourDe p').html('Tour de ' + u.name);
 
     if(u.id == $('.userID').val()){
         $('.loading').remove();
         $('.actions .action').fadeOut('slow');
 
-        if(actionNumber == 1)
-        	$('.action img[alt="' + u.action1 + '"]').parent().fadeIn(100).append('<p>' + $('.action img[alt="' + u.action1 + '"]').parent().attr('data-first-sentence') + '</p>');
-        else
-        	$('.action img[alt="' + u.action2 + '"]').parent().fadeIn(100).append('<p>' + $('.action img[alt="' + u.action2 + '"]').parent().attr('data-first-sentence') + '</p>');
+        if(actionNumber == 1){
+            var actionDIV = that.Helper.GetAction(u.action1);
+        	actionDIV.parent().fadeIn(100).append('<p>' + actionDIV.parent().attr('data-first-sentence') + '</p>');
+        }
+        else{
+            var actionDIV = that.Helper.GetAction(u.action2);
+        	actionDIV.parent().fadeIn(100).append('<p>' + actionDIV.parent().attr('data-first-sentence') + '</p>');
+        }
 
         manageTurn(u, users);
     }
@@ -175,7 +190,9 @@ MainView.prototype.appendTurnOf = function(u, users, actionNumber) {
 
  // Affiche la seconde phrase d'une  action complexe
 MainView.prototype.nextSentence = function(object) {
-    $('.action img[alt="' + object.action + '"]').parent().children('p').html($('.action img[alt="' + object.action + '"]').parent().attr('data-second-sentence'));
+    var that = this;
+    var actionDIV = that.Helper.GetAction(object.action);
+    actionDIV.parent().children('p').html(actionDIV.parent().attr('data-second-sentence'));
 
     manageComplexAction(object);
 };
@@ -183,7 +200,7 @@ MainView.prototype.nextSentence = function(object) {
 // action se déplacer
 MainView.prototype.deplacer = function(user) {
 	var that = this;
-	$('.character-' + user.id).animate({
+	that.Helper.GetCharacterDiv(user.id).animate({
 		top: (that.caseHeight * user.position.y) + 'px',
 		left: (that.caseWidth * user.position.x) + 'px'
 	}, 500, function(){
@@ -192,36 +209,42 @@ MainView.prototype.deplacer = function(user) {
         }
     });
 
-	var imgs = $('.tuile[data-position="' + user.position.x + '-' + user.position.y + '"]').children('img');
+    var tuile = that.Helper.GetTuile(user.position.x, user.position.y);
+	var imgs = tuile.children('img');
 	imgs.first().removeClass('ng-hide');
 	imgs.first().fadeIn('slow');
 	imgs.last().fadeOut('slow');
+
+    that.CaseEffect.manageCaseEffect(user, tuile.attr('data-action'));
 };
 
 // Action pousser
 MainView.prototype.pousser = function(user) {
 	var that = this;
-	$('.character-' + user.id).animate({
+	that.Helper.GetCharacterDiv(user.id).animate({
 		top: (that.caseHeight * user.position.y) + 'px',
 		left: (that.caseWidth * user.position.x) + 'px'
 	}, 500);
 
-	var imgs = $('.tuile[data-position="' + user.position.x + '-' + user.position.y + '"]').children('img');
+    var tuile = that.Helper.GetTuile(user.position.x, user.position.y);
+	var imgs = tuile.children('img');
 	imgs.first().removeClass('ng-hide');
 	imgs.first().fadeIn('slow');
 	imgs.last().fadeOut('slow');
+
+    that.CaseEffect.manageCaseEffect(user, tuile.attr('data-action'));
 };
 
 // Action regarder
 MainView.prototype.regarder = function(user, coords) {
 	var that = this;
 	var position = {
-		x: coords.split('-')[0],
-		y: coords.split('-')[1]
+		x: coords.split('-')[0].parseInt(),
+		y: coords.split('-')[1].parseInt()
 	};
 
-	if(user.id == $('.userID').val()){
-		var imgs = $('.tuile[data-position="' + position.x + '-' + position.y + '"]').children('img');
+	if(user.id == that.Helper.GetCurrentID()){
+		var imgs = that.Helper.GetTuile(position.x, position.y).children('img');
 
 		if(imgs.first().hasClass('ng-hide')){
 			imgs.first().removeClass('ng-hide');
@@ -243,19 +266,19 @@ MainView.prototype.controller = function(users, coords, sens) {
 
     if(sens == 'left' || sens == 'right'){
         $('.tuile').each(function(){
-            var x = $(this).attr('data-position').split('-')[0];
-            var y = $(this).attr('data-position').split('-')[1];
+            var x = $(this).attr('data-position').split('-')[0].parseInt();
+            var y = $(this).attr('data-position').split('-')[1].parseInt();
 
-            if(y == coords.split('-')[1]){
+            if(y == coords.split('-')[1].parseInt()){
 
                 if(x == 0 && sens == 'left')
                     x = 4;
                 else if(x == 4 && sens == 'right')
                     x = 0;
                 else if(sens == 'left')
-                    x = (x * 1) - 1;
+                    x = x - 1;
                 else
-                    x = (x * 1) + 1;
+                    x = x + 1;
 
                 $(this).attr('data-position', x + '-' + y);
                 $(this).addClass('moved');
@@ -264,19 +287,19 @@ MainView.prototype.controller = function(users, coords, sens) {
     }
     else if(sens == 'top' || sens == 'bottom'){
         $('.tuile').each(function(){
-            var x = $(this).attr('data-position').split('-')[0];
-            var y = $(this).attr('data-position').split('-')[1];
+            var x = $(this).attr('data-position').split('-')[0].parseInt();
+            var y = $(this).attr('data-position').split('-')[1].parseInt();
 
-            if(x == coords.split('-')[0]){
+            if(x == coords.split('-')[0].parseInt()){
 
                 if(y == 0 && sens == 'top')
                     y = 4;
                 else if(y == 4 && sens == 'bottom')
                     y = 0;
                 else if(sens == 'top')
-                    y = (y * 1) - 1;
+                    y = y - 1;
                 else
-                    y = (y * 1) + 1;
+                    y = y + 1;
 
                 $(this).attr('data-position', x + '-' + y);
                 $(this).addClass('moved');
@@ -285,14 +308,14 @@ MainView.prototype.controller = function(users, coords, sens) {
     }
     $('.moved').each(function(){
         $(this).animate({
-            'top': (($(this).attr('data-position').split('-')[1] * 1) * that.caseHeight) + 'px',
-            'left': (($(this).attr('data-position').split('-')[0] * 1) * that.caseWidth) + 'px'
+            'top': (($(this).attr('data-position').split('-')[1].parseInt()) * that.caseHeight) + 'px',
+            'left': (($(this).attr('data-position').split('-')[0].parseInt()) * that.caseWidth) + 'px'
         }, 500);
     });
 
     for(var u in users){
         if(users.hasOwnProperty(u)){
-            $('.character-' + users[u].id).animate({
+            that.Helper.GetCharacterDiv(users[u].id).animate({
                 'top': (users[u].position.y * 1) * that.caseHeight,
                 'left': (users[u].position.x * 1) * that.caseWidth
             }, 500);
@@ -321,7 +344,7 @@ MainView.prototype.controller = function(users, coords, sens) {
 MainView.prototype.someoneHere = function(user){
     var that =  this;
     var anybody = false;
-    var $user = $('.character-' + user.id);
+    var $user = this.Helper.GetCharacterDiv(user.id);
 
     $('.character').each(function(){
         if($(this).css('top') == $user.css('top') && $(this).css('left') == $user.css('left') && !$(this).hasClass('character-' + user.id)){
@@ -332,7 +355,8 @@ MainView.prototype.someoneHere = function(user){
 };
 
 MainView.prototype.moveUser = function(user){
-    $('.character-' + user.id).css('left', (($('.character-' + user.id).css('left').substr(0, $('.character-' + user.id).css('left').length - 2) * 1) + 50) + 'px');
+    var userDIV = this.Helper.GetCharacterDiv(user.id);
+    userDIV.css('left', ((userDIV.css('left').substr(0, userDIV.css('left').length - 2).parseInt() + 50) + 'px');
 };
 
 // Gère le tour d'une personne
@@ -395,7 +419,7 @@ function manageComplexAction(object){
         appendSelect(coords, object.action);
     }
     else if(object.action === 'Contrôller'){
-        if(object.coords.split('-')[0] * 1 > object.user.position.x || object.coords.split('-')[0] * 1 < object.user.position.x){
+        if(object.coords.split('-')[0].parseInt() > object.user.position.x || object.coords.split('-')[0].parseInt() < object.user.position.x){
             $('.tourDe').append(
                 '<p class="sensArrows" data-position=' + object.coords + '>' +
                     '<span class="right direction">&rarr;</span>' +
@@ -413,18 +437,20 @@ function manageComplexAction(object){
 }
 
 function appendSelect(coords, action){
+    var that = this;
     for(var c in coords){
         if(coords.hasOwnProperty(c)){
-            $('.tuile[data-position="'+ coords[c].x + '-' + coords[c].y + '"').append('<div class="selectMe" data-action="' + action + '"></div>');
+            that.Helper.GetTuile(coords[c].x, coords[c].y).append('<div class="selectMe" data-action="' + action + '"></div>');
             $('.selectMe').animate({'width': '175px', 'height':'175px'}, 500);
         }
     }
 }
 
 function appendCharacterSelectMe(coords, action){
+    var that = this;
     for(var c in coords){
         if(coords.hasOwnProperty(c)){
-            $('.character-' + coords[c].id).append('<div class="characterSelectMe" data-action="' + action + '"></div>');
+            that.Helper.GetCharacterDiv(coords[c].id).append('<div class="characterSelectMe" data-action="' + action + '"></div>');
         }
     }
 }
