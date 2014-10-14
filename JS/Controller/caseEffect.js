@@ -39,4 +39,4 @@ CaseEffectController.prototype.manageCaseEffect = function(user, effect) {
 	else if(effect === 'win'){
 		
 	}
-}
+};

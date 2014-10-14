@@ -175,12 +175,13 @@ MainView.prototype.appendTurnOf = function(u, users, actionNumber) {
         $('.loading').remove();
         $('.actions .action').fadeOut('slow');
 
+        var actionDIV;
         if(actionNumber == 1){
-            var actionDIV = that.Helper.GetAction(u.action1);
+            actionDIV = that.Helper.GetAction(u.action1);
         	actionDIV.parent().fadeIn(100).append('<p>' + actionDIV.parent().attr('data-first-sentence') + '</p>');
         }
         else{
-            var actionDIV = that.Helper.GetAction(u.action2);
+            actionDIV = that.Helper.GetAction(u.action2);
         	actionDIV.parent().fadeIn(100).append('<p>' + actionDIV.parent().attr('data-first-sentence') + '</p>');
         }
 
@@ -270,12 +271,11 @@ MainView.prototype.controller = function(users, coords, sens) {
             var y = $(this).attr('data-position').split('-')[1].parseInt();
 
             if(y == coords.split('-')[1].parseInt()){
-
-                if(x == 0 && sens == 'left')
+                if(x == 0 && sens === 'left')
                     x = 4;
-                else if(x == 4 && sens == 'right')
+                else if(x == 4 && sens === 'right')
                     x = 0;
-                else if(sens == 'left')
+                else if(sens === 'left')
                     x = x - 1;
                 else
                     x = x + 1;
@@ -285,18 +285,18 @@ MainView.prototype.controller = function(users, coords, sens) {
             }
         });
     }
-    else if(sens == 'top' || sens == 'bottom'){
+    else if(sens === 'top' || sens === 'bottom'){
         $('.tuile').each(function(){
             var x = $(this).attr('data-position').split('-')[0].parseInt();
             var y = $(this).attr('data-position').split('-')[1].parseInt();
 
             if(x == coords.split('-')[0].parseInt()){
 
-                if(y == 0 && sens == 'top')
+                if(y == 0 && sens === 'top')
                     y = 4;
-                else if(y == 4 && sens == 'bottom')
+                else if(y == 4 && sens === 'bottom')
                     y = 0;
-                else if(sens == 'top')
+                else if(sens === 'top')
                     y = y - 1;
                 else
                     y = y + 1;
@@ -356,7 +356,7 @@ MainView.prototype.someoneHere = function(user){
 
 MainView.prototype.moveUser = function(user){
     var userDIV = this.Helper.GetCharacterDiv(user.id);
-    userDIV.css('left', ((userDIV.css('left').substr(0, userDIV.css('left').length - 2).parseInt() + 50) + 'px');
+    userDIV.css('left', ((userDIV.css('left').substr(0, userDIV.css('left').length - 2).parseInt() + 50) + 'px'));
 };
 
 // Gère le tour d'une personne

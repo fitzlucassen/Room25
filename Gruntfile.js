@@ -8,8 +8,8 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-connect-socket.io');
     grunt.loadNpmTasks('grunt-express');
 
-    var jsSrc = ['JS/**/*.js'];
     var jsDist = 'JS/_built.js';
+    var jsSrc = ['JS/**/*.js', '!JS/server.js', '!' + jsDist, '!JS/Base/*.js'];
 
     var cssSrc = ['CSS/*.css'];
     var cssDist = 'CSS/_built.css';
@@ -17,7 +17,7 @@ module.exports = function(grunt) {
     // Configuration de Grunt
     grunt.initConfig({
         jshint: {
-            all: ['Gruntfile.js', jsSrc, '!JS/server.js', '!' + jsDist]
+            all: ['Gruntfile.js', jsSrc]
         },
         uglify: {
             options: {
@@ -37,7 +37,7 @@ module.exports = function(grunt) {
         },
         watch: {
             scripts: {
-                files: ['**/*.js', '!JS/server.js', '!' + jsDist],
+                files: ['Gruntfile.js', jsSrc],
                 tasks: ['scripts:dev']
             },
         },
@@ -54,11 +54,9 @@ module.exports = function(grunt) {
         }
     });
 
-    grunt.registerTask('default', ['dev', 'watch']);
-    grunt.registerTask('dev', ['scripts:dev']);
-    grunt.registerTask('dist', ['scripts:dist']);
+    grunt.registerTask('default', ['scripts', 'watch']);
 
     // J'aime bien avoir des noms génériques
-    grunt.registerTask('scripts:dev', ['jshint', 'uglify:compile', 'cssmin:compile']);
+    grunt.registerTask('scripts', ['jshint', 'uglify:compile', 'cssmin:compile']);
     grunt.registerTask('roomServer', ['express', 'express-keepalive']);
 };
