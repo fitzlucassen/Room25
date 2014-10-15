@@ -334,6 +334,12 @@ io.sockets.on('connection', function(socket) {
         }
     });
 
+    socket.on('killUser', function(user){
+        console.log('L\'utilisateur ' + user.id + ' : ' + user.name + ' est mort');
+        users.splice(findInArray(users, user.id), 1);
+        io.sockets.emit('disconnectedUser', user);
+    });
+
     // Quand un utilisateur se deconnecte
     socket.on('disconnect', function(reason) {
         if (!me) {

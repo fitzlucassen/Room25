@@ -200,3 +200,10 @@ ClientController.prototype.emitComplexAction = function(object){
     $('.selectMe').remove();
     $('.sensArrows').remove();
 };
+
+ClientController.prototype.emitDeath = function(user) {
+    this.socket.emit('killUser', user);
+};
+ClientController.prototype.emitGoToCentral = function(user) {
+    this.socket.emit('goToCentral', user);
+};

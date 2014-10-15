@@ -28,6 +28,12 @@ MainView.prototype.deleteCharacter = function(id, name, pseudo) {
 // On supprime un personnage du DOM
 MainView.prototype.deleteUser = function(user) {
     $('.characterTaken-' + user.id).remove();
+    this.Helper.GetCharacterDiv(user.id).addClass('dead');
+    $('.gameboard').append('<p class="tmpMessage">Le joueur ' + user.name + ' est mort !</p>');
+
+    setTimeout(function(){
+        $('.tmpMessage').fadeOut('slow');
+    }, 3000);
 };
 
 // Un utilisateur arrive en retard --> on met à jours tous les personnage pris
@@ -96,7 +102,7 @@ MainView.prototype.showPlayers = function(object) {
     var cpt = 0;
     for (var u in object.users) {
         if (object.users.hasOwnProperty(u)) {
-            if (object.users[u].id != $('.userID').val())
+            if (object.users[u].id != that.Helper.GetCurrentID().parseInt())
                 $('.gameboard').append('<div class="character character-' + object.users[u].id + '">' + object.users[u].name + '</div>');
             else
                 $('.gameboard').append('<div class="myCharacter character character-' + object.users[u].id + '">' + object.users[u].name + '</div>');
@@ -185,7 +191,7 @@ MainView.prototype.appendTurnOf = function(u, users, actionNumber) {
         	actionDIV.parent().fadeIn(100).append('<p>' + actionDIV.parent().attr('data-first-sentence') + '</p>');
         }
 
-        manageTurn(u, users);
+        manageTurn(u, users, this.Helper);
     }
 };
 
@@ -216,7 +222,7 @@ MainView.prototype.deplacer = function(user) {
 	imgs.first().fadeIn('slow');
 	imgs.last().fadeOut('slow');
 
-    that.CaseEffect.manageCaseEffect(user, tuile.attr('data-action'));
+    this.CaseEffect.manageCaseEffect(user, tuile.attr('data-action'));
 };
 
 // Action pousser
@@ -360,14 +366,14 @@ MainView.prototype.moveUser = function(user){
 };
 
 // Gère le tour d'une personne
-function manageTurn(u, users){
+function manageTurn(u, users, helper){
     // Affiche les cases possible
     var coords = [];
 
     if(u.action1 !== ''){
         if(u.action1 === 'Déplacer'){
             coords = getCoordsDeplacerRegarder(u);
-            appendSelect(coords, u.action1);
+            appendSelect(coords, u.action1, helper);
         }
         else if(u.action1 === 'Pousser'){
             for(var a in users){
@@ -376,21 +382,21 @@ function manageTurn(u, users){
                         coords.push(users[a]);
                 }
             }
-            appendCharacterSelectMe(coords, u.action1);
+            appendCharacterSelectMe(coords, u.action1, helper);
         }
         else if(u.action1 === 'Regarder'){
             coords = getCoordsDeplacerRegarder(u);
-            appendSelect(coords, u.action1);
+            appendSelect(coords, u.action1, helper);
         }
         else if(u.action1 === 'Contrôller'){
             coords = getCoordsController(u);
-            appendSelect(coords, u.action1);
+            appendSelect(coords, u.action1, helper);
         }
     }
     else {
         if(u.action2 === 'Déplacer'){
             coords = getCoordsDeplacerRegarder(u);
-            appendSelect(coords, u.action2);
+            appendSelect(coords, u.action2, helper);
         }
         else if(u.action2 === 'Pousser'){
             for(var b in users){
@@ -399,15 +405,15 @@ function manageTurn(u, users){
                         coords.push(users[b]);
                 }
             }
-            appendCharacterSelectMe(coords, u.action2);
+            appendCharacterSelectMe(coords, u.action2, helper);
         }
         else if(u.action2 === 'Regarder'){
             coords = getCoordsDeplacerRegarder(u);
-            appendSelect(coords, u.action2);
+            appendSelect(coords, u.action2, helper);
         }
         else if(u.action2 === 'Contrôller'){
             coords = getCoordsController(u);
-            appendSelect(coords, u.action2);
+            appendSelect(coords, u.action2, helper);
         }
     }
 }
@@ -436,21 +442,19 @@ function manageComplexAction(object){
     }
 }
 
-function appendSelect(coords, action){
-    var that = this;
+function appendSelect(coords, action, helper){
     for(var c in coords){
         if(coords.hasOwnProperty(c)){
-            that.Helper.GetTuile(coords[c].x, coords[c].y).append('<div class="selectMe" data-action="' + action + '"></div>');
+            helper.GetTuile(coords[c].x, coords[c].y).append('<div class="selectMe" data-action="' + action + '"></div>');
             $('.selectMe').animate({'width': '175px', 'height':'175px'}, 500);
         }
     }
 }
 
-function appendCharacterSelectMe(coords, action){
-    var that = this;
+function appendCharacterSelectMe(coords, action, helper){
     for(var c in coords){
         if(coords.hasOwnProperty(c)){
-            that.Helper.GetCharacterDiv(coords[c].id).append('<div class="characterSelectMe" data-action="' + action + '"></div>');
+            helper.GetCharacterDiv(coords[c].id).append('<div class="characterSelectMe" data-action="' + action + '"></div>');
         }
     }
 }

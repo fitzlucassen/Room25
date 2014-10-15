@@ -163,3 +163,15 @@ span.direction {
 	height: 0;
 	background: rgba(150,150,150,0.4);
 }
+.tmpMessage{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 50%;
+	margin: 10px auto;
+	padding: 10px;
+
+	background: rgba(22, 160, 133,0.6);
+	color: white;
+	text-align: center;
+}

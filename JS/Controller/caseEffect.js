@@ -4,7 +4,7 @@ function CaseEffectController(client){
 
 CaseEffectController.prototype.manageCaseEffect = function(user, effect) {
 	if(effect === 'death'){
-
+		this.client.emitDeath(user);
 	}
 	else if(effect === 'noSee'){
 
@@ -22,7 +22,7 @@ CaseEffectController.prototype.manageCaseEffect = function(user, effect) {
 		
 	}
 	else if(effect === 'goTo2-2'){
-		
+		this.client.emitGoToCentral(user);
 	}
 	else if(effect === 'doSee'){
 		
@@ -34,9 +34,6 @@ CaseEffectController.prototype.manageCaseEffect = function(user, effect) {
 		
 	}
 	else if(effect === 'goInAnotherTuile'){
-		
-	}
-	else if(effect === 'win'){
 		
 	}
 };
