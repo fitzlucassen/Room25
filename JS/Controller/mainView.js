@@ -29,11 +29,8 @@ MainView.prototype.deleteCharacter = function(id, name, pseudo) {
 MainView.prototype.deleteUser = function(user) {
     $('.characterTaken-' + user.id).remove();
     this.Helper.GetCharacterDiv(user.id).addClass('dead');
-    $('.gameboard').append('<p class="tmpMessage">Le joueur ' + user.name + ' est mort !</p>');
 
-    setTimeout(function(){
-        $('.tmpMessage').fadeOut('slow');
-    }, 3000);
+    this.appendTmpMessage('Le joueur ' + user.name + ' est mort !');
 };
 
 // Un utilisateur arrive en retard --> on met à jours tous les personnage pris
@@ -243,14 +240,20 @@ MainView.prototype.pousser = function(user) {
 };
 
 // Action regarder
-MainView.prototype.regarder = function(user, coords) {
+MainView.prototype.regarder = function(userId, coords) {
+
+    if(!coords){
+        coords = getAllCoords();
+        appendSelect(coords, 'regarderMaster', this.Helper);
+        return true;
+    }
 	var that = this;
 	var position = {
 		x: coords.split('-')[0].parseInt(),
 		y: coords.split('-')[1].parseInt()
 	};
 
-	if(user.id == that.Helper.GetCurrentID()){
+	if(userId == that.Helper.GetCurrentID()){
 		var imgs = that.Helper.GetTuile(position.x, position.y).children('img');
 
 		if(imgs.first().hasClass('ng-hide')){
@@ -271,6 +274,11 @@ MainView.prototype.regarder = function(user, coords) {
 MainView.prototype.controller = function(users, coords, sens) {
     var that = this;
 
+    if (!coords && !sens){
+        var coords = getAllCoords();
+        appendSelect(coords, 'controllerMaster', this.Helper);
+        return true;
+    }
     if(sens == 'left' || sens == 'right'){
         $('.tuile').each(function(){
             var x = $(this).attr('data-position').split('-')[0].parseInt();
@@ -363,6 +371,20 @@ MainView.prototype.someoneHere = function(user){
 MainView.prototype.moveUser = function(user){
     var userDIV = this.Helper.GetCharacterDiv(user.id);
     userDIV.css('left', ((userDIV.css('left').substr(0, userDIV.css('left').length - 2).parseInt() + 50) + 'px'));
+};
+
+MainView.prototype.gardienWins = function() {
+    $('.gameboard').append('<p class="tmpMessage">La partie est finie, les gardiens ont gagné !</p>');
+};
+
+MainView.prototype.appendTmpMessage = function(message){
+    $('.gameboard').append('<p class="tmpMessage tmp">' + message + '</p>');
+
+    setTimeout(function(){
+        $('.tmpMessage.tmp').fadeOut('slow', function(){
+            $(this).remove();
+        });
+    }, 3000);
 };
 
 // Gère le tour d'une personne
@@ -623,6 +645,39 @@ function getCoordsDeplacerRegarder(u){
             y: (u.position.y * 1) + 1
         });
     }
+
+    return coords;
+}
+function getAllCoords(){
+    var coords = [];
+
+    coords.push(
+        {x: 0, y: 0},
+        {x: 0, y: 1},
+        {x: 0, y: 2},
+        {x: 0, y: 3},
+        {x: 0, y: 4},
+        {x: 1, y: 0},
+        {x: 1, y: 1},
+        {x: 1, y: 2},
+        {x: 1, y: 3},
+        {x: 1, y: 4},
+        {x: 2, y: 0},
+        {x: 2, y: 1},
+        {x: 2, y: 2},
+        {x: 2, y: 3},
+        {x: 2, y: 4},
+        {x: 3, y: 0},
+        {x: 3, y: 1},
+        {x: 3, y: 2},
+        {x: 3, y: 3},
+        {x: 3, y: 4},
+        {x: 4, y: 0},
+        {x: 4, y: 1},
+        {x: 4, y: 2},
+        {x: 4, y: 3},
+        {x: 4, y: 4}
+    );
 
     return coords;
 }

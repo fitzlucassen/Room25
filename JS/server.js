@@ -338,6 +338,30 @@ io.sockets.on('connection', function(socket) {
         console.log('L\'utilisateur ' + user.id + ' : ' + user.name + ' est mort');
         users.splice(findInArray(users, user.id), 1);
         io.sockets.emit('disconnectedUser', user);
+
+        if(gardienWins(users)){
+            io.sockets.emit('gardienWins');
+        }
+    });
+
+    socket.on('goToCentral', function(user){
+        console.log('L\'utilisateur ' + user.id + ' : ' + user.name + ' est téléporté sur la case central');
+
+        var u = findInArray(users, user.id);
+        users[u].position.x = 2;
+        users[u].position.y = 2;
+
+        io.sockets.emit('userCentral', users[u]);
+    });
+
+    socket.on('controlEffect', function(user){
+        console.log('L\'utilisateur ' + user.id + ' : ' + user.name + ' va controller une rangé');
+
+        var u = findInArray(users, user.id);
+        users[u].position.x = 2;
+        users[u].position.y = 2;
+
+        io.sockets.emit('userCentral', users[u]);
     });
 
     // Quand un utilisateur se deconnecte
@@ -456,6 +480,20 @@ function everyoneIsNOk(array) {
         }
     }
     return notReady;
+}
+
+function gardienWins(users){
+    var bool = 0;
+
+    for(var u in users){
+        if (users.hasOwnProperty(u)) {
+            if(users[u].identity === 'prisonnier'){
+                bool++;
+            }
+        }
+    }
+
+    return bool <= 2;
 }
 
 function moreThanFourPlayers(array) {

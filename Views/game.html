@@ -6,8 +6,8 @@
 	<div class="gameboard">
 
 		<div class="tuile" ng-repeat="tuile in tuiles" style="top: {{tuile.position.y * 175}}px;left:{{tuile.position.x * 175}}px" data-position="{{tuile.position.x}}-{{tuile.position.y}}" data-action="{{tuile.action}}">
-			<img id="tuile-{{tuile.id}}" src="{{tuile.image}}" alt="Tuile : {{tuile.name}}" ng-show="tuile.enable"/>
-			<img src="/Images/tuiles/cache.gif" alt="Tuile : {{tuile.name}}" ng-hide="tuile.enable"/>
+			<img id="tuile-{{tuile.id}}" src="{{tuile.image}}" alt="Tuile : {{tuile.name}}" ng-hide="tuile.enable"/>
+			<img src="/Images/tuiles/cache.gif" alt="Tuile : {{tuile.name}}" ng-show="tuile.enable"/>
 		</div>
 	</div>
 

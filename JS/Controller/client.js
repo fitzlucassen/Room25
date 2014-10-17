@@ -86,7 +86,7 @@ ClientController.prototype.initialize = function() {
     });
     // On regarde
     this.socket.on('playerRegarder', function(object){
-        that.view.regarder(object.user, object.coords);
+        that.view.regarder(object.user.id, object.coords);
     });
     // On controlle
     this.socket.on('playerController', function(object){
@@ -114,6 +114,12 @@ ClientController.prototype.initialize = function() {
     // On passe au tour suivant
     this.socket.on('nextTurn', function(object){
         that.view.nextTurn(object);
+    });
+    this.socket.on('gardienWins', function(){
+        that.view.gardienWins();
+    });
+    this.socket.on('userCentral', function(user){
+        that.view.deplacer(user);
     });
 };
 
@@ -149,35 +155,44 @@ ClientController.prototype.play = function() {
 // effectue l'action du joueur
 ClientController.prototype.emitAction = function(element){
     var action = element.attr('data-action');
+    var that = this;
 
     if(action === 'Déplacer' || action === 'Regarder'){
         this.socket.emit('doAction', {
-            id: $('.userID').val(),
+            id: that.Helper.GetCurrentID(),
             action: action,
             coords: element.parent().attr('data-position')
         });
         $('.selectMe').remove();
     }
     else if(action === 'Contrôller') {
+        var that = this;
+
         this.socket.emit('getUserAndDoNextSentenceController', {
-            id: $('.userID').val(),
+            id: that.Helper.GetCurrentID(),
             action: action,
             coords: element.parent().attr('data-position')
         });
     }
     else if(action === 'Pousser' && element.parent().hasClass('character')){
         var idTarget = element.parent().removeClass('character').attr('class').split('-')[1];
+        var that = this;
         element.parent().addClass('character');
 
         this.socket.emit('getUserAndDoNextSentence', {
-            id: $('.userID').val(),
+            id: that.Helper.GetCurrentID(),
             action: action,
             idTarget: idTarget
         });
     }
+    else if(action === 'regarderMaster'){
+        this.view.regarder(that.Helper.GetCurrentID(), element.parent().attr('data-position'));
+        $('.selectMe').remove();
+    }
     else {
+        var that = this;
         this.socket.emit('doAction', {
-            id: $('.userID').val(),
+            id: that.Helper.GetCurrentID(),
             action: action,
             coords: element.parent().attr('data-position'),
             idTarget: $('.characterSelectMe').parent().removeClass('character').attr('class').split('-')[1]
@@ -190,8 +205,10 @@ ClientController.prototype.emitAction = function(element){
 
 // effectue l'action du joueur
 ClientController.prototype.emitComplexAction = function(object){
+    var that = this;
+
     this.socket.emit('doAction', {
-        id: $('.userID').val(),
+        id: that.Helper.GetCurrentID(),
         action: object.action,
         sens: object.sens,
         coords: object.position
@@ -206,4 +223,7 @@ ClientController.prototype.emitDeath = function(user) {
 };
 ClientController.prototype.emitGoToCentral = function(user) {
     this.socket.emit('goToCentral', user);
+};
+ClientController.prototype.takeALook = function(user) {
+    this.view.regarder(user.id);
 };

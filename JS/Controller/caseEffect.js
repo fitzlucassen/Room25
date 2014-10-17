@@ -25,10 +25,12 @@ CaseEffectController.prototype.manageCaseEffect = function(user, effect) {
 		this.client.emitGoToCentral(user);
 	}
 	else if(effect === 'doSee'){
-		
+		this.client.view.appendTmpMessage('Choisissez la case que vous souhaitez regarder.');
+		this.client.takeALook(user);
 	}
 	else if(effect === 'doController'){
-		
+		this.client.view.appendTmpMessage('Choisissez la rangée que vous souhaitez contrôller.');
+		this.client.view.controller(user);
 	}
 	else if(effect === 'exchangeTuile'){
 		
