@@ -16,7 +16,7 @@
 
             $http({
                 method: 'GET',
-                url: 'actions.json'
+                url: 'Json/actions.json'
             }).success(function(data) {
                 $scope.actions = data;
             }).error(function(data, status, headers, config) {
@@ -30,7 +30,7 @@
                 if (newValue !== -1) {
                     $http({
                         method: 'GET',
-                        url: 'tuiles.json'
+                        url: 'Json/tuiles.json'
                     }).success(function(data) {
                         $scope.tuiles = $scope.mixTuiles(data, LastCoords, OtherCoords);
                     }).error(function(data, status, headers, config) {

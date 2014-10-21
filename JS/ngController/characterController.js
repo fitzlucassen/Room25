@@ -15,7 +15,7 @@
 
             $http({
                 method: 'GET',
-                url: 'characters.json'
+                url: 'Json/characters.json'
             }).success(function(data) {
                 $scope.characters = data;
             }).error(function(data, status, headers, config) {
