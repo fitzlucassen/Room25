@@ -364,6 +364,44 @@ io.sockets.on('connection', function(socket) {
         io.sockets.emit('userCentral', users[u]);
     });
 
+    socket.on('deathForFirstHere', function(user){
+        var u = getUserInTheSameCase(users, user);
+
+        if(u != null){
+            console.log('L\'utilisateur ' + u.id + ' : ' + u.name + ' est mort');
+            users.splice(findInArray(users, u.id), 1);
+            io.sockets.emit('disconnectedUser', u);
+
+            if(gardienWins(users)){
+                io.sockets.emit('gardienWins');
+            }
+        }
+    });
+
+    socket.on('exchangeTuile', function(object){
+        var u = findInArray(users, object.id);
+        var lastCoords = users[u].position.x + "-" + users[u].position.y;
+
+        var targetUsers = getUsersInTheSameCase(users, users[u]);
+
+        users[u].position.x = object.coords.split('-')[0];
+        users[u].position.y = object.coords.split('-')[1];
+        
+        for(var i in targetUsers){
+            if(users.hasOwnProperty(i)){
+                users[i].position.x = object.coords.split('-')[0];
+                users[i].position.y = object.coords.split('-')[1];
+            }
+        }
+
+        targetUsers.push(users[u]);
+        io.sockets.emit('exchangeTuile', {
+            users: targetUsers, 
+            user: users[u],
+            lastCoords: lastCoords
+        });
+    });
+
     // Quand un utilisateur se deconnecte
     socket.on('disconnect', function(reason) {
         if (!me) {
@@ -436,6 +474,31 @@ function getUsersInTheSameRow(users, coords, sens){
             if(users.hasOwnProperty(u)){
                 if(users[u].position.y == coords.split('-')[1])
                     r.push(u);
+            }
+        }
+    }
+    return r;
+}
+
+function getUserInTheSameCase(users, user){
+
+    for(var u in users){
+        if(users.hasOwnProperty(u)){
+            if(users[u].position.x == user.position.x && users[u].position.y == user.position.y && users[u].id != user.id)
+                return users[u];
+        }
+    }
+    return null;
+}
+
+function getUsersInTheSameCase(users, user){
+    var r = [];
+
+    for(var u in users){
+        if(users.hasOwnProperty(u)){
+            if(users[u].position.x == user.position.x && users[u].position.y == user.position.y && users[u].id != user.id){
+                console.log(u);
+                r.push(users[u]);
             }
         }
     }

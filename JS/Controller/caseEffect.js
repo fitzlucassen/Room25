@@ -19,7 +19,7 @@ CaseEffectController.prototype.manageCaseEffect = function(user, effect) {
 		
 	}
 	else if(effect === 'deathIfTwo'){
-		
+		this.client.emitDeathForFirstHere(user);
 	}
 	else if(effect === 'goTo2-2'){
 		this.client.emitGoToCentral(user);
@@ -36,6 +36,7 @@ CaseEffectController.prototype.manageCaseEffect = function(user, effect) {
 		
 	}
 	else if(effect === 'goInAnotherTuile'){
-		
+		this.client.view.appendTmpMessage('Choisissez la case où vous voulez vous rendre.');
+		this.client.view.exchangeTuile(user.id);
 	}
 };

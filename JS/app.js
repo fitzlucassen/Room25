@@ -11,6 +11,14 @@ $(document).ready(function() {
     View.setCaseEffect(CaseEffect);
     Client.initialize();
 
+    // Toggle du menu
+    $('body').on('click', '.toggle', function(){
+        if($(this).parent().outerWidth() > 1)
+            $(this).parent().animate({width: '0px'}, 500);
+        else
+            $(this).parent().animate({width: '200px'}, 500);
+    });
+
     // Vérification login + envoi de l'évènement nouveau joueur
     $('body').on('click', '#getMyName', function() {
         var patt = /[a-zA-Z\-\']+/;

@@ -198,7 +198,7 @@ MainView.prototype.nextSentence = function(object) {
     var actionDIV = that.Helper.GetAction(object.action);
     actionDIV.parent().children('p').html(actionDIV.parent().attr('data-second-sentence'));
 
-    manageComplexAction(object);
+    manageComplexAction(object, this.Helper);
 };
 
 // action se déplacer
@@ -239,6 +239,53 @@ MainView.prototype.pousser = function(user) {
     that.CaseEffect.manageCaseEffect(user, tuile.attr('data-action'));
 };
 
+MainView.prototype.exchangeTuileAndUsers = function(users, user, lastCoords) {
+    var futurTuile = this.Helper.GetTuile(user.position.x, user.position.y);
+    var lastTuile = this.Helper.GetTuile(lastCoords.split('-')[0], lastCoords.split('-')[1]);
+    var that = this;
+
+    lastTuile.animate({
+        'top': ((futurTuile.attr('data-position').split('-')[1].parseInt()) * that.caseHeight) + 'px',
+        'left': ((futurTuile.attr('data-position').split('-')[0].parseInt()) * that.caseWidth) + 'px'
+    }, 500);
+
+    futurTuile.animate({
+        'top': ((lastTuile.attr('data-position').split('-')[1].parseInt()) * that.caseHeight) + 'px',
+        'left': ((lastTuile.attr('data-position').split('-')[0].parseInt()) * that.caseWidth) + 'px'
+    }, 500);
+
+    for(var u in users){
+        if(users.hasOwnProperty(u)){
+            that.Helper.GetCharacterDiv(users[u].id).animate({
+                'top': ((users[u].position.y * 1) * that.caseHeight) + 'px',
+                'left': ((users[u].position.x * 1) * that.caseWidth) + 'px'
+            }, 500);
+        }
+    }
+
+    lastTuile.attr('data-position', futurTuile.attr('data-position'));
+    futurTuile.attr('data-position', lastCoords);
+
+    setTimeout(function(){
+        for(var u in users){
+            if(users.hasOwnProperty(u)){
+                while(that.someoneHere(users[u])){
+                    that.moveUser(users[u]);
+                }
+            }
+        }
+    }, 500);
+};
+
+
+MainView.prototype.exchangeTuile = function(id) {
+    if(id == this.Helper.GetCurrentID()){
+        coords = getAllCoords();
+        appendSelect(coords, 'teleporter', this.Helper);
+        return true;
+    }
+};
+
 // Action regarder
 MainView.prototype.regarder = function(userId, coords) {
 
@@ -274,8 +321,8 @@ MainView.prototype.regarder = function(userId, coords) {
 MainView.prototype.controller = function(users, coords, sens) {
     var that = this;
 
-    if (!coords && !sens){
-        var coords = getAllCoords();
+    if (!coords && !sens && users.id == that.Helper.GetCurrentID()){
+        var coords = getAllControllerCoords();
         appendSelect(coords, 'controllerMaster', this.Helper);
         return true;
     }
@@ -441,25 +488,36 @@ function manageTurn(u, users, helper){
 }
 
 // gère une action complète
-function manageComplexAction(object){
+function manageComplexAction(object, helper){
     if(object.action === 'Pousser'){
     	coords = getCoordsDeplacerRegarder(object.user);
-        appendSelect(coords, object.action);
+        appendSelect(coords, object.action, helper);
     }
     else if(object.action === 'Contrôller'){
-        if(object.coords.split('-')[0].parseInt() > object.user.position.x || object.coords.split('-')[0].parseInt() < object.user.position.x){
+        if($('.selectMe').length > 8){
             $('.tourDe').append(
                 '<p class="sensArrows" data-position=' + object.coords + '>' +
                     '<span class="right direction">&rarr;</span>' +
                     '<span class="left direction">&larr;</span>' +
-                '</p>');
-        }
-        else {
-            $('.tourDe').append(
-                '<p class="sensArrows" data-position=' + object.coords + '>' +
                     '<span class="top direction">&uarr;</span>' +
                     '<span class="bottom direction">&darr;</span>' +
                 '</p>');
+        }
+        else {
+            if(object.coords.split('-')[0].parseInt() > object.user.position.x || object.coords.split('-')[0].parseInt() < object.user.position.x){
+                $('.tourDe').append(
+                    '<p class="sensArrows" data-position=' + object.coords + '>' +
+                        '<span class="right direction">&rarr;</span>' +
+                        '<span class="left direction">&larr;</span>' +
+                    '</p>');
+            }
+            else {
+                $('.tourDe').append(
+                    '<p class="sensArrows" data-position=' + object.coords + '>' +
+                        '<span class="top direction">&uarr;</span>' +
+                        '<span class="bottom direction">&darr;</span>' +
+                    '</p>');
+            }
         }
     }
 }
@@ -648,6 +706,7 @@ function getCoordsDeplacerRegarder(u){
 
     return coords;
 }
+
 function getAllCoords(){
     var coords = [];
 
@@ -664,7 +723,6 @@ function getAllCoords(){
         {x: 1, y: 4},
         {x: 2, y: 0},
         {x: 2, y: 1},
-        {x: 2, y: 2},
         {x: 2, y: 3},
         {x: 2, y: 4},
         {x: 3, y: 0},
@@ -675,6 +733,31 @@ function getAllCoords(){
         {x: 4, y: 0},
         {x: 4, y: 1},
         {x: 4, y: 2},
+        {x: 4, y: 3},
+        {x: 4, y: 4}
+    );
+
+    return coords;
+}
+
+function getAllControllerCoords(){
+    var coords = [];
+
+    coords.push(
+        {x: 0, y: 0},
+        {x: 0, y: 1},
+        {x: 0, y: 3},
+        {x: 0, y: 4},
+        {x: 1, y: 0},
+        {x: 1, y: 1},
+        {x: 1, y: 3},
+        {x: 1, y: 4},
+        {x: 3, y: 0},
+        {x: 3, y: 1},
+        {x: 3, y: 3},
+        {x: 3, y: 4},
+        {x: 4, y: 0},
+        {x: 4, y: 1},
         {x: 4, y: 3},
         {x: 4, y: 4}
     );

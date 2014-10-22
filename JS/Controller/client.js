@@ -121,6 +121,9 @@ ClientController.prototype.initialize = function() {
     this.socket.on('userCentral', function(user){
         that.view.deplacer(user);
     });
+    this.socket.on('exchangeTuile', function(object){
+        that.view.exchangeTuileAndUsers(object.users, object.user, object.lastCoords);
+    });
 };
 
 // Nouvel utilisateur avec un pseudo
@@ -189,6 +192,23 @@ ClientController.prototype.emitAction = function(element){
         this.view.regarder(that.Helper.GetCurrentID(), element.parent().attr('data-position'));
         $('.selectMe').remove();
     }
+    else if(action === 'controllerMaster'){
+        var that = this;
+
+        this.view.appendTmpMessage('Choisissez le sens dans lequel contrôller la rangée.');
+        this.socket.emit('getUserAndDoNextSentenceController', {
+            id: that.Helper.GetCurrentID(),
+            action: 'Contrôller',
+            coords: element.parent().attr('data-position')
+        });
+    }
+    else if(action === 'teleporter'){
+        this.socket.emit('exchangeTuile', {
+            id: this.Helper.GetCurrentID(),
+            coords: element.parent().attr('data-position')
+        });
+        $('.selectMe').remove();
+    }
     else {
         var that = this;
         this.socket.emit('doAction', {
@@ -226,4 +246,8 @@ ClientController.prototype.emitGoToCentral = function(user) {
 };
 ClientController.prototype.takeALook = function(user) {
     this.view.regarder(user.id);
+};
+
+ClientController.prototype.emitDeathForFirstHere = function(user) {
+    this.socket.emit('deathForFirstHere', user);
 };
