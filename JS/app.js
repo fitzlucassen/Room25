@@ -77,6 +77,11 @@ $(document).ready(function() {
         }
     });
 
+    // Au clique sur une action on la remet en possibilité
+    $('body').on('click', '.action1-final > img, .action2-final > img', function(e) {
+        View.animateAction($(this), false);
+    });
+
     // Au clique sur le bouton des actions on les valide
     $('body').on('click', '.btnOk', function(e) {
         View.disableActions();

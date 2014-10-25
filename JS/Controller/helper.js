@@ -11,7 +11,7 @@ HelperController.prototype.SetCurrentID = function(id) {
 };
 
 HelperController.prototype.GetCharacterDiv = function(id) {
-	if(id != null && id >= 0){
+	if(id !== null && id >= 0){
 		return $('.character-' + id);
 	}
 	else{
@@ -20,7 +20,7 @@ HelperController.prototype.GetCharacterDiv = function(id) {
 };
 
 HelperController.prototype.GetTuile = function(x, y) {
-	if(x != null && x >= 0 && y != null && y >= 0)
+	if(x !== null && x >= 0 && y !== null && y >= 0)
 		return $('.tuile[data-position="'+ x + '-' + y + '"]');
 	else
 		return $('.tuile[data-position="2-2"]');

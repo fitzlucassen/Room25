@@ -1,11 +1,29 @@
 // Initialisation
-var express = require('express'),
-    http = require('http');
+var express = require('express');
+var http = require('http');
+var socketIO = require('socket.io');
+var user = require('./nodeModules/user');
+var debug = require('./nodeModules/debug');
+var coords = require('./nodeModules/coords');
+var game = require('./nodeModules/game');
+// End
 
+// Création du serveur
 var app = express();
 var server = http.createServer(app).listen(1337);
+var io = socketIO.listen(server);
+// End
 
-var io = require('socket.io').listen(server);
+// Gestion des modules internes
+exports = module.exports = server;
+exports.use = function() {
+    app.use.apply(app, arguments);
+};
+
+UserManager = new user.userManager();
+DebugManager = new debug.debugManager();
+CoordsManager = new coords.coordsManager();
+GameManager = new game.gameManager();
 // End
 
 // Tous les utilisateurs
@@ -48,7 +66,7 @@ io.sockets.on('connection', function(socket) {
             users: users
         });
 
-        console.log('L\'utilisateur ' + me.id + ' : ' + me.name + ' s\'est connecté');
+        DebugManager.messageForUser(me, 's\'est connecté');
     });
 
     // Quand un utilisateur à choisi un personnage
@@ -56,7 +74,7 @@ io.sockets.on('connection', function(socket) {
         // On ajoute le nom du personnage choisi à l'utilisateur actuel
         me.character = object.name;
 
-        console.log('L\'utilisateur ' + me.id + ' : ' + me.name + ' a choisi le personnage ' + object.name);
+        DebugManager.messageForUser(me, 'a choisi le personnage ' + object.name);
 
         // Et on émet à tous les autres utilisateurs le signal qu'un personnage a été prit
         io.sockets.emit('newCharacter', {
@@ -65,7 +83,7 @@ io.sockets.on('connection', function(socket) {
             pseudo: me.name
         });
 
-        //if (moreThanFourPlayers(users)) {
+        //if (GameManager.moreThanFourPlayers(users)) {
         console.log("Le jeu peut démarrer");
         io.sockets.emit('letsPlay');
         //}
@@ -73,9 +91,10 @@ io.sockets.on('connection', function(socket) {
 
     // Signal de début de partie
     socket.on('emitPlay', function() {
-        var arrayCoords = manageCoords();
-        var identites = manageIdentity(users);
-        users = managePlayerOrder(users);
+        var arrayCoords = CoordsManager.manageCoords();
+
+        users = GameManager.manageIdentity(users, CoordsManager.shufflePositions);
+        users = UserManager.processPlayerOrder(users, CoordsManager.shufflePositions);
 
         io.sockets.emit('play', {
             me: me,
@@ -87,14 +106,15 @@ io.sockets.on('connection', function(socket) {
 
     // Quand un joueur a défini ses actions
     socket.on('playerReady', function(object) {
-        users[findInArray(users, object.id)].ready = true;
-        users[findInArray(users, object.id)].action1 = object.action1;
-        users[findInArray(users, object.id)].action2 = object.action2;
+        var u = UserManager.getById(users, object.id);
+        users[u].ready = true;
+        users[u].action1 = object.action1;
+        users[u].action2 = object.action2;
 
-        console.log('L\'utilisateur ' + me.id + ' : ' + me.name + ' est prêt.');
+        DebugManager.messageForUser(me, 'est prêt');
 
         // Si tout le monde est ok on joue
-        if (everyoneIsOk(users)) {
+        if (GameManager.everyoneIsOk(users)) {
             console.log('Tout le monde est prêt.');
             io.sockets.emit('everyoneIsOk', users);
         }
@@ -102,7 +122,7 @@ io.sockets.on('connection', function(socket) {
 
     // Retourne le user grâce à l'id fourni puis emet l'event nextsentence
     socket.on('getUserAndDoNextSentence', function(object) {
-        var u = findInArray(users, object.id);
+        var u = UserManager.getById(users, object.id);
 
         socket.emit('doNextSentence', {
             user: users[u],
@@ -113,7 +133,7 @@ io.sockets.on('connection', function(socket) {
 
     // Retourne le user grâce à l'id fourni puis emet l'event nextsentence
     socket.on('getUserAndDoNextSentenceController', function(object) {
-        var u = findInArray(users, object.id);
+        var u = UserManager.getById(users, object.id);
 
         socket.emit('doNextSentenceController', {
             user: users[u],
@@ -124,10 +144,10 @@ io.sockets.on('connection', function(socket) {
 
     // Une action doit être effectué
     socket.on('doAction', function(object){
-        var u = users[findInArray(users, object.id)];
+        var u = users[UserManager.getById(users, object.id)];
         u.action1 = '';
 
-        console.log(u.id + ' --> ' + u.name + ' effectue l\'action ' + object.action);
+        DebugManager.messageForUser(u, 'effectue l\'action ' + object.action);
 
         // Si c'est l'action déplacer
         if(object.action === 'Déplacer'){
@@ -141,14 +161,15 @@ io.sockets.on('connection', function(socket) {
 
         // Si c'est l'action pousser
         else if(object.action === 'Pousser'){
-            var uTarget = users[findInArray(users, object.idTarget)];
+            var uTarget = users[UserManager.getById(users, object.idTarget)];
             uTarget.position.x = object.coords.split('-')[0];
             uTarget.position.y = object.coords.split('-')[1];
 
-            users[findInArray(users, object.idTarget)] = uTarget;
+            users[UserManager.getById(users, object.idTarget)] = uTarget;
 
             io.sockets.emit('playerPousser', {
-                user: uTarget,
+                userTarget: uTarget,
+                user: u
             });
         }
 
@@ -160,27 +181,28 @@ io.sockets.on('connection', function(socket) {
             });
         }
         else if(object.action === 'Contrôller'){
-            var us = getUsersInTheSameRow(users, object.coords, object.sens);
+            var us = UserManager.getInTheSameRow(users, object.coords, object.sens);
 
             for(var b in us){
                 if(us.hasOwnProperty(b)){
-                    console.log(users[us[b]].name + ' --> avant : ' + users[us[b]].position.x + '-' + users[us[b]].position.y);
+                    DebugManager.messageForUser(users[us[b]], '--> avant : ' + users[us[b]].position.x + '-' + users[us[b]].position.y);
 
-                    users[us[b]] = getNewUserPositionAfterController(users[us[b]], object.sens);
+                    users[us[b]] = CoordsManager.getNewUserPositionAfterController(users[us[b]], object.sens);
 
-                    console.log(users[us[b]].name + ' --> après : ' + users[us[b]].position.x + '-' + users[us[b]].position.y);
+                    DebugManager.messageForUser(users[us[b]], '--> après : ' + users[us[b]].position.x + '-' + users[us[b]].position.y);
                 }
             }
 
             io.sockets.emit('playerController', {
                 users: users,
                 coords: object.coords,
-                sens: object.sens
+                sens: object.sens,
+                user: u
             });
         }
 
         // On update le user
-        users[findInArray(users, object.id)] = u;
+        users[UserManager.getById(users, object.id)] = u;
 
         // Si c'est la deuxième action, on remet tout le monde à zéro pour le prochain tour
         if(u.action2 === object.action){
@@ -189,25 +211,26 @@ io.sockets.on('connection', function(socket) {
             u.ready = false;
 
             // On update le user
-            users[findInArray(users, object.id)] = u;
+            users[UserManager.getById(users, object.id)] = u;
 
-            if(everyoneIsNOk(users)){
+            if(GameManager.everyoneIsNok(users)){
                 io.sockets.emit('nextTurn', {
                     users: users
                 });
             }
         }
+    });
 
-        
+    socket.on('nextPlayerOk', function(u){
         // On récupère le prochain joueur
-        var nextOne = getByOrder(users, (u.order * 1) + 1);
+        var nextOne = UserManager.getByOrder(users, (u.order * 1) + 1);
         // Si on est à la fin de l'array on repasse à l'index 0
         if(!nextOne)
-            nextOne = getByOrder(users, 0);
+            nextOne = UserManager.getByOrder(users, 0);
 
         // Si il y a une action1 on emet l'event
         if(nextOne.action1 != ''){
-            console.log('Tour de ' + nextOne.id + ' --> ' + nextOne.name);
+            DebugManager.messageForUser(nextOne, 'son tour');
 
             io.sockets.emit('nextPlayer', {
                 user: nextOne,
@@ -217,7 +240,7 @@ io.sockets.on('connection', function(socket) {
         // Sinon c'est qu'on passe à la deuxieme action
         else {
             // Si tout le monde a joué ses deux actions on repasse à la prévision
-            if(everyoneIsNOk(users)){
+            if(GameManager.everyoneIsNok(users)){
                 io.sockets.emit('nextTurn', {
                     users: users
                 });
@@ -226,13 +249,13 @@ io.sockets.on('connection', function(socket) {
             else {
                 var o = (nextOne.order * 1);
                 while(nextOne && (nextOne.action2 === '' || nextOne.action2 === null)){
-                    nextOne = getByOrder(users, ((o * 1) + 1));
+                    nextOne = UserManager.getByOrder(users, ((o * 1) + 1));
                     o++;
                 }
 
                 // Si on a trouvé un joeur avec une deuxieme action
                 if(nextOne){
-                    console.log('Tour de ' + nextOne.id + ' --> ' + nextOne.name);
+                    DebugManager.messageForUser(nextOne, 'son tour');
 
                     // Et on le fait jouer
                     if(nextOne.action2 != '' && nextOne.action2 != null){
@@ -260,10 +283,11 @@ io.sockets.on('connection', function(socket) {
         }
     });
 
+    // L'action prévu ne peut-être effectuée
     socket.on('noPossibilities', function(object){
         var u = object.user;
 
-        console.log(u.id + ' --> ' + u.name + ' effectue l\'action' + (u.action1 === '' ? u.action2 : u.action1) + ' sans possibilité...');
+        DebugManager.messageForUser(u, 'effectue l\'action' + (u.action1 === '' ? u.action2 : u.action1) + ' sans possibilité...');
 
         if(u.action1 === ''){
             u.action2 = '';
@@ -271,17 +295,17 @@ io.sockets.on('connection', function(socket) {
         }
         u.action1 = '';
         // On update le user
-        users[findInArray(users, u.id)] = u;
+        users[UserManager.getById(users, u.id)] = u;
 
         // On récupère le prochain joueur
-        var nextOne = getByOrder(users, (u.order * 1) + 1);
+        var nextOne = UserManager.getByOrder(users, (u.order * 1) + 1);
         // Si on est à la fin de l'array on repasse à l'index 0
         if(!nextOne)
-            nextOne = getByOrder(users, 0);
+            nextOne = UserManager.getByOrder(users, 0);
 
         // Si il y a une action1 on emet l'event
         if(nextOne.action1 != ''){
-            console.log('Tour de ' + nextOne.id + ' --> ' + nextOne.name);
+            DebugManager.messageForUser(nextOne, 'son tour');
 
             io.sockets.emit('nextPlayer', {
                 user: nextOne,
@@ -291,7 +315,7 @@ io.sockets.on('connection', function(socket) {
         // Sinon c'est qu'on passe à la deuxieme action
         else {
             // Si tout le monde a joué ses deux actions on repasse à la prévision
-            if(everyoneIsNOk(users)){
+            if(GameManager.everyoneIsNok(users)){
                 io.sockets.emit('nextTurn', {
                     users: users
                 });
@@ -300,13 +324,13 @@ io.sockets.on('connection', function(socket) {
             else {
                 var o = (nextOne.order * 1);
                 while(nextOne && (nextOne.action2 === '' || nextOne.action2 === null)){
-                    nextOne = getByOrder(users, ((o * 1) + 1));
+                    nextOne = UserManager.getByOrder(users, ((o * 1) + 1));
                     o++;
                 }
 
                 // Si on a trouvé un joeur avec une deuxieme action
                 if(nextOne){
-                    console.log('Tour de ' + nextOne.id + ' --> ' + nextOne.name);
+                    DebugManager.messageForUser(nextOne, 'son tour');
 
                     // Et on le fait jouer
                     if(nextOne.action2 != '' && nextOne.action2 != null){
@@ -334,55 +358,65 @@ io.sockets.on('connection', function(socket) {
         }
     });
 
+    // Tue quelqu'un
     socket.on('killUser', function(user){
-        console.log('L\'utilisateur ' + user.id + ' : ' + user.name + ' est mort');
-        users.splice(findInArray(users, user.id), 1);
+
+        users.splice(UserManager.getById(users, user.id), 1);
         io.sockets.emit('disconnectedUser', user);
 
-        if(gardienWins(users)){
+        DebugManager.messageForUser(user, 'est mort');
+        DebugManager.debugArrayOfObject(users);
+
+        if(GameManager.gardienWins(users)){
             io.sockets.emit('gardienWins');
         }
     });
 
+    // Retourne à la case central
     socket.on('goToCentral', function(user){
-        console.log('L\'utilisateur ' + user.id + ' : ' + user.name + ' est téléporté sur la case central');
+        DebugManager.messageForUser(user, 'est mort');
 
-        var u = findInArray(users, user.id);
+        var u = UserManager.getById(users, user.id);
         users[u].position.x = 2;
         users[u].position.y = 2;
 
         io.sockets.emit('userCentral', users[u]);
     });
 
+    // Effectue l'action controller via la case controller
     socket.on('controlEffect', function(user){
-        console.log('L\'utilisateur ' + user.id + ' : ' + user.name + ' va controller une rangé');
+        DebugManager.messageForUser(user, 'va controller une rangé');
 
-        var u = findInArray(users, user.id);
+        var u = UserManager.getById(users, user.id);
         users[u].position.x = 2;
         users[u].position.y = 2;
 
         io.sockets.emit('userCentral', users[u]);
     });
 
+    // Tue la première personne présente sur la case poison
     socket.on('deathForFirstHere', function(user){
-        var u = getUserInTheSameCase(users, user);
+        var u = UserManager.getInTheSameCase(users, user)[0];
 
         if(u != null){
-            console.log('L\'utilisateur ' + u.id + ' : ' + u.name + ' est mort');
-            users.splice(findInArray(users, u.id), 1);
+            users.splice(UserManager.getById(users, u.id), 1);
             io.sockets.emit('disconnectedUser', u);
 
-            if(gardienWins(users)){
+            DebugManager.messageForUser(u, 'est mort');
+            DebugManager.debugArrayOfObject(users);
+
+            if(GameManager.gardienWins(users)){
                 io.sockets.emit('gardienWins');
             }
         }
     });
 
+    // Quand un utilisateur se téléporte via la case spécifique
     socket.on('exchangeTuile', function(object){
-        var u = findInArray(users, object.id);
+        var u = UserManager.getById(users, object.id);
         var lastCoords = users[u].position.x + "-" + users[u].position.y;
 
-        var targetUsers = getUsersInTheSameCase(users, users[u]);
+        var targetUsers = UserManager.getInTheSameCase(users, users[u]);
 
         users[u].position.x = object.coords.split('-')[0];
         users[u].position.y = object.coords.split('-')[1];
@@ -393,6 +427,8 @@ io.sockets.on('connection', function(socket) {
                 users[i].position.y = object.coords.split('-')[1];
             }
         }
+
+        DebugManager.messageForUser(users[u], 'se téléporte en ' + users[u].position.x + '-' + users[u].position.y);
 
         targetUsers.push(users[u]);
         io.sockets.emit('exchangeTuile', {
@@ -408,348 +444,18 @@ io.sockets.on('connection', function(socket) {
             return false;
         }
 
-        console.log('L\'utilisateur ' + me.id + ' : ' + me.name + ' s\'est déconnecté.');
-        console.log(reason);
-
         // On supprime l'utilisateur du tableau
-        users.splice(findInArray(users, me.id), 1);
-        debugArray(users);
+        users.splice(UserManager.getById(users, me.id), 1);
+
+        DebugManager.messageForUser(me, 's\'est deconnecté');
+        DebugManager.debugArrayOfObject(users);
+        console.log(reason);
 
         // Et on émet à tous les autres joueurs qu'un utilisateur s'est deconnecté
         io.sockets.emit('disconnectedUser', me);
 
-        if (!moreThanFourPlayers(users)) {
+        if (!GameManager.moreThanFourPlayers(users)) {
             io.sockets.emit('cantPlay');
         }
     });
 });
-
-exports = module.exports = server;
-// delegates use() function
-exports.use = function() {
-    app.use.apply(app, arguments);
-};
-
-function getNewUserPositionAfterController(u, sens){
-    if(sens == 'top'){
-        if(u.position.y > 0)
-            u.position.y = (u.position.y * 1) - 1;
-        else
-            u.position.y = 4;
-    }
-    else if(sens == 'bottom'){
-        if(u.position.y < 4)
-            u.position.y = (u.position.y * 1) + 1;
-        else
-            u.position.y = 0;
-    }
-    else if(sens == 'left'){
-        if(u.position.x > 0)
-            u.position.x = (u.position.x * 1) - 1;
-        else
-            u.position.x = 4;
-    }
-    else if(sens == 'right'){
-        if(u.position.x < 4)
-            u.position.x = (u.position.x * 1) + 1;
-        else
-            u.position.x = 0;
-    }
-
-    return u;
-}
-
-function getUsersInTheSameRow(users, coords, sens){
-    var r = [];
-    if(sens == 'top' || sens == 'bottom'){
-        for(var u in users){
-            if(users.hasOwnProperty(u)){
-                if(users[u].position.x == coords.split('-')[0])
-                    r.push(u);
-            }
-        }
-    }
-    else if(sens == 'left' || sens == 'right'){
-        for(var u in users){
-            if(users.hasOwnProperty(u)){
-                if(users[u].position.y == coords.split('-')[1])
-                    r.push(u);
-            }
-        }
-    }
-    return r;
-}
-
-function getUserInTheSameCase(users, user){
-
-    for(var u in users){
-        if(users.hasOwnProperty(u)){
-            if(users[u].position.x == user.position.x && users[u].position.y == user.position.y && users[u].id != user.id)
-                return users[u];
-        }
-    }
-    return null;
-}
-
-function getUsersInTheSameCase(users, user){
-    var r = [];
-
-    for(var u in users){
-        if(users.hasOwnProperty(u)){
-            if(users[u].position.x == user.position.x && users[u].position.y == user.position.y && users[u].id != user.id){
-                console.log(u);
-                r.push(users[u]);
-            }
-        }
-    }
-    return r;
-}
-
-function getByOrder(users, order){
-    var u = null;
-
-    for (var a in users) {
-        if (users.hasOwnProperty(a)) {
-            if (users[a].order == order){
-                u = users[a];
-                break;
-            }
-        }
-    }
-    return u;
-}
-
-function everyoneIsOk(array) {
-    var ready = true;
-    for (var a in array) {
-        if (array.hasOwnProperty(a)) {
-            if (!array[a].ready) {
-                ready = false;
-                break;
-            }
-        }
-    }
-    return ready;
-}
-
-function everyoneIsNOk(array) {
-    var notReady = true;
-    for (var a in array) {
-        if (array.hasOwnProperty(a)) {
-            if (array[a].ready) {
-                notReady = false;
-                break;
-            }
-        }
-    }
-    return notReady;
-}
-
-function gardienWins(users){
-    var bool = 0;
-
-    for(var u in users){
-        if (users.hasOwnProperty(u)) {
-            if(users[u].identity === 'prisonnier'){
-                bool++;
-            }
-        }
-    }
-
-    return bool <= 2;
-}
-
-function moreThanFourPlayers(array) {
-    var cpt = 0;
-    for (var a in array) {
-        if (array.hasOwnProperty(a)) {
-            if (array[a].character != '')
-                cpt++;
-        }
-    }
-    return cpt >= 4;
-}
-
-function findInArray(array, val) {
-    for (var a in array) {
-        if (array.hasOwnProperty(a)) {
-            if (array[a].id == val)
-                return a;
-        }
-    }
-}
-
-function findInArrayPosition(val, array) {
-    for (var a in array) {
-        if (array.hasOwnProperty(a)) {
-            if (array[a].x == val.x && array[a].y == val.y)
-                return a;
-        }
-    }
-}
-
-function debugArray(array) {
-    for (var a in array) {
-        console.log(a + ' -> ' + array[a]);
-    }
-}
-
-function getCoordsPossible() {
-    return [{
-        x: 0,
-        y: 0
-    }, {
-        x: 1,
-        y: 0
-    }, {
-        x: 0,
-        y: 1
-    }, {
-        x: 4,
-        y: 0
-    }, {
-        x: 3,
-        y: 0
-    }, {
-        x: 4,
-        y: 1
-    }, {
-        x: 4,
-        y: 4
-    }, {
-        x: 4,
-        y: 3
-    }, {
-        x: 3,
-        y: 4
-    }, {
-        x: 1,
-        y: 4
-    }, {
-        x: 0,
-        y: 4
-    }, {
-        x: 0,
-        y: 3
-    }, ];
-}
-
-function getOtherCoordsPossible() {
-    return [{
-        x: 2,
-        y: 0
-    }, {
-        x: 1,
-        y: 1
-    }, {
-        x: 2,
-        y: 1
-    }, {
-        x: 3,
-        y: 1
-    }, {
-        x: 0,
-        y: 2
-    }, {
-        x: 1,
-        y: 2
-    }, {
-        x: 3,
-        y: 2
-    }, {
-        x: 4,
-        y: 2
-    }, {
-        x: 1,
-        y: 3
-    }, {
-        x: 2,
-        y: 3
-    }, {
-        x: 3,
-        y: 3
-    }, {
-        x: 2,
-        y: 4
-    }, ];
-}
-
-function mixRandomlyPositions(coords) {
-    var j = 0;
-    var valI = '';
-    var valJ = valI;
-    var l = coords.length - 1;
-
-    while (l > -1) {
-        j = Math.floor(Math.random() * l);
-        valI = coords[l];
-        valJ = coords[j];
-        coords[l] = valJ;
-        coords[j] = valI;
-        l = l - 1;
-    }
-    return coords;
-}
-
-function deleteLastCardsCoords(arrayFrom, array) {
-    var arrayReturn = [];
-
-    // Et pour chacune des tuiles restante
-    for (var t in arrayFrom) {
-        if (arrayFrom.hasOwnProperty(t)) {
-            // On vérifie que la coordonnées n'est pas déjà prise
-            if (!findInArrayPosition(arrayFrom[t], array)) {
-                arrayReturn.push(arrayFrom[t]);
-            }
-        }
-    }
-    return arrayReturn;
-}
-
-function manageCoords() {
-    // On récupère les coordonnées autorisées pour ces cartes
-    var coordsPossible = getCoordsPossible();
-    // On mélange ces coordonnées au hasard
-    coordsPossible = mixRandomlyPositions(coordsPossible);
-    var lastCardsCoords = [];
-    // Et on récupère les deux premières
-    lastCardsCoords.push(coordsPossible[0]);
-    lastCardsCoords.push(coordsPossible[1]);
-
-    // On récupère les autres coordonnées
-    var otherCoords = getOtherCoordsPossible();
-    // On concatène les deux tableaux de coordonnées
-    otherCoords = otherCoords.concat(coordsPossible);
-    // On mélange le tableau de coordonnées au hasard
-    otherCoords = mixRandomlyPositions(otherCoords);
-    otherCoords = deleteLastCardsCoords(otherCoords, lastCardsCoords);
-
-    return [lastCardsCoords, otherCoords];
-}
-
-function manageIdentity(users) {
-    var identities;
-
-    if (users.length == 4) {
-        identities = ['prisonnier', 'prisonnier', 'prisonnier', 'gardien'];
-    } else {
-        identities = ['prisonnier', 'prisonnier', 'prisonnier', 'gardien', 'gardien'];
-    }
-
-    identities = mixRandomlyPositions(identities);
-    for (var u in users) {
-        if (users.hasOwnProperty(u)) {
-            users[u].identity = identities[u];
-        }
-    }
-}
-
-function managePlayerOrder(users){
-    users = mixRandomlyPositions(users);
-    for(var i in users){
-        if (users.hasOwnProperty(i)) {
-            users[i].order = i;
-        }
-    }
-    return users;
-}

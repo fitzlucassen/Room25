@@ -82,15 +82,17 @@ ClientController.prototype.initialize = function() {
     });
     // On effectue l'action pousser
     this.socket.on('playerPousser', function(object){
-        that.view.pousser(object.user);
+        that.view.pousser(object.userTarget, object.user);
     });
     // On regarde
     this.socket.on('playerRegarder', function(object){
         that.view.regarder(object.user.id, object.coords);
+        that.socket.emit('nextPlayerOk', object.user);
     });
     // On controlle
     this.socket.on('playerController', function(object){
         that.view.controller(object.users, object.coords, object.sens);
+        that.socket.emit('nextPlayerOk', object.user);
     });
 
     // On passe au joueur suivant
@@ -120,9 +122,11 @@ ClientController.prototype.initialize = function() {
     });
     this.socket.on('userCentral', function(user){
         that.view.deplacer(user);
+        that.socket.emit('nextPlayerOk', object.user);
     });
     this.socket.on('exchangeTuile', function(object){
         that.view.exchangeTuileAndUsers(object.users, object.user, object.lastCoords);
+        that.socket.emit('nextPlayerOk', object.user);
     });
 };
 
@@ -169,7 +173,6 @@ ClientController.prototype.emitAction = function(element){
         $('.selectMe').remove();
     }
     else if(action === 'Contrôller') {
-        var that = this;
 
         this.socket.emit('getUserAndDoNextSentenceController', {
             id: that.Helper.GetCurrentID(),
@@ -179,7 +182,6 @@ ClientController.prototype.emitAction = function(element){
     }
     else if(action === 'Pousser' && element.parent().hasClass('character')){
         var idTarget = element.parent().removeClass('character').attr('class').split('-')[1];
-        var that = this;
         element.parent().addClass('character');
 
         this.socket.emit('getUserAndDoNextSentence', {
@@ -193,7 +195,6 @@ ClientController.prototype.emitAction = function(element){
         $('.selectMe').remove();
     }
     else if(action === 'controllerMaster'){
-        var that = this;
 
         this.view.appendTmpMessage('Choisissez le sens dans lequel contrôller la rangée.');
         this.socket.emit('getUserAndDoNextSentenceController', {
@@ -210,7 +211,6 @@ ClientController.prototype.emitAction = function(element){
         $('.selectMe').remove();
     }
     else {
-        var that = this;
         this.socket.emit('doAction', {
             id: that.Helper.GetCurrentID(),
             action: action,
@@ -244,10 +244,15 @@ ClientController.prototype.emitDeath = function(user) {
 ClientController.prototype.emitGoToCentral = function(user) {
     this.socket.emit('goToCentral', user);
 };
-ClientController.prototype.takeALook = function(user) {
-    this.view.regarder(user.id);
-};
-
 ClientController.prototype.emitDeathForFirstHere = function(user) {
+    var that = this;
     this.socket.emit('deathForFirstHere', user);
+
+    setTimeout(this.emitNextPlayer, 200, user, this);
+};
+ClientController.prototype.emitNextPlayer = function(user, that){
+    if(that)
+        that.socket.emit('nextPlayerOk', user);
+    else
+        this.socket.emit('nextPlayerOk', user);
 };

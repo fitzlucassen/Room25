@@ -82,14 +82,14 @@ MainView.prototype.redirectToGame = function(object) {
 
 // Tour d'après
 MainView.prototype.nextTurn = function(object) {
-	$('.actions .action').fadeIn('slow');
+    $('.actions .action').fadeIn('slow');
+	$('.actions .action img').fadeIn('slow');
 	$('.actions .action').children('p').remove();
+
+    $('.action1-final > img, .action2-final > img').remove();
 
 	$('.actions .action').each(function(){
 		$(this).removeClass('ok').removeClass('actionOk-1').removeClass('actionOk-2');
-		$(this).css({
-			'margin-top': '5px'
-		});
 	});
 };
 
@@ -132,16 +132,30 @@ MainView.prototype.showIdentity = function(users, meID) {
 
 // On anime les actions
 MainView.prototype.animateAction = function(element, toggle) {
+    var isAction1 = $('.action1-final > img').length === 0;
+    var isAction2 = $('.action2-final > img').length === 0;
+
     if (toggle) {
-        element.animate({
-            'margin-top': '20px'
-        }, 300);
+        var img = element.children('img');
+
+        if(isAction1)
+            $('.action1-final').append(img.clone());
+        else
+            $('.action2-final').append(img.clone());
+
+        element.children('img').fadeOut('slow');
+
         element.addClass('ok').addClass('actionOk-' + $('.action.ok').length);
     } else {
-        element.animate({
-            'margin-top': '5px'
-        }, 300);
-        element.removeClass('actionOk-' + element.attr('class').split(' ').last().split('-').last()).removeClass('ok');
+        var title = element.attr('title');
+        if(!isAction1)
+            element.remove();
+        else
+            element.remove();
+
+        $('.action img[title="' + title + '"]').fadeIn('slow');
+
+        $('.action img[title="' + title + '"]').parent().removeClass('actionOk-' + $('.action img[title="' + title + '"]').parent().attr('class').split(' ').last().split('-').last()).removeClass('ok');
     }
 };
 
@@ -223,20 +237,132 @@ MainView.prototype.deplacer = function(user) {
 };
 
 // Action pousser
-MainView.prototype.pousser = function(user) {
+MainView.prototype.pousser = function(userTarget, user) {
 	var that = this;
-	that.Helper.GetCharacterDiv(user.id).animate({
-		top: (that.caseHeight * user.position.y) + 'px',
-		left: (that.caseWidth * user.position.x) + 'px'
+	that.Helper.GetCharacterDiv(userTarget.id).animate({
+		top: (that.caseHeight * userTarget.position.y) + 'px',
+		left: (that.caseWidth * userTarget.position.x) + 'px'
 	}, 500);
 
-    var tuile = that.Helper.GetTuile(user.position.x, user.position.y);
+    var tuile = that.Helper.GetTuile(userTarget.position.x, userTarget.position.y);
 	var imgs = tuile.children('img');
 	imgs.first().removeClass('ng-hide');
 	imgs.first().fadeIn('slow');
 	imgs.last().fadeOut('slow');
 
-    that.CaseEffect.manageCaseEffect(user, tuile.attr('data-action'));
+    that.CaseEffect.manageCaseEffect(userTarget, tuile.attr('data-action'), user);
+};
+
+// Action regarder
+MainView.prototype.regarder = function(userId, coords) {
+    if(!coords && userId == this.Helper.GetCurrentID()){
+        this.appendTmpMessage('Choisissez la case que vous souhaitez regarder.');
+        coords = getAllCoords();
+        appendSelect(coords, 'regarderMaster', this.Helper);
+        return true;
+    }
+	var that = this;
+	var position = {
+		x: coords.split('-')[0].parseInt(),
+		y: coords.split('-')[1].parseInt()
+	};
+
+	if(userId == that.Helper.GetCurrentID()){
+		var imgs = that.Helper.GetTuile(position.x, position.y).children('img');
+
+		if(imgs.first().hasClass('ng-hide')){
+			imgs.first().removeClass('ng-hide');
+			imgs.first().fadeIn('slow');
+			imgs.last().fadeOut('slow');
+
+			setTimeout(function(){
+				imgs.first().addClass('ng-hide');
+				imgs.first().fadeOut('slow');
+				imgs.last().fadeIn('slow');
+			}, 3000);
+		}
+	}
+};
+
+// Action contrôller
+MainView.prototype.controller = function(users, coords, sens) {
+    var that = this;
+
+    if (!coords && !sens && users.id == that.Helper.GetCurrentID()){
+        this.appendTmpMessage('Choisissez la rangée que vous souhaitez contrôller.');
+        coords = getAllControllerCoords();
+        appendSelect(coords, 'controllerMaster', this.Helper);
+        return true;
+    }
+    if(sens == 'left' || sens == 'right'){
+        $('.tuile').each(function(){
+            var x = $(this).attr('data-position').split('-')[0].parseInt();
+            var y = $(this).attr('data-position').split('-')[1].parseInt();
+
+            if(y == coords.split('-')[1].parseInt()){
+                if(x === 0 && sens === 'left')
+                    x = 4;
+                else if(x === 4 && sens === 'right')
+                    x = 0;
+                else if(sens === 'left')
+                    x = x - 1;
+                else
+                    x = x + 1;
+
+                $(this).attr('data-position', x + '-' + y);
+                $(this).addClass('moved');
+            }
+        });
+    }
+    else if(sens === 'top' || sens === 'bottom'){
+        $('.tuile').each(function(){
+            var x = $(this).attr('data-position').split('-')[0].parseInt();
+            var y = $(this).attr('data-position').split('-')[1].parseInt();
+
+            if(x == coords.split('-')[0].parseInt()){
+
+                if(y === 0 && sens === 'top')
+                    y = 4;
+                else if(y === 4 && sens === 'bottom')
+                    y = 0;
+                else if(sens === 'top')
+                    y = y - 1;
+                else
+                    y = y + 1;
+
+                $(this).attr('data-position', x + '-' + y);
+                $(this).addClass('moved');
+            }
+        });
+    }
+    $('.moved').each(function(){
+        $(this).animate({
+            'top': (($(this).attr('data-position').split('-')[1].parseInt()) * that.caseHeight) + 'px',
+            'left': (($(this).attr('data-position').split('-')[0].parseInt()) * that.caseWidth) + 'px'
+        }, 500);
+    });
+
+    for(var u in users){
+        if(users.hasOwnProperty(u)){
+            that.Helper.GetCharacterDiv(users[u].id).animate({
+                'top': (users[u].position.y * 1) * that.caseHeight,
+                'left': (users[u].position.x * 1) * that.caseWidth
+            }, 500);
+        }
+    }
+    setTimeout(function(){
+        for(var u in users){
+            if(users.hasOwnProperty(u)){
+                while(that.someoneHere(users[u])){
+                    that.moveUser(users[u]);
+                }
+            }
+        }
+    }, 500);
+
+    setTimeout(function(){
+        $('.moved').removeClass('moved');
+    }, 200);
 };
 
 MainView.prototype.exchangeTuileAndUsers = function(users, user, lastCoords) {
@@ -280,121 +406,11 @@ MainView.prototype.exchangeTuileAndUsers = function(users, user, lastCoords) {
 
 MainView.prototype.exchangeTuile = function(id) {
     if(id == this.Helper.GetCurrentID()){
+        this.appendTmpMessage('Choisissez la case où vous voulez vous rendre.');
         coords = getAllCoords();
         appendSelect(coords, 'teleporter', this.Helper);
         return true;
     }
-};
-
-// Action regarder
-MainView.prototype.regarder = function(userId, coords) {
-
-    if(!coords){
-        coords = getAllCoords();
-        appendSelect(coords, 'regarderMaster', this.Helper);
-        return true;
-    }
-	var that = this;
-	var position = {
-		x: coords.split('-')[0].parseInt(),
-		y: coords.split('-')[1].parseInt()
-	};
-
-	if(userId == that.Helper.GetCurrentID()){
-		var imgs = that.Helper.GetTuile(position.x, position.y).children('img');
-
-		if(imgs.first().hasClass('ng-hide')){
-			imgs.first().removeClass('ng-hide');
-			imgs.first().fadeIn('slow');
-			imgs.last().fadeOut('slow');
-
-			setTimeout(function(){
-				imgs.first().addClass('ng-hide');
-				imgs.first().fadeOut('slow');
-				imgs.last().fadeIn('slow');
-			}, 3000);
-		}
-	}
-};
-
-// Action contrôller
-MainView.prototype.controller = function(users, coords, sens) {
-    var that = this;
-
-    if (!coords && !sens && users.id == that.Helper.GetCurrentID()){
-        var coords = getAllControllerCoords();
-        appendSelect(coords, 'controllerMaster', this.Helper);
-        return true;
-    }
-    if(sens == 'left' || sens == 'right'){
-        $('.tuile').each(function(){
-            var x = $(this).attr('data-position').split('-')[0].parseInt();
-            var y = $(this).attr('data-position').split('-')[1].parseInt();
-
-            if(y == coords.split('-')[1].parseInt()){
-                if(x == 0 && sens === 'left')
-                    x = 4;
-                else if(x == 4 && sens === 'right')
-                    x = 0;
-                else if(sens === 'left')
-                    x = x - 1;
-                else
-                    x = x + 1;
-
-                $(this).attr('data-position', x + '-' + y);
-                $(this).addClass('moved');
-            }
-        });
-    }
-    else if(sens === 'top' || sens === 'bottom'){
-        $('.tuile').each(function(){
-            var x = $(this).attr('data-position').split('-')[0].parseInt();
-            var y = $(this).attr('data-position').split('-')[1].parseInt();
-
-            if(x == coords.split('-')[0].parseInt()){
-
-                if(y == 0 && sens === 'top')
-                    y = 4;
-                else if(y == 4 && sens === 'bottom')
-                    y = 0;
-                else if(sens === 'top')
-                    y = y - 1;
-                else
-                    y = y + 1;
-
-                $(this).attr('data-position', x + '-' + y);
-                $(this).addClass('moved');
-            }
-        });
-    }
-    $('.moved').each(function(){
-        $(this).animate({
-            'top': (($(this).attr('data-position').split('-')[1].parseInt()) * that.caseHeight) + 'px',
-            'left': (($(this).attr('data-position').split('-')[0].parseInt()) * that.caseWidth) + 'px'
-        }, 500);
-    });
-
-    for(var u in users){
-        if(users.hasOwnProperty(u)){
-            that.Helper.GetCharacterDiv(users[u].id).animate({
-                'top': (users[u].position.y * 1) * that.caseHeight,
-                'left': (users[u].position.x * 1) * that.caseWidth
-            }, 500);
-        }
-    }
-    setTimeout(function(){
-        for(var u in users){
-            if(users.hasOwnProperty(u)){
-                while(that.someoneHere(users[u])){
-                    that.moveUser(users[u]);
-                }
-            }
-        }
-    }, 500);
-
-    setTimeout(function(){
-        $('.moved').removeClass('moved');
-    }, 200);
 };
 
 
