@@ -1,9 +1,10 @@
-function MainView(helper) {
+function MainView(helper, DOMView) {
     this.caseWidth = 175;
     this.caseHeight = 175;
 
     this.Helper = helper;
     this.CaseEffect = null;
+    this.DOMView = DOMView;
 }
 
 MainView.prototype.setCaseEffect = function(ce) {
@@ -30,7 +31,7 @@ MainView.prototype.deleteUser = function(user) {
     $('.characterTaken-' + user.id).remove();
     this.Helper.GetCharacterDiv(user.id).addClass('dead');
 
-    this.appendTmpMessage('Le joueur ' + user.name + ' est mort !');
+    this.DOMView.appendTmpMessage('Le joueur ' + user.name + ' est mort !');
 };
 
 // Un utilisateur arrive en retard --> on met à jours tous les personnage pris
@@ -49,18 +50,6 @@ MainView.prototype.refreshUsers = function(users) {
             }
         }
     }
-};
-
-// On montre le bouton de lancement
-MainView.prototype.showButton = function() {
-    $('.btn').fadeIn(200, function() {
-        $('.btn').css('display', 'block');
-    });
-};
-
-// On supprime le bouton de lancement
-MainView.prototype.deleteButton = function() {
-    $('.btn').fadeOut(200);
 };
 
 // On redirige, sans rechargement, vers la page du jeu
@@ -83,7 +72,7 @@ MainView.prototype.redirectToGame = function(object) {
 // Tour d'après
 MainView.prototype.nextTurn = function(object) {
     $('.actions .action').fadeIn('slow');
-	$('.actions .action img').fadeIn('slow');
+	this.Helper.GetAction().fadeIn('slow');
 	$('.actions .action').children('p').remove();
 
     $('.action1-final > img, .action2-final > img').remove();
@@ -159,30 +148,6 @@ MainView.prototype.animateAction = function(element, toggle) {
     }
 };
 
-// On montre le bouton de validation des actions
-MainView.prototype.showButtonOk = function() {
-    $('.btnOk').fadeIn('slow', function() {
-        $('.btnOk').css('display', 'block');
-    });
-};
-
-// On cache le bouton de validation des actions
-MainView.prototype.hideButtonOk = function() {
-    $('.btnOk').fadeOut('slow');
-};
-
-// On désactive les actions (loader par dessus)
-MainView.prototype.disableActions = function() {
-    $('.actions').append('<div class="loading"><p>En attente des autres joueurs...</p><img src="Images/loader.gif" alt="loader"></div>');
-};
-
-// On desactive le loader (tout le monde est prêt)
-MainView.prototype.hideActions = function() {
-    $('.loading img').remove();
-    $('.btnOk').fadeOut('slow');
-    $('.loading p').html('C\'est parti !');
-};
-
 // Affiche le tour de
 MainView.prototype.appendTurnOf = function(u, users, actionNumber) {
     var that = this;
@@ -256,7 +221,7 @@ MainView.prototype.pousser = function(userTarget, user) {
 // Action regarder
 MainView.prototype.regarder = function(userId, coords) {
     if(!coords && userId == this.Helper.GetCurrentID()){
-        this.appendTmpMessage('Choisissez la case que vous souhaitez regarder.');
+        this.DOMView.appendTmpMessage('Choisissez la case que vous souhaitez regarder.');
         coords = getAllCoords();
         appendSelect(coords, 'regarderMaster', this.Helper);
         return true;
@@ -289,7 +254,7 @@ MainView.prototype.controller = function(users, coords, sens) {
     var that = this;
 
     if (!coords && !sens && users.id == that.Helper.GetCurrentID()){
-        this.appendTmpMessage('Choisissez la rangée que vous souhaitez contrôller.');
+        this.DOMView.appendTmpMessage('Choisissez la rangée que vous souhaitez contrôller.');
         coords = getAllControllerCoords();
         appendSelect(coords, 'controllerMaster', this.Helper);
         return true;
@@ -406,7 +371,7 @@ MainView.prototype.exchangeTuileAndUsers = function(users, user, lastCoords) {
 
 MainView.prototype.exchangeTuile = function(id) {
     if(id == this.Helper.GetCurrentID()){
-        this.appendTmpMessage('Choisissez la case où vous voulez vous rendre.');
+        this.DOMView.appendTmpMessage('Choisissez la case où vous voulez vous rendre.');
         coords = getAllCoords();
         appendSelect(coords, 'teleporter', this.Helper);
         return true;
@@ -434,20 +399,6 @@ MainView.prototype.someoneHere = function(user){
 MainView.prototype.moveUser = function(user){
     var userDIV = this.Helper.GetCharacterDiv(user.id);
     userDIV.css('left', ((userDIV.css('left').substr(0, userDIV.css('left').length - 2).parseInt() + 50) + 'px'));
-};
-
-MainView.prototype.gardienWins = function() {
-    $('.gameboard').append('<p class="tmpMessage">La partie est finie, les gardiens ont gagné !</p>');
-};
-
-MainView.prototype.appendTmpMessage = function(message){
-    $('.gameboard').append('<p class="tmpMessage tmp">' + message + '</p>');
-
-    setTimeout(function(){
-        $('.tmpMessage.tmp').fadeOut('slow', function(){
-            $(this).remove();
-        });
-    }, 3000);
 };
 
 // Gère le tour d'une personne

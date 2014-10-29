@@ -3,9 +3,10 @@ var OtherCoords = [];
 
 $(document).ready(function() {
     var Helper = new HelperController();
-    var View = new MainView(Helper);
     var ErrView = new ErrorView(Helper);
-    var Client = new ClientController(View, Helper);
+    var DOMView = new DOMView(Helper);
+    var View = new MainView(Helper, DOMView);
+    var Client = new ClientController(View, DOMView, Helper);
     var CaseEffect = new CaseEffectController(Client);
 
     View.setCaseEffect(CaseEffect);
@@ -71,9 +72,9 @@ $(document).ready(function() {
             View.animateAction($(this), !$(this).hasClass('ok'));
 
             if ($('.action.ok').length > 0)
-                View.showButtonOk();
+                DOMView.showButtonOk();
             else
-                View.hideButtonOk();
+                DOMView.hideButtonOk();
         }
     });
 

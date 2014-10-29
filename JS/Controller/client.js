@@ -1,6 +1,7 @@
-function ClientController(view, helper) {
+function ClientController(view, DOMView, helper) {
     this.socket = {};
     this.view = view;
+    this.DOMView = DOMView;
 
     this.Helper = helper;
 }
@@ -25,15 +26,15 @@ ClientController.prototype.initialize = function() {
     });
     // Supprime le bouton si tout le monde n'est pas prêt (personnage)
     this.socket.on('cantPlay', function() {
-        that.view.deleteButton();
+        that.DOMView.hideButton();
     });
     // On fait apparaître le bouton si tout le monde est prêt (personnage)
     this.socket.on('letsPlay', function() {
-        that.view.showButton();
+        that.DOMView.showButton();
     });
     // Si tout le monde est ok (actions)
     this.socket.on('everyoneIsOk', function(users) {
-        that.view.hideActions();
+        that.DOMView.hideActions();
         var u = {};
 
         for (var a in users) {
@@ -45,7 +46,7 @@ ClientController.prototype.initialize = function() {
             }
         }
         that.view.appendTurnOf(u, users, 1);
-        if($('.selectMe').length === 0 && $('.characterSelectMe').length === 0 && u.id == $('.userID').val()){
+        if($('.selectMe').length === 0 && $('.characterSelectMe').length === 0 && u.id == that.Helper.GetCurrentID()){
             that.socket.emit('noPossibilities', {user: u});
         }
     });
@@ -97,19 +98,19 @@ ClientController.prototype.initialize = function() {
 
     // On passe au joueur suivant
     this.socket.on('nextPlayer', function(object){
-        that.view.hideActions();
+        that.DOMView.hideActions();
 
         that.view.appendTurnOf(object.user, object.users, 1);
-        if($('.selectMe').length === 0 && $('.characterSelectMe').length === 0 && object.user.id == $('.userID').val()){
+        if($('.selectMe').length === 0 && $('.characterSelectMe').length === 0 && object.user.id == that.Helper.GetCurrentID()){
             that.socket.emit('noPossibilities', object);
         }
     });
     // On passe au joueur suivant pour l'action 2
     this.socket.on('nextPlayer2', function(object){
-        that.view.hideActions();
+        that.DOMView.hideActions();
 
         that.view.appendTurnOf(object.user, object.users, 2);
-        if($('.selectMe').length === 0 && $('.characterSelectMe').length === 0 && object.user.id == $('.userID').val()){
+        if($('.selectMe').length === 0 && $('.characterSelectMe').length === 0 && object.user.id == that.Helper.GetCurrentID()){
             that.socket.emit('noPossibilities', object);
         }
     });
@@ -118,7 +119,7 @@ ClientController.prototype.initialize = function() {
         that.view.nextTurn(object);
     });
     this.socket.on('gardienWins', function(){
-        that.view.gardienWins();
+        that.DOMView.appendGardienWins();
     });
     this.socket.on('userCentral', function(user){
         that.view.deplacer(user);
@@ -196,7 +197,7 @@ ClientController.prototype.emitAction = function(element){
     }
     else if(action === 'controllerMaster'){
 
-        this.view.appendTmpMessage('Choisissez le sens dans lequel contrôller la rangée.');
+        this.DOMView.appendTmpMessage('Choisissez le sens dans lequel contrôller la rangée.');
         this.socket.emit('getUserAndDoNextSentenceController', {
             id: that.Helper.GetCurrentID(),
             action: 'Contrôller',
