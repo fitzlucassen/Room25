@@ -1,10 +1,11 @@
-function MainView(helper, DOMView) {
+function MainView(helper, DOMView, CoordsProvider) {
     this.caseWidth = 175;
     this.caseHeight = 175;
 
     this.Helper = helper;
     this.CaseEffect = null;
     this.DOMView = DOMView;
+    this.CoordsProvider = CoordsProvider;
 }
 
 MainView.prototype.setCaseEffect = function(ce) {
@@ -167,7 +168,7 @@ MainView.prototype.appendTurnOf = function(u, users, actionNumber) {
         	actionDIV.parent().fadeIn(100).append('<p>' + actionDIV.parent().attr('data-first-sentence') + '</p>');
         }
 
-        manageTurn(u, users, this.Helper);
+        manageTurn(u, users, this.Helper, this.CoordsProvider);
     }
 };
 
@@ -177,7 +178,7 @@ MainView.prototype.nextSentence = function(object) {
     var actionDIV = that.Helper.GetAction(object.action);
     actionDIV.parent().children('p').html(actionDIV.parent().attr('data-second-sentence'));
 
-    manageComplexAction(object, this.Helper);
+    manageComplexAction(object, this.Helper, this.CoordsProvider);
 };
 
 // action se déplacer
@@ -222,7 +223,7 @@ MainView.prototype.pousser = function(userTarget, user) {
 MainView.prototype.regarder = function(userId, coords) {
     if(!coords && userId == this.Helper.GetCurrentID()){
         this.DOMView.appendTmpMessage('Choisissez la case que vous souhaitez regarder.');
-        coords = getAllCoords();
+        coords = this.CoordsProvider.getAllCoords();
         appendSelect(coords, 'regarderMaster', this.Helper);
         return true;
     }
@@ -255,7 +256,7 @@ MainView.prototype.controller = function(users, coords, sens) {
 
     if (!coords && !sens && users.id == that.Helper.GetCurrentID()){
         this.DOMView.appendTmpMessage('Choisissez la rangée que vous souhaitez contrôller.');
-        coords = getAllControllerCoords();
+        coords = this.CoordsProvider.getAllControllerCoords();
         appendSelect(coords, 'controllerMaster', this.Helper);
         return true;
     }
@@ -372,7 +373,7 @@ MainView.prototype.exchangeTuileAndUsers = function(users, user, lastCoords) {
 MainView.prototype.exchangeTuile = function(id) {
     if(id == this.Helper.GetCurrentID()){
         this.DOMView.appendTmpMessage('Choisissez la case où vous voulez vous rendre.');
-        coords = getAllCoords();
+        coords = this.CoordsProvider.getAllCoords();
         appendSelect(coords, 'teleporter', this.Helper);
         return true;
     }
@@ -402,13 +403,13 @@ MainView.prototype.moveUser = function(user){
 };
 
 // Gère le tour d'une personne
-function manageTurn(u, users, helper){
+function manageTurn(u, users, helper, cProvider){
     // Affiche les cases possible
     var coords = [];
 
     if(u.action1 !== ''){
         if(u.action1 === 'Déplacer'){
-            coords = getCoordsDeplacerRegarder(u);
+            coords = cProvider.getCoordsDeplacerRegarder(u);
             appendSelect(coords, u.action1, helper);
         }
         else if(u.action1 === 'Pousser'){
@@ -421,17 +422,17 @@ function manageTurn(u, users, helper){
             appendCharacterSelectMe(coords, u.action1, helper);
         }
         else if(u.action1 === 'Regarder'){
-            coords = getCoordsDeplacerRegarder(u);
+            coords = cProvider.getCoordsDeplacerRegarder(u);
             appendSelect(coords, u.action1, helper);
         }
         else if(u.action1 === 'Contrôller'){
-            coords = getCoordsController(u);
+            coords = cProvider.getCoordsController(u);
             appendSelect(coords, u.action1, helper);
         }
     }
     else {
         if(u.action2 === 'Déplacer'){
-            coords = getCoordsDeplacerRegarder(u);
+            coords = cProvider.getCoordsDeplacerRegarder(u);
             appendSelect(coords, u.action2, helper);
         }
         else if(u.action2 === 'Pousser'){
@@ -444,20 +445,20 @@ function manageTurn(u, users, helper){
             appendCharacterSelectMe(coords, u.action2, helper);
         }
         else if(u.action2 === 'Regarder'){
-            coords = getCoordsDeplacerRegarder(u);
+            coords = cProvider.getCoordsDeplacerRegarder(u);
             appendSelect(coords, u.action2, helper);
         }
         else if(u.action2 === 'Contrôller'){
-            coords = getCoordsController(u);
+            coords = cProvider.getCoordsController(u);
             appendSelect(coords, u.action2, helper);
         }
     }
 }
 
 // gère une action complète
-function manageComplexAction(object, helper){
+function manageComplexAction(object, helper, cProvider){
     if(object.action === 'Pousser'){
-    	coords = getCoordsDeplacerRegarder(object.user);
+    	coords = cProvider.getCoordsDeplacerRegarder(object.user);
         appendSelect(coords, object.action, helper);
     }
     else if(object.action === 'Contrôller'){
@@ -504,230 +505,4 @@ function appendCharacterSelectMe(coords, action, helper){
             helper.GetCharacterDiv(coords[c].id).append('<div class="characterSelectMe" data-action="' + action + '"></div>');
         }
     }
-}
-
-function getCoordsController(u){
-    var coords = [];
-
-    if(u.position.x != 2 && u.position.y != 2){
-        coords.push(
-            {
-                x: u.position.x,
-                y: 0
-            },
-            {
-                x: u.position.x,
-                y: 1
-            },
-            {
-                x: u.position.x,
-                y: 2
-            },
-            {
-                x: u.position.x,
-                y: 3
-            },
-            {
-                x: u.position.x,
-                y: 4
-            }
-        );
-        coords.push(
-            {
-                x: 0,
-                y: u.position.y
-            },
-            {
-                x: 1,
-                y: u.position.y
-            },
-            {
-                x: 2,
-                y: u.position.y
-            },
-            {
-                x: 3,
-                y: u.position.y
-            },
-            {
-                x: 4,
-                y: u.position.y
-            }
-        );
-    }
-    else if(u.position.x != 2 && u.position.y == 2){
-        coords.push(
-            {
-                x: u.position.x,
-                y: 0
-            },
-            {
-                x: u.position.x,
-                y: 1
-            },
-            {
-                x: u.position.x,
-                y: 2
-            },
-            {
-                x: u.position.x,
-                y: 3
-            },
-            {
-                x: u.position.x,
-                y: 4
-            }
-        );
-    }
-    else if(u.position.x == 2 && u.position.y != 2){
-        coords.push(
-            {
-                x: 0,
-                y: u.position.y
-            },
-            {
-                x: 1,
-                y: u.position.y
-            },
-            {
-                x: 2,
-                y: u.position.y
-            },
-            {
-                x: 3,
-                y: u.position.y
-            },
-            {
-                x: 4,
-                y: u.position.y
-            }
-        );
-    }
-    else {
-    	coords.push(
-    		{
-                x: 2,
-                y: 0
-            },
-            {
-                x: 2,
-                y: 1
-            },
-            {
-                x: 2,
-                y: 3
-            },
-            {
-                x: 2,
-                y: 4
-            },
-            {
-                x: 0,
-                y: 2
-            },
-            {
-                x: 1,
-                y: 2
-            },
-            {
-                x: 3,
-                y: 2
-            },
-            {
-                x: 4,
-                y: 2
-            }
-    	);
-    }
-
-    return coords;
-}
-
-function getCoordsDeplacerRegarder(u){
-    var coords = [];
-
-    if((u.position.x * 1) > 0){
-        coords.push({
-            x: (u.position.x * 1) - 1,
-            y: (u.position.y * 1)
-        });
-    }
-    if((u.position.x * 1) < 4){
-        coords.push({
-            x: (u.position.x * 1) + 1,
-            y: (u.position.y * 1)
-        });
-    }
-    if((u.position.y * 1) > 0){
-        coords.push({
-            x: (u.position.x * 1),
-            y: (u.position.y * 1) - 1
-        });
-    }
-    if((u.position.y * 1) < 4){
-        coords.push({
-            x: (u.position.x * 1),
-            y: (u.position.y * 1) + 1
-        });
-    }
-
-    return coords;
-}
-
-function getAllCoords(){
-    var coords = [];
-
-    coords.push(
-        {x: 0, y: 0},
-        {x: 0, y: 1},
-        {x: 0, y: 2},
-        {x: 0, y: 3},
-        {x: 0, y: 4},
-        {x: 1, y: 0},
-        {x: 1, y: 1},
-        {x: 1, y: 2},
-        {x: 1, y: 3},
-        {x: 1, y: 4},
-        {x: 2, y: 0},
-        {x: 2, y: 1},
-        {x: 2, y: 3},
-        {x: 2, y: 4},
-        {x: 3, y: 0},
-        {x: 3, y: 1},
-        {x: 3, y: 2},
-        {x: 3, y: 3},
-        {x: 3, y: 4},
-        {x: 4, y: 0},
-        {x: 4, y: 1},
-        {x: 4, y: 2},
-        {x: 4, y: 3},
-        {x: 4, y: 4}
-    );
-
-    return coords;
-}
-
-function getAllControllerCoords(){
-    var coords = [];
-
-    coords.push(
-        {x: 0, y: 0},
-        {x: 0, y: 1},
-        {x: 0, y: 3},
-        {x: 0, y: 4},
-        {x: 1, y: 0},
-        {x: 1, y: 1},
-        {x: 1, y: 3},
-        {x: 1, y: 4},
-        {x: 3, y: 0},
-        {x: 3, y: 1},
-        {x: 3, y: 3},
-        {x: 3, y: 4},
-        {x: 4, y: 0},
-        {x: 4, y: 1},
-        {x: 4, y: 3},
-        {x: 4, y: 4}
-    );
-
-    return coords;
 }

@@ -3,9 +3,10 @@ var OtherCoords = [];
 
 $(document).ready(function() {
     var Helper = new HelperController();
+    var CoordsProvider = new CoordsProvider();
     var ErrView = new ErrorView(Helper);
     var DOMView = new DOMView(Helper);
-    var View = new MainView(Helper, DOMView);
+    var View = new MainView(Helper, DOMView, CoordsProvider);
     var Client = new ClientController(View, DOMView, Helper);
     var CaseEffect = new CaseEffectController(Client);
 
