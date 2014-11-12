@@ -72,6 +72,7 @@ MainView.prototype.redirectToGame = function(object) {
 
 // Tour d'après
 MainView.prototype.nextTurn = function(object) {
+    $('.tourRestant').html('Ilreste ' + object.nbTourRestant + ' tours.');
     $('.actions .action').fadeIn('slow');
 	this.Helper.GetAction().fadeIn('slow');
 	$('.actions .action').children('p').remove();

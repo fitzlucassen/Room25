@@ -29,6 +29,7 @@ GameManager = new game.gameManager();
 // Tous les utilisateurs
 var users = [];
 var nbUser = -1;
+var nbTourRestant = 10;
 
 // La classe user
 var User = function(name) {
@@ -214,8 +215,10 @@ io.sockets.on('connection', function(socket) {
             users[UserManager.getById(users, object.id)] = u;
 
             if(GameManager.everyoneIsNok(users)){
+                nbTourRestant--;
                 io.sockets.emit('nextTurn', {
-                    users: users
+                    users: users,
+                    nbTourRestant: nbTourRestant
                 });
             }
         }
@@ -241,8 +244,10 @@ io.sockets.on('connection', function(socket) {
         else {
             // Si tout le monde a joué ses deux actions on repasse à la prévision
             if(GameManager.everyoneIsNok(users)){
+                nbTourRestant--;
                 io.sockets.emit('nextTurn', {
-                    users: users
+                    users: users,
+                    nbTourRestant: nbTourRestant
                 });
             }
             // Sinon on récupère le prochain joueur
@@ -275,8 +280,10 @@ io.sockets.on('connection', function(socket) {
                             users[b].action2 = '';
                         }
                     }
+                    nbTourRestant--;
                     io.sockets.emit('nextTurn', {
-                        users: users
+                        users: users,
+                        nbTourRestant: nbTourRestant
                     });
                 }
             }
@@ -316,8 +323,10 @@ io.sockets.on('connection', function(socket) {
         else {
             // Si tout le monde a joué ses deux actions on repasse à la prévision
             if(GameManager.everyoneIsNok(users)){
+                nbTourRestant--;
                 io.sockets.emit('nextTurn', {
-                    users: users
+                    users: users,
+                    nbTourRestant: nbTourRestant
                 });
             }
             // Sinon on récupère le prochain joueur
@@ -350,8 +359,10 @@ io.sockets.on('connection', function(socket) {
                             users[b].action2 = '';
                         }
                     }
+                    nbTourRestant--;
                     io.sockets.emit('nextTurn', {
-                        users: users
+                        users: users,
+                        nbTourRestant: nbTourRestant
                     });
                 }
             }
