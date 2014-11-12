@@ -184,7 +184,7 @@ MainView.prototype.nextSentence = function(object) {
 // action se déplacer
 MainView.prototype.deplacer = function(user) {
 	var that = this;
-	that.Helper.GetCharacterDiv(user.id).animate({
+	this.Helper.GetCharacterDiv(user.id).animate({
 		top: (that.caseHeight * user.position.y) + 'px',
 		left: (that.caseWidth * user.position.x) + 'px'
 	}, 500, function(){
@@ -193,13 +193,14 @@ MainView.prototype.deplacer = function(user) {
         }
     });
 
-    var tuile = that.Helper.GetTuile(user.position.x, user.position.y);
+    var tuile = this.Helper.GetTuile(user.position.x, user.position.y);
 	var imgs = tuile.children('img');
 	imgs.first().removeClass('ng-hide');
 	imgs.first().fadeIn('slow');
 	imgs.last().fadeOut('slow');
 
-    this.CaseEffect.manageCaseEffect(user, tuile.attr('data-action'));
+    if(user.id == this.Helper.GetCurrentID())
+        that.CaseEffect.manageCaseEffect(user, tuile.attr('data-action'));
 };
 
 // Action pousser
@@ -216,7 +217,8 @@ MainView.prototype.pousser = function(userTarget, user) {
 	imgs.first().fadeIn('slow');
 	imgs.last().fadeOut('slow');
 
-    that.CaseEffect.manageCaseEffect(userTarget, tuile.attr('data-action'), user);
+    if(user.id == this.Helper.GetCurrentID())
+        that.CaseEffect.manageCaseEffect(userTarget, tuile.attr('data-action'), user);
 };
 
 // Action regarder

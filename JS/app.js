@@ -3,11 +3,11 @@ var OtherCoords = [];
 
 $(document).ready(function() {
     var Helper = new HelperController();
-    var CoordsProvider = new CoordsProvider();
+    var Coords = new CoordsProvider();
     var ErrView = new ErrorView(Helper);
-    var DOMView = new DOMView(Helper);
-    var View = new MainView(Helper, DOMView, CoordsProvider);
-    var Client = new ClientController(View, DOMView, Helper);
+    var DOM = new DOMView(Helper);
+    var View = new MainView(Helper, DOM, Coords);
+    var Client = new ClientController(View, DOM, Helper);
     var CaseEffect = new CaseEffectController(Client);
 
     View.setCaseEffect(CaseEffect);
@@ -73,9 +73,9 @@ $(document).ready(function() {
             View.animateAction($(this), !$(this).hasClass('ok'));
 
             if ($('.action.ok').length > 0)
-                DOMView.showButtonOk();
+                DOM.showButtonOk();
             else
-                DOMView.hideButtonOk();
+                DOM.hideButtonOk();
         }
     });
 
@@ -86,7 +86,7 @@ $(document).ready(function() {
 
     // Au clique sur le bouton des actions on les valide
     $('body').on('click', '.btnOk', function(e) {
-        View.disableActions();
+        DOM.disableActions();
 
         var action2 = '';
         if($('.actionOk-2').length > 0)
