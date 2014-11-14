@@ -139,3 +139,9 @@ header p{
     display: none;
     margin: 10px auto;
 }
+video.webcam{
+    width: 150px;
+    height: 150px;
+    display: block;
+    margin: auto;
+}

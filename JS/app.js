@@ -2,12 +2,14 @@ var LastCoords = [];
 var OtherCoords = [];
 
 $(document).ready(function() {
+    var Udp = new RtcPeerConnection();
+    var Rtc = new RTCController(Udp);
     var Helper = new HelperController();
     var Coords = new CoordsProvider();
     var ErrView = new ErrorView(Helper);
     var DOM = new DOMView(Helper);
     var View = new MainView(Helper, DOM, Coords);
-    var Client = new ClientController(View, DOM, Helper);
+    var Client = new ClientController(View, DOM, Helper, Rtc);
     var CaseEffect = new CaseEffectController(Client);
 
     View.setCaseEffect(CaseEffect);

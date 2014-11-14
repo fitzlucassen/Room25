@@ -42,6 +42,8 @@
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular-route.min.js"></script> 
 <script type="text/javascript" src="JS/Base/helper.js"></script>
 
+<script type='text/javascript' src='https://cdn.firebase.com/v0/firebase.js'></script>
+
 <script type="text/javascript" src="http://localhost:1337/socket.io/socket.io.js"></script>
 <script type="text/javascript" src="JS/base64Manager.js"></script>
 <script type="text/javascript" src="JS/Controller/helper.js"></script>
@@ -51,6 +53,8 @@
 <script type="text/javascript" src="JS/Controller/errorView.js"></script>
 <script type="text/javascript" src="JS/Controller/coords.js"></script>
 <script type="text/javascript" src="JS/Controller/caseEffect.js"></script>
+<script type="text/javascript" src="JS/Controller/rtcPeerConnection.js"></script>
+<script type="text/javascript" src="JS/Controller/rtc.js"></script>
 <script type="text/javascript" src="JS/app.js"></script>
 
 <script type="text/javascript" src="JS/ngController/mainController.js"></script>

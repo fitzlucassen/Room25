@@ -26,9 +26,15 @@
             });
 
             $scope.$watch('readyToPlay', function(newValue, oldValue) {
-                if (newValue === '1') {
-                    $scope.readyToPlay = newValue;
-                    $location.path('/game');
+                if (newValue >= 0) {
+                    if(newValue == document.getElementById('userID').value){
+                        $scope.readyToPlay = newValue;
+                        $location.path('/game');
+                    }
+                    else {
+                        $scope.readyToPlay = newValue;
+                        $location.path('/game/join');
+                    }
                 }
             }, true);
         });

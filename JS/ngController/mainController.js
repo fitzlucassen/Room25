@@ -11,6 +11,10 @@
                 templateUrl: 'Views/game.html',
                 reloadOnSearch: false
             })
+            .when('/game/join', {
+                templateUrl: 'Views/game.html',
+                reloadOnSearch: false
+            })
             .otherwise({
                 redirectTo: '/'
             });

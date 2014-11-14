@@ -54,11 +54,11 @@ MainView.prototype.refreshUsers = function(users) {
 };
 
 // On redirige, sans rechargement, vers la page du jeu
-MainView.prototype.redirectToGame = function(object) {
+MainView.prototype.redirectToGame = function(object, rtc) {
     var that = this;
     var userId = that.Helper.GetCurrentID();
 
-    $('.readyToPlay').val(1);
+    $('.readyToPlay').val(object.users[0].id);
     $('.readyToPlay').trigger('change');
 
     setTimeout(function() {
@@ -67,12 +67,24 @@ MainView.prototype.redirectToGame = function(object) {
         that.showIdentity(object.users, userId);
         $('.coordsReady').val(1);
         $('.coordsReady').trigger('change');
+
+        var video = $('video.webcam');
+        var ids = [];
+
+        for(var u in object.users){
+            if(object.users.hasOwnProperty(u)){
+                $('.camContainer').append(video.clone().addClass('webcam-' + object.users[u].id));
+                ids.push('webcam-' + object.users[u].id);
+            }
+        }
+        video.remove();
+        rtc.initialize(ids, 'webcam-' + that.Helper.GetCurrentID());
     }, 500);
 };
 
 // Tour d'après
 MainView.prototype.nextTurn = function(object) {
-    $('.tourRestant').html('Ilreste ' + object.nbTourRestant + ' tours.');
+    $('.tourRestant').html('Il reste ' + object.nbTourRestant + ' tours.');
     $('.actions .action').fadeIn('slow');
 	this.Helper.GetAction().fadeIn('slow');
 	$('.actions .action').children('p').remove();

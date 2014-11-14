@@ -1,9 +1,10 @@
-function ClientController(view, DOMView, helper) {
+function ClientController(view, DOMView, helper, rtc) {
     this.socket = {};
     this.view = view;
     this.DOMView = DOMView;
 
     this.Helper = helper;
+    this.Rtc = rtc;
 }
 
 ClientController.prototype.initialize = function() {
@@ -56,7 +57,7 @@ ClientController.prototype.initialize = function() {
         LastCoords = object.lastCardsCoords;
         OtherCoords = object.otherCoords;
 
-        that.view.redirectToGame(object);
+        that.view.redirectToGame(object, that.Rtc);
     });
 
     // On affiche la deuxieme partie de l'action
