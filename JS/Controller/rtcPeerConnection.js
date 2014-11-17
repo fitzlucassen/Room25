@@ -5,7 +5,7 @@ function RtcPeerConnection(){
     this.configurations = {
         iceServers: [
             {url: "stun:stun.ekiga.net"},
-            {url: "stun:stun.l.google.com:19302"}
+            {url: "stun:stun.l.google.com:19302"},
             {url: "turn:numb.viagenie.ca", credential: "webrtcdemo", username: "louis%40mozilla.com"}
             /*{url: "turn:numb.viagenie.ca", credential: "123456", username: "famille_dudul%40hotmail.fr"}*/
         ]

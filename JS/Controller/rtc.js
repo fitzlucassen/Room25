@@ -28,7 +28,7 @@ RTCController.prototype.initialize = function(ids, localID){
 		// get the user's media, in this case just video
 		navigator.getUserMedia(that.constraints, function (stream) {
 			// set one of the video src to the stream
-			that.localVideo[0].src = window.URL.createObjectURL(stream);
+			//that.localVideo[0].src = window.URL.createObjectURL(stream);
 			// add the stream to the PeerConnection
 			that.udp.RtcPeer.addStream(stream);
 			// now we can connect to the other peer
