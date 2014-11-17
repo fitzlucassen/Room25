@@ -6,12 +6,14 @@ function RtcPeerConnection(){
         iceServers: [
             {url: "stun:stun.ekiga.net"},
             {url: "stun:stun.l.google.com:19302"}
+            {url: "turn:numb.viagenie.ca", credential: "webrtcdemo", username: "louis%40mozilla.com"}
+            /*{url: "turn:numb.viagenie.ca", credential: "123456", username: "famille_dudul%40hotmail.fr"}*/
         ]
     };
     this.rtcOptions = {
         optional: [
             {DtlsSrtpKeyAgreement: true},
-            {RtpDataChannels: true}
+            /*{RtpDataChannels: true}*/
         ]
     };
     this.SDPConstraints = {
@@ -40,7 +42,7 @@ RtcPeerConnection.prototype.initialize = function(){
         navigator.getUserMedia = navigator.getUserMedia || navigator.mozGetUserMedia || navigator.webkitGetUserMedia;
 
         // generate a unique-ish room number
-        var ME = this.id();
+        /*var ME = this.id();*/
         // determine what type of peer we are,
         // offerer or answerer.
         this.ROOM = location.hash.substr(1);
