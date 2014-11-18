@@ -78,7 +78,13 @@ MainView.prototype.redirectToGame = function(object, rtc) {
             }
         }
         video.remove();
-        rtc.initialize(ids, 'webcam-' + that.Helper.GetCurrentID());
+
+        if(object.users[0].id != that.Helper.GetCurrentID()){
+            $('#callButton').css('display','none');
+            $('#hangupButton').css('display','none');
+        }
+        rtc.initialize(ids, 'webcam-' + that.Helper.GetCurrentID(), function(){
+        });
     }, 500);
 };
 
