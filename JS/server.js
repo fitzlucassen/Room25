@@ -459,8 +459,8 @@ io.sockets.on('connection', function(socket) {
         io.sockets.emit('exchangeAndApplyTuile', {
             users: users, 
             user: users[u],
-            lastCoords: lastCoords
-            newCoords: object.coords;
+            lastCoords: lastCoords,
+            newCoords: object.coords
         });
     });
 

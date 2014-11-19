@@ -160,6 +160,17 @@ span.direction {
 	background: rgb(231, 76, 60);
 	border: 1px solid rgb(192, 57, 43);
 }
+.btnClass.speBg{
+	background: rgb(231, 76, 60);
+	border: 1px solid rgb(192, 57, 43);
+}
+.btnClass{
+	display: inline-block;
+	font-size: 16px;
+	padding: 5px;
+	min-width: 90px;
+	margin-left: 5px;
+}
 
 /*************/
 /** TUILES ***/
