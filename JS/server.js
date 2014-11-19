@@ -449,6 +449,21 @@ io.sockets.on('connection', function(socket) {
         });
     });
 
+    // Quand un utilisateur échange tuile
+    socket.on('exchangeAndApplyTuile', function(object){
+        var u = UserManager.getById(users, object.id);
+        var lastCoords = users[u].position.x + "-" + users[u].position.y;
+
+        DebugManager.messageForUser(users[u], ' échange sa tuile avec ' + users[u].position.x + '-' + users[u].position.y);
+
+        io.sockets.emit('exchangeAndApplyTuile', {
+            users: users, 
+            user: users[u],
+            lastCoords: lastCoords,
+            newCoords: object.coords
+        });
+    });
+
     // Quand un utilisateur se deconnecte
     socket.on('disconnect', function(reason) {
         if (!me) {

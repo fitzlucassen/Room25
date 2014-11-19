@@ -9,22 +9,30 @@ function RTCController(udp) {
 	this.hangupBtn = null;
 }
 
-RTCController.prototype.initialize = function(ids, localID){
+RTCController.prototype.initialize = function(ids, localID, callback){
 	this.callBtn = document.getElementById('callButton');
 	this.hangupBtn = document.getElementById('hangupButton');
 
 	var that = this;
-	this.callBtn.onclick = function(){
-		that.udp.initialize();
-		that.localVideo = $('.' + localID);
+	that.udp.initialize();
 
-		for(var id in ids){
-			if(ids.hasOwnProperty(id)){
-				if(ids[id] != localID)
-					that.videos.push($('.' + ids[id]));
-			}
+	that.localVideo = $('.' + localID);
+
+	for(var id in ids){
+		if(ids.hasOwnProperty(id)){
+			if(ids[id] != localID)
+				that.videos.push($('.' + ids[id]));
 		}
+	}
 
+	// when we get the other peer's stream, add it to the second
+	// video element.
+	that.udp.RtcPeer.onaddstream = function (e) {
+		that.videos[that.cpt][0].src = window.URL.createObjectURL(e.stream);
+		that.cpt++;
+	};
+		
+	this.callBtn.onclick = function(){
 		// get the user's media, in this case just video
 		navigator.getUserMedia(that.constraints, function (stream) {
 			// set one of the video src to the stream
@@ -33,14 +41,8 @@ RTCController.prototype.initialize = function(ids, localID){
 			that.udp.RtcPeer.addStream(stream);
 			// now we can connect to the other peer
 			that.udp.connect();
-		}, that.udp.errorHandler);
 
-		// when we get the other peer's stream, add it to the second
-		// video element.
-		that.udp.RtcPeer.onaddstream = function (e) {
-			that.videos[that.cpt][0].src = window.URL.createObjectURL(e.stream);
-			that.cpt++;
-		};
+		}, that.udp.errorHandler);
 	};
 
 	this.hangupBtn.onclick = function(){

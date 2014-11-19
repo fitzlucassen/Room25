@@ -4,7 +4,7 @@ function RtcPeerConnection(){
     this.IceCandidate = null;
     this.configurations = {
         iceServers: [
-            {url: "stun:stun.ekiga.net"},
+            {url: "stun:23.21.150.121"},
             {url: "stun:stun.l.google.com:19302"},
             {url: "turn:numb.viagenie.ca", credential: "webrtcdemo", username: "louis%40mozilla.com"}
             /*{url: "turn:numb.viagenie.ca", credential: "123456", username: "famille_dudul%40hotmail.fr"}*/
@@ -17,7 +17,7 @@ function RtcPeerConnection(){
         ]
     };
     this.SDPConstraints = {
-        mandatory: {
+        optional: {
             OfferToReceiveAudio: true,
             OfferToReceiveVideo: true
         }
@@ -66,7 +66,7 @@ RtcPeerConnection.prototype.initialize = function(){
         this.RtcPeer.onicecandidate = function (e) {
             // take the first candidate that isn't null
             if (!e.candidate) { return; }
-            that.RtcPeer.onicecandidate = null;
+            //that.RtcPeer.onicecandidate = null;
             // request the other peers ICE candidate
             that.recv(that.ROOM, "candidate:" + otherType, function (candidate) {
                 that.RtcPeer.addIceCandidate(new that.IceCandidate(JSON.parse(candidate)));
@@ -77,7 +77,7 @@ RtcPeerConnection.prototype.initialize = function(){
     }
 };
 
-RtcPeerConnection.prototype.connect = function(){
+RtcPeerConnection.prototype.connect = function(callback){
     var that = this;
     // start the connection!
     if (this.typeRequest === "offerer") {
@@ -92,6 +92,8 @@ RtcPeerConnection.prototype.connect = function(){
                     new that.SessionDescription(JSON.parse(answer))
                 );
             });
+
+            callback();
         }, that.errorHandler, that.SDPConstraints);
     } else {
         // answerer needs to wait for an offer before

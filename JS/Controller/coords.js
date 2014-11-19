@@ -227,3 +227,17 @@ CoordsProvider.prototype.getAllControllerCoords = function(){
 
     return coords;
 };
+
+CoordsProvider.prototype.removeVisibleCoords = function(coords, helper){
+    var newCoords = [];
+
+    for(var i in coords){
+        if(coords.hasOwnProperty(i)){
+            if(helper.GetTuile(coords[i].x, coords[i].y).children('.ng-hide').attr('id') && helper.GetTuile(coords[i].x, coords[i].y).children('.ng-hide').attr('id').length > 0){
+                newCoords.push(coords[i]);
+            }
+        }
+    }
+
+    return newCoords;
+};

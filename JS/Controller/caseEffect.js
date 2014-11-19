@@ -10,23 +10,35 @@ CaseEffectController.prototype.manageCaseEffect = function(user, effect, userMai
 		setTimeout(this.client.emitNextPlayer, 200 , nextOne);
 	}
 	else if(effect === 'noSee'){
-		// TODO
+		var userDiv = this.client.view.Helper.GetCharacterDiv(user.id);
+
+		userDiv.attr('handicap', 'noSee');
+
 		this.client.emitNextPlayer(nextOne);
 	}
 	else if(effect === 'noSecondAction'){
-		// TODO
+		var userDiv = this.client.view.Helper.GetCharacterDiv(user.id);
+
+		userDiv.attr('handicap', 'noSecondAction');
+		
 		this.client.emitNextPlayer(nextOne);
 	}
 	else if(effect === 'deathAfterNextAction'){
-		// TODO
+		var userDiv = this.client.view.Helper.GetCharacterDiv(user.id);
+
+		userDiv.attr('handicap', 'deathAfterNextAction');
+		
 		this.client.emitNextPlayer(nextOne);
 	}
 	else if(effect === 'deathAfterNextTour'){
-		// TODO
+		var userDiv = this.client.view.Helper.GetCharacterDiv(user.id);
+
+		userDiv.attr('handicap', 'deathAfterNextTour');
+		
 		this.client.emitNextPlayer(nextOne);
 	}
 	else if(effect === 'exchangeTuile'){
-		// TODO
+		this.view.exchangeAndApplyTuile(user.id);
 		this.client.emitNextPlayer(nextOne);
 	}
 	else if(effect === 'deathIfTwo'){

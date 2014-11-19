@@ -104,7 +104,7 @@ header p{
     opacity: 0;
 }
 
-.btn, .btnOk{
+.btn, .btnOk, .btnClass{
     cursor: pointer;
     display: none;
     margin: 40px auto;
