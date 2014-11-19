@@ -47,7 +47,7 @@ module.exports = function(grunt) {
                     server: path.resolve('JS/server'),
                     keepalive: true,
                     port: 1337,
-                    hostname: 'localhost',
+                    hostname: '192.168.0.15',
                     showStack: true
                 }
             }
