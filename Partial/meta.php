@@ -44,7 +44,7 @@
 
 <script type='text/javascript' src='https://cdn.firebase.com/v0/firebase.js'></script>
 
-<script type="text/javascript" src="http://localhost:1337/socket.io/socket.io.js"></script>
+<script type="text/javascript" src="http://192.168.0.15:1337/socket.io/socket.io.js"></script>
 <script type="text/javascript" src="JS/base64Manager.js"></script>
 <script type="text/javascript" src="JS/Controller/helper.js"></script>
 <script type="text/javascript" src="JS/Controller/domView.js"></script>
