@@ -89,12 +89,16 @@ ClientController.prototype.initialize = function() {
     // On regarde
     this.socket.on('playerRegarder', function(object){
         that.view.regarder(object.user.id, object.coords);
-        that.socket.emit('nextPlayerOk', object.user);
+
+        if(that.Helper.GetCurrentID() == object.user.id)
+            that.socket.emit('nextPlayerOk', object.user);
     });
     // On controlle
     this.socket.on('playerController', function(object){
         that.view.controller(object.users, object.coords, object.sens);
-        that.socket.emit('nextPlayerOk', object.user);
+
+        if(that.Helper.GetCurrentID() == object.user.id)
+            that.socket.emit('nextPlayerOk', object.user);
     });
 
     // On passe au joueur suivant
@@ -124,15 +128,21 @@ ClientController.prototype.initialize = function() {
     });
     this.socket.on('userCentral', function(user){
         that.view.deplacer(user);
-        that.socket.emit('nextPlayerOk', object.user);
+
+        if(that.Helper.GetCurrentID() == object.user.id)
+            that.socket.emit('nextPlayerOk', object.user);
     });
     this.socket.on('exchangeTuile', function(object){
         that.view.exchangeTuileAndUsers(object.users, object.user, object.lastCoords);
-        that.socket.emit('nextPlayerOk', object.user);
+
+        if(that.Helper.GetCurrentID() == object.user.id)
+            that.socket.emit('nextPlayerOk', object.user);
     });
     this.socket.on('exchangeAndApplyTuile', function(object){
         that.view.exchangeAndApplyTuileAndUsers(object.users, object.user, object.lastCoords, object.newCoords);
-        that.socket.emit('nextPlayerOk', object.user);
+
+        if(that.Helper.GetCurrentID() == object.user.id)
+            that.socket.emit('nextPlayerOk', object.user);
     });
 };
 

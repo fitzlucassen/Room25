@@ -134,7 +134,7 @@ MainView.prototype.showIdentity = function(users, meID) {
     for (var u in users) {
         if (users.hasOwnProperty(u)) {
             if (users[u].id == meID) {
-                $('.identity img').attr('src', '/Images/identities/' + users[u].identity + '.gif').attr('title', users[u].identity);
+                $('.identity img').attr('src', 'Images/identities/' + users[u].identity + '.gif').attr('title', users[u].identity);
                 $('.pseudo p').html(users[u].name);
             }
         }

@@ -1,25 +1,25 @@
 [{
     "name": "Le geek",
-    "image": "/Images/geek.png",
+    "image": "Images/geek.png",
     "player": -1
 }, {
     "name": "Le beau goss",
-    "image": "/Images/bg.png",
+    "image": "Images/bg.png",
     "player": -1
 }, {
     "name": "Le savant",
-    "image": "/Images/savant.png",
+    "image": "Images/savant.png",
     "player": -1
 }, {
     "name": "Le molosse",
-    "image": "/Images/molosse.png",
+    "image": "Images/molosse.png",
     "player": -1
 }, {
     "name": "La bimbo",
-    "image": "/Images/bimbo.png",
+    "image": "Images/bimbo.png",
     "player": -1
 }, {
     "name": "La petite fille",
-    "image": "/Images/fille.png",
+    "image": "Images/fille.png",
     "player": -1
 }]

@@ -17,7 +17,7 @@ function RtcPeerConnection(){
         ]
     };
     this.SDPConstraints = {
-        optional: {
+        mandatory: {
             OfferToReceiveAudio: true,
             OfferToReceiveVideo: true
         }

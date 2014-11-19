@@ -40,7 +40,7 @@ RTCController.prototype.initialize = function(ids, localID, callback){
 			// add the stream to the PeerConnection
 			that.udp.RtcPeer.addStream(stream);
 			// now we can connect to the other peer
-			that.udp.connect();
+			that.udp.connect(callback);
 
 		}, that.udp.errorHandler);
 	};

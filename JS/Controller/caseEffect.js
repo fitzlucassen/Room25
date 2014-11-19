@@ -38,8 +38,7 @@ CaseEffectController.prototype.manageCaseEffect = function(user, effect, userMai
 		this.client.emitNextPlayer(nextOne);
 	}
 	else if(effect === 'exchangeTuile'){
-		this.view.exchangeAndApplyTuile(user.id);
-		this.client.emitNextPlayer(nextOne);
+		this.client.view.exchangeAndApplyTuile(user.id);
 	}
 	else if(effect === 'deathIfTwo'){
 		this.client.emitDeathForFirstHere(user);
