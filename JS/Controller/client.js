@@ -130,6 +130,10 @@ ClientController.prototype.initialize = function() {
         that.view.exchangeTuileAndUsers(object.users, object.user, object.lastCoords);
         that.socket.emit('nextPlayerOk', object.user);
     });
+    this.socket.on('exchangeAndApplyTuile', function(object){
+        that.view.exchangeAndApplyTuileAndUsers(object.users, object.user, object.lastCoords, object.newCoords);
+        that.socket.emit('nextPlayerOk', object.user);
+    });
 };
 
 // Nouvel utilisateur avec un pseudo
@@ -207,6 +211,13 @@ ClientController.prototype.emitAction = function(element){
     }
     else if(action === 'teleporter'){
         this.socket.emit('exchangeTuile', {
+            id: this.Helper.GetCurrentID(),
+            coords: element.parent().attr('data-position')
+        });
+        $('.selectMe').remove();
+    }
+    else if(action === 'exchange'){
+        this.socket.emit('exchangeAndApplyTuile', {
             id: this.Helper.GetCurrentID(),
             coords: element.parent().attr('data-position')
         });

@@ -83,7 +83,9 @@ MainView.prototype.redirectToGame = function(object, rtc) {
             $('#callButton').css('display','none');
             $('#hangupButton').css('display','none');
         }
+
         rtc.initialize(ids, 'webcam-' + that.Helper.GetCurrentID(), function(){
+
         });
     }, 500);
 };
@@ -391,11 +393,49 @@ MainView.prototype.exchangeTuileAndUsers = function(users, user, lastCoords) {
 };
 
 
+MainView.prototype.exchangeAndApplyTuileAndUsers = function(users, user, lastCoords, newCoords) {
+    var futurTuile = this.Helper.GetTuile(newCoords.split('-')[0], newCoords.split('-')[1]);
+    var lastTuile = this.Helper.GetTuile(lastCoords.split('-')[0], lastCoords.split('-')[1]);
+    var that = this;
+
+    lastTuile.animate({
+        'top': ((futurTuile.attr('data-position').split('-')[1].parseInt()) * that.caseHeight) + 'px',
+        'left': ((futurTuile.attr('data-position').split('-')[0].parseInt()) * that.caseWidth) + 'px'
+    }, 500);
+
+    futurTuile.animate({
+        'top': ((lastTuile.attr('data-position').split('-')[1].parseInt()) * that.caseHeight) + 'px',
+        'left': ((lastTuile.attr('data-position').split('-')[0].parseInt()) * that.caseWidth) + 'px'
+    }, 500);
+
+    lastTuile.attr('data-position', futurTuile.attr('data-position'));
+    futurTuile.attr('data-position', lastCoords);
+
+    var imgs = futurTuile.children('img');
+    imgs.first().removeClass('ng-hide');
+    imgs.first().fadeIn('slow');
+    imgs.last().fadeOut('slow');
+
+    if(user.id == this.Helper.GetCurrentID())
+        that.CaseEffect.manageCaseEffect(user, futurTuile.attr('data-action'));
+};
+
 MainView.prototype.exchangeTuile = function(id) {
     if(id == this.Helper.GetCurrentID()){
         this.DOMView.appendTmpMessage('Choisissez la case où vous voulez vous rendre.');
         coords = this.CoordsProvider.getAllCoords();
+        coords = this.CoordsProvider.removeVisibleCoords(coords, this.Helper);
         appendSelect(coords, 'teleporter', this.Helper);
+        return true;
+    }
+};
+
+MainView.prototype.exchangeAndApplyTuile = function(id) {
+    if(id == this.Helper.GetCurrentID()){
+        this.DOMView.appendTmpMessage('Choisissez la case à échanger.');
+        coords = this.CoordsProvider.getAllCoords();
+        coords = this.CoordsProvider.removeVisibleCoords(coords, this.Helper);
+        appendSelect(coords, 'exchange', this.Helper);
         return true;
     }
 };
