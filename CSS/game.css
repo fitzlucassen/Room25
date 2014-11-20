@@ -112,11 +112,12 @@
 	height: 235px;
 	position: relative;
 }
-.actions .action{
+.actions .actionContainer{
 	display: inline-block;
 	vertical-align: top;
 	margin: 5px;
 	cursor: pointer;
+	width: 70px;
 }
 .actions .action img{
 	width: 70px;
@@ -155,7 +156,10 @@ span.direction {
 	margin: 5px;
 	cursor: pointer;
 }
-
+.btnOkContainer{
+	width: 144px;
+	margin: auto;
+}
 .btnOk{
 	background: rgb(231, 76, 60);
 	border: 1px solid rgb(192, 57, 43);

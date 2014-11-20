@@ -19,12 +19,16 @@
 		</div>
 
 		<div class="actions">
-			<div class="action" ng-repeat="action in actions" data-first-sentence="{{action.phrase1}}" data-second-sentence="{{action.phrase2}}">
-				<img src="{{action.image}}" alt="{{action.name}}" title="{{action.name}}"/>
+			<div class="actionContainer" ng-repeat="action in actions">
+				<div class="action" data-first-sentence="{{action.phrase1}}" data-second-sentence="{{action.phrase2}}">
+					<img src="{{action.image}}" alt="{{action.name}}" title="{{action.name}}"/>
+				</div>
 			</div>
 			<br/>
 
-			<input type="button" value="Valider" class="btnOk"/>
+			<div class="btnOkContainer">
+				<input type="button" value="Valider" class="btnOk"/>
+			</div>
 		</div>
 
 		<div class="action1-final">

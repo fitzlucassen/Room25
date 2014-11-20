@@ -220,6 +220,7 @@ MainView.prototype.deplacer = function(user) {
 	imgs.first().fadeIn('slow');
 	imgs.last().fadeOut('slow');
 
+    this.Helper.GetCharacterDiv(user.id).removeAttr('handicap');
     if(user.id == this.Helper.GetCurrentID())
         that.CaseEffect.manageCaseEffect(user, tuile.attr('data-action'));
 };
@@ -238,6 +239,7 @@ MainView.prototype.pousser = function(userTarget, user) {
 	imgs.first().fadeIn('slow');
 	imgs.last().fadeOut('slow');
 
+    this.Helper.GetCharacterDiv(userTarget.id).removeAttr('handicap');
     if(user.id == this.Helper.GetCurrentID())
         that.CaseEffect.manageCaseEffect(userTarget, tuile.attr('data-action'), user);
 };
@@ -440,11 +442,6 @@ MainView.prototype.exchangeAndApplyTuile = function(id) {
     }
 };
 
-
-/*************
- * FUNCTIONS *
- *************/
-
 MainView.prototype.someoneHere = function(user){
     var that =  this;
     var anybody = false;
@@ -462,6 +459,10 @@ MainView.prototype.moveUser = function(user){
     var userDIV = this.Helper.GetCharacterDiv(user.id);
     userDIV.css('left', ((userDIV.css('left').substr(0, userDIV.css('left').length - 2).parseInt() + 50) + 'px'));
 };
+
+/*************
+ * FUNCTIONS *
+ *************/
 
 // Gère le tour d'une personne
 function manageTurn(u, users, helper, cProvider){
