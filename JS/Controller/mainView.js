@@ -96,6 +96,7 @@ MainView.prototype.nextTurn = function(object) {
     $('.actions .action').fadeIn('slow');
 	this.Helper.GetAction().fadeIn('slow');
 	$('.actions .action').children('p').remove();
+    $('.extendWidth').removeClass('extendWidth');
 
     $('.action1-final > img, .action2-final > img').remove();
 
@@ -183,10 +184,12 @@ MainView.prototype.appendTurnOf = function(u, users, actionNumber) {
         if(actionNumber == 1){
             actionDIV = that.Helper.GetAction(u.action1);
         	actionDIV.parent().fadeIn(100).append('<p>' + actionDIV.parent().attr('data-first-sentence') + '</p>');
+            actionDIV.parent().parent().addClass('extendWidth');
         }
         else{
             actionDIV = that.Helper.GetAction(u.action2);
         	actionDIV.parent().fadeIn(100).append('<p>' + actionDIV.parent().attr('data-first-sentence') + '</p>');
+            actionDIV.parent().parent().addClass('extendWidth');
         }
 
         manageTurn(u, users, this.Helper, this.CoordsProvider);
@@ -393,7 +396,6 @@ MainView.prototype.exchangeTuileAndUsers = function(users, user, lastCoords) {
         }
     }, 500);
 };
-
 
 MainView.prototype.exchangeAndApplyTuileAndUsers = function(users, user, lastCoords, newCoords) {
     var futurTuile = this.Helper.GetTuile(newCoords.split('-')[0], newCoords.split('-')[1]);

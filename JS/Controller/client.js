@@ -8,7 +8,7 @@ function ClientController(view, DOMView, helper, rtc) {
 }
 
 ClientController.prototype.initialize = function() {
-    this.socket = io.connect('http://192.168.0.15:1337');
+    this.socket = io.connect('http://localhost:1337');
 
     that = this;
 
@@ -129,7 +129,7 @@ ClientController.prototype.initialize = function() {
     this.socket.on('userCentral', function(user){
         that.view.deplacer(user);
 
-        if(that.Helper.GetCurrentID() == object.user.id)
+        if(that.Helper.GetCurrentID() == user.id)
             that.socket.emit('nextPlayerOk', object.user);
     });
     this.socket.on('exchangeTuile', function(object){

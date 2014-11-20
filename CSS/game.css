@@ -119,6 +119,11 @@
 	cursor: pointer;
 	width: 70px;
 }
+.extendWidth{
+	width: 90% !important;
+	margin: auto !important;
+	display: block !important;
+}
 .actions .action img{
 	width: 70px;
 
