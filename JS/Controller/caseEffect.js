@@ -54,7 +54,7 @@ CaseEffectController.prototype.manageCaseEffect = function(user, effect, userMai
 		this.client.emitNextPlayer(nextOne);
 	}
 	else if(effect === 'goInAnotherTuile'){
-		this.client.view.exchangeTuile(user.id);
+		this.client.view.exchangeTuile(user);
 	}
 	else {
 		this.client.emitNextPlayer(nextOne);

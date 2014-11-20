@@ -152,8 +152,10 @@ MainView.prototype.animateAction = function(element, toggle) {
 
         if(isAction1)
             $('.action1-final').append(img.clone());
-        else
+        else if(this.Helper.GetCharacterDiv(this.Helper.GetCurrentID()).attr('handicap') != 'noSecondAction')
             $('.action2-final').append(img.clone());
+        else
+            return true;
 
         element.children('img').fadeOut('slow');
 
@@ -182,11 +184,17 @@ MainView.prototype.appendTurnOf = function(u, users, actionNumber) {
 
         var actionDIV;
         if(actionNumber == 1){
+            if(that.Helper.GetCharacterDiv(that.Helper.GetCurrentID()).attr('handicap') === 'noSee' && u.action1 === 'Regarder'){
+                return true;
+            }
             actionDIV = that.Helper.GetAction(u.action1);
         	actionDIV.parent().fadeIn(100).append('<p>' + actionDIV.parent().attr('data-first-sentence') + '</p>');
             actionDIV.parent().parent().addClass('extendWidth');
         }
         else{
+            if(that.Helper.GetCharacterDiv(that.Helper.GetCurrentID()).attr('handicap') === 'noSee' && u.action2 === 'Regarder'){
+                return true;
+            }
             actionDIV = that.Helper.GetAction(u.action2);
         	actionDIV.parent().fadeIn(100).append('<p>' + actionDIV.parent().attr('data-first-sentence') + '</p>');
             actionDIV.parent().parent().addClass('extendWidth');
@@ -424,12 +432,17 @@ MainView.prototype.exchangeAndApplyTuileAndUsers = function(users, user, lastCoo
         that.CaseEffect.manageCaseEffect(user, futurTuile.attr('data-action'));
 };
 
-MainView.prototype.exchangeTuile = function(id) {
-    if(id == this.Helper.GetCurrentID()){
+MainView.prototype.exchangeTuile = function(u) {
+    if(u.id == this.Helper.GetCurrentID()){
         this.DOMView.appendTmpMessage('Choisissez la case où vous voulez vous rendre.');
         coords = this.CoordsProvider.getAllCoords();
         coords = this.CoordsProvider.removeVisibleCoords(coords, this.Helper);
         appendSelect(coords, 'teleporter', this.Helper);
+
+        if($('.selectMe').length === 0){
+            this.CaseEffect.client.socket.emit('noPossibilities', {user: u});
+        }
+
         return true;
     }
 };
