@@ -19,10 +19,11 @@ MainView.prototype.appendUserID = function(user) {
 };
 
 // On ajoute un user sur un personnage
-MainView.prototype.deleteCharacter = function(id, name, pseudo) {
+MainView.prototype.deleteCharacter = function(id, name, pseudo, color) {
     $('ul.personnage li').each(function() {
         if ($(this).children('span').text() == name) {
-            $(this).append('<div class="characterTaken characterTaken-' + id + '"><p>' + pseudo + '</p></div>');
+            $('.characterTaken-' + id).remove();
+            $(this).append('<div class="characterTaken characterTaken-' + id + '" style="background:' + color + ';opacity:0.6;"><p>' + pseudo + '</p></div>');
         }
     });
 };
@@ -45,7 +46,7 @@ MainView.prototype.refreshUsers = function(users) {
 
 				    if (element.children('span').text() == users[u].character) {
 				    	if($('.characterTaken-' + users[u].id).length === 0)
-				        	element.append('<div class="characterTaken characterTaken-' + users[u].id + '"><p>' + users[u].name + '</p></div>');
+				        	element.append('<div class="characterTaken characterTaken-' + users[u].id + '" style="background:' + users[u].color + ';opacity:0.6;"><p>' + users[u].name + '</p></div>');
 				    }
                 });
             }
@@ -112,9 +113,9 @@ MainView.prototype.showPlayers = function(object) {
     for (var u in object.users) {
         if (object.users.hasOwnProperty(u)) {
             if (object.users[u].id != that.Helper.GetCurrentID().parseInt())
-                $('.gameboard').append('<div class="character character-' + object.users[u].id + '">' + object.users[u].name + '</div>');
+                $('.gameboard').append('<div class="character character-' + object.users[u].id + '" style="opacity: 0.8;background:' + object.users[u].color + ';">' + object.users[u].name + '</div>');
             else
-                $('.gameboard').append('<div class="myCharacter character character-' + object.users[u].id + '">' + object.users[u].name + '</div>');
+                $('.gameboard').append('<div class="myCharacter character character-' + object.users[u].id + '" style="opacity: 0.8;background:' + object.users[u].color + ';">' + object.users[u].name + '</div>');
 
             
             var userDIV = that.Helper.GetCharacterDiv(object.users[u].id);
@@ -187,6 +188,12 @@ MainView.prototype.appendTurnOf = function(u, users, actionNumber) {
             if(that.Helper.GetCharacterDiv(that.Helper.GetCurrentID()).attr('handicap') === 'noSee' && u.action1 === 'Regarder'){
                 return true;
             }
+            if(that.Helper.GetCharacterDiv(that.Helper.GetCurrentID()).attr('handicap') === 'deathAfterNextAction' && u.action1 !== 'Déplacer'){
+                this.CaseEffect.client.emitDeath(u);
+            }
+            if(that.Helper.GetCharacterDiv(that.Helper.GetCurrentID()).attr('handicap') === 'deathAfterNextTour'){
+                that.Helper.GetCharacterDiv(that.Helper.GetCurrentID()).attr('handicap', 'deathAfterThisTour')
+            }
             actionDIV = that.Helper.GetAction(u.action1);
         	actionDIV.parent().fadeIn(100).append('<p>' + actionDIV.parent().attr('data-first-sentence') + '</p>');
             actionDIV.parent().parent().addClass('extendWidth');
@@ -194,6 +201,12 @@ MainView.prototype.appendTurnOf = function(u, users, actionNumber) {
         else{
             if(that.Helper.GetCharacterDiv(that.Helper.GetCurrentID()).attr('handicap') === 'noSee' && u.action2 === 'Regarder'){
                 return true;
+            }
+            if(that.Helper.GetCharacterDiv(that.Helper.GetCurrentID()).attr('handicap') === 'deathAfterNextAction' && u.action2 !== 'Déplacer'){
+                this.CaseEffect.client.emitDeath(u);
+            }
+            if(that.Helper.GetCharacterDiv(that.Helper.GetCurrentID()).attr('handicap') === 'deathAfterThisTour' && u.action2 !== 'Déplacer'){
+                this.CaseEffect.client.emitDeath(u);
             }
             actionDIV = that.Helper.GetAction(u.action2);
         	actionDIV.parent().fadeIn(100).append('<p>' + actionDIV.parent().attr('data-first-sentence') + '</p>');

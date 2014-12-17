@@ -45,6 +45,7 @@ var User = function(name) {
     this.order = 0;
     this.action1 = '';
     this.action2 = '';
+    this.color = "";
 };
 
 // Au chargement de la page
@@ -74,6 +75,7 @@ io.sockets.on('connection', function(socket) {
     socket.on('characterChoosen', function(object) {
         // On ajoute le nom du personnage choisi à l'utilisateur actuel
         me.character = object.name;
+        me.color = object.color;
 
         DebugManager.messageForUser(me, 'a choisi le personnage ' + object.name);
 
@@ -81,7 +83,8 @@ io.sockets.on('connection', function(socket) {
         io.sockets.emit('newCharacter', {
             id: object.id,
             name: object.name,
-            pseudo: me.name
+            pseudo: me.name,
+            color: me.color
         });
 
         //if (GameManager.moreThanFourPlayers(users)) {

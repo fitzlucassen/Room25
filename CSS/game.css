@@ -39,9 +39,9 @@
 	-o-border-radius: 30px;
 	-ms-border-radius: 30px;
 }
-.myCharacter{
+/*.myCharacter{
 	background: rgba(150,30,30,0.8);
-}
+}*/
 .identity{
 	position: absolute;
 	top: 10px;
@@ -60,6 +60,16 @@
 
 	border-left: 1px solid rgb(24, 175, 145);
 }
+.leftPanel{
+	left: 0 !important;
+	border-left: none;
+	border-right: 1px solid rgb(24, 175, 145);
+}
+.hiddencontent{
+	width: 0;
+	height: 0;
+	overflow: hidden;
+}
 .panel .toggle{
 	position: absolute;
 	top: 0;
@@ -69,7 +79,7 @@
 
 	cursor: pointer;
 
-	background: rgba(26, 188, 156, 0.8) url('Images/menu.png') center center no-repeat;
+	background: rgba(26, 188, 156, 0.8) url('../Images/menu.png') center center no-repeat;
 
 	border-top-left-radius: 5px; 
 	border-bottom-left-radius: 5px; 
@@ -79,6 +89,15 @@
 	-moz-border-bottom-left-radius: 5px; 
 	-o-border-top-left-radius: 5px; 
 	-o-border-bottom-left-radius: 5px; 
+}
+.leftPanel .toggle{
+	right: -41px !important;
+	left: initial;
+
+	transform: rotate(180deg);
+	-webkit-transform: rotate(180deg);
+	-moz-transform: rotate(180deg);
+	-o-transform: rotate(180deg);
 }
 .pseudo{
 	margin: 20px 0 20px 20px;
