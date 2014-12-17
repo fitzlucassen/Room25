@@ -10,7 +10,7 @@ var game = require('./nodeModules/game');
 
 // Création du serveur
 var app = express();
-var server = http.createServer(app).listen(1337);
+var server = http.createServer(app).listen('1337');
 var io = socketIO.listen(server);
 // End
 
