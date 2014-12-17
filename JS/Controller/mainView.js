@@ -187,6 +187,12 @@ MainView.prototype.appendTurnOf = function(u, users, actionNumber) {
             if(that.Helper.GetCharacterDiv(that.Helper.GetCurrentID()).attr('handicap') === 'noSee' && u.action1 === 'Regarder'){
                 return true;
             }
+            if(that.Helper.GetCharacterDiv(that.Helper.GetCurrentID()).attr('handicap') === 'deathAfterNextAction' && u.action1 !== 'Déplacer'){
+                this.CaseEffect.client.emitDeath(u);
+            }
+            if(that.Helper.GetCharacterDiv(that.Helper.GetCurrentID()).attr('handicap') === 'deathAfterNextTour'){
+                that.Helper.GetCharacterDiv(that.Helper.GetCurrentID()).attr('handicap', 'deathAfterThisTour')
+            }
             actionDIV = that.Helper.GetAction(u.action1);
         	actionDIV.parent().fadeIn(100).append('<p>' + actionDIV.parent().attr('data-first-sentence') + '</p>');
             actionDIV.parent().parent().addClass('extendWidth');
@@ -194,6 +200,12 @@ MainView.prototype.appendTurnOf = function(u, users, actionNumber) {
         else{
             if(that.Helper.GetCharacterDiv(that.Helper.GetCurrentID()).attr('handicap') === 'noSee' && u.action2 === 'Regarder'){
                 return true;
+            }
+            if(that.Helper.GetCharacterDiv(that.Helper.GetCurrentID()).attr('handicap') === 'deathAfterNextAction' && u.action2 !== 'Déplacer'){
+                this.CaseEffect.client.emitDeath(u);
+            }
+            if(that.Helper.GetCharacterDiv(that.Helper.GetCurrentID()).attr('handicap') === 'deathAfterThisTour' && u.action2 !== 'Déplacer'){
+                this.CaseEffect.client.emitDeath(u);
             }
             actionDIV = that.Helper.GetAction(u.action2);
         	actionDIV.parent().fadeIn(100).append('<p>' + actionDIV.parent().attr('data-first-sentence') + '</p>');
