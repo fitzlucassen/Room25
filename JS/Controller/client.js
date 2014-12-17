@@ -23,7 +23,7 @@ ClientController.prototype.initialize = function() {
     });
     // Lorsqu'un utilisateur a choisi un personnage
     this.socket.on('newCharacter', function(object) {
-        that.view.deleteCharacter(object.id, object.name, object.pseudo);
+        that.view.deleteCharacter(object.id, object.name, object.pseudo, object.color);
     });
     // Supprime le bouton si tout le monde n'est pas prêt (personnage)
     this.socket.on('cantPlay', function() {
@@ -163,10 +163,11 @@ ClientController.prototype.validateAction = function(id, action1, action2) {
 };
 
 // Personnage choisi
-ClientController.prototype.characterChoosen = function(name, id) {
+ClientController.prototype.characterChoosen = function(name, id, color) {
     this.socket.emit('characterChoosen', {
         name: name,
-        id: id
+        id: id,
+        color: color
     });
 };
 

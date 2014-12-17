@@ -59,7 +59,7 @@ $(document).ready(function() {
 
         if (!$(this).hasClass('characterTaken')) {
             $('.characterTaken-' + $('.userID').val()).remove();
-            Client.characterChoosen($(this).children('span').text(), $('.userID').val());
+            Client.characterChoosen($(this).children('span').text(), $('.userID').val(), $(this).data('color'));
         }
     });
 

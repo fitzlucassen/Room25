@@ -19,10 +19,10 @@ MainView.prototype.appendUserID = function(user) {
 };
 
 // On ajoute un user sur un personnage
-MainView.prototype.deleteCharacter = function(id, name, pseudo) {
+MainView.prototype.deleteCharacter = function(id, name, pseudo, color) {
     $('ul.personnage li').each(function() {
         if ($(this).children('span').text() == name) {
-            $(this).append('<div class="characterTaken characterTaken-' + id + '"><p>' + pseudo + '</p></div>');
+            $(this).append('<div class="characterTaken characterTaken-' + id + '" style="background:' + color + ';opacity:0.6;"><p>' + pseudo + '</p></div>');
         }
     });
 };
@@ -45,7 +45,7 @@ MainView.prototype.refreshUsers = function(users) {
 
 				    if (element.children('span').text() == users[u].character) {
 				    	if($('.characterTaken-' + users[u].id).length === 0)
-				        	element.append('<div class="characterTaken characterTaken-' + users[u].id + '"><p>' + users[u].name + '</p></div>');
+				        	element.append('<div class="characterTaken characterTaken-' + users[u].id + '" style="background:' + users[u].color + ';opacity:0.6;"><p>' + users[u].name + '</p></div>');
 				    }
                 });
             }
