@@ -8,7 +8,7 @@ function ClientController(view, DOMView, helper, rtc) {
 }
 
 ClientController.prototype.initialize = function() {
-    this.socket = io.connect('http://room25.thibaultdulon.com/socketpor);
+    this.socket = io.connect('http://localhost:1337');
     that = this;
 
     // Lorsqu'un utilisateur s'est connecté
