@@ -22,6 +22,7 @@ MainView.prototype.appendUserID = function(user) {
 MainView.prototype.deleteCharacter = function(id, name, pseudo, color) {
     $('ul.personnage li').each(function() {
         if ($(this).children('span').text() == name) {
+            $('.characterTaken-' + id).remove();
             $(this).append('<div class="characterTaken characterTaken-' + id + '" style="background:' + color + ';opacity:0.6;"><p>' + pseudo + '</p></div>');
         }
     });
@@ -112,9 +113,9 @@ MainView.prototype.showPlayers = function(object) {
     for (var u in object.users) {
         if (object.users.hasOwnProperty(u)) {
             if (object.users[u].id != that.Helper.GetCurrentID().parseInt())
-                $('.gameboard').append('<div class="character character-' + object.users[u].id + '">' + object.users[u].name + '</div>');
+                $('.gameboard').append('<div class="character character-' + object.users[u].id + '" style="opacity: 0.8;background:' + object.users[u].color + ';">' + object.users[u].name + '</div>');
             else
-                $('.gameboard').append('<div class="myCharacter character character-' + object.users[u].id + '">' + object.users[u].name + '</div>');
+                $('.gameboard').append('<div class="myCharacter character character-' + object.users[u].id + '" style="opacity: 0.8;background:' + object.users[u].color + ';">' + object.users[u].name + '</div>');
 
             
             var userDIV = that.Helper.GetCharacterDiv(object.users[u].id);

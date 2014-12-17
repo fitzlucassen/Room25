@@ -17,10 +17,15 @@ $(document).ready(function() {
 
     // Toggle du menu
     $('body').on('click', '.toggle', function(){
-        if($(this).parent().outerWidth() > 1)
+        if($(this).parent().outerWidth() > 1){
             $(this).parent().animate({width: '0px'}, 500);
-        else
+            $(this).parent().children('*').addClass('hiddencontent');
+            $('.toggle').removeClass('hiddencontent');
+        }
+        else{
             $(this).parent().animate({width: '200px'}, 500);
+            $(this).parent().children('*').removeClass('hiddencontent');
+        }
     });
 
     // Vérification login + envoi de l'évènement nouveau joueur
