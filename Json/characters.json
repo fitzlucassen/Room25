@@ -4,7 +4,7 @@
     "player": -1,
     "color": "#16a085"
 }, {
-    "name": "Le beau goss",
+    "name": "Le beau gosse",
     "image": "Images/bg.png",
     "player": -1,
     "color": "#2980b9"
@@ -14,7 +14,7 @@
     "player": -1,
     "color": "#7f8c8d"
 }, {
-    "name": "Le molosse",
+    "name": "Le colosse",
     "image": "Images/molosse.png",
     "player": -1,
     "color": "#c0392b"
