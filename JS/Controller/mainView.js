@@ -18,6 +18,15 @@ MainView.prototype.appendUserID = function(user) {
     that.Helper.SetCurrentID(user.id);
 };
 
+MainView.prototype.manageMultipleGames = function(available, users){
+    if(available){
+        $('.hideCharacters').css('display', 'none');
+    }
+    else {
+        $('.hideCharacters p').html('Il y a actuellement déjà une partie qui se joue. Veillez patienter jusqu\'à la fin de celle-ci.');
+    }
+};
+
 // On ajoute un user sur un personnage
 MainView.prototype.deleteCharacter = function(id, name, pseudo, color) {
     $('ul.personnage li').each(function() {

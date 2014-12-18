@@ -30,6 +30,7 @@ GameManager = new game.gameManager();
 var users = [];
 var nbUser = -1;
 var nbTourRestant = 10;
+var isAGame = false;
 
 // La classe user
 var User = function(name) {
@@ -65,7 +66,8 @@ io.sockets.on('connection', function(socket) {
         // Et on emet le signal pour la personne qui vient de se connecter qu'on l'a bien enregistré
         socket.emit('connectedUser', {
             me: me,
-            users: users
+            users: users,
+            available: !isAGame
         });
 
         DebugManager.messageForUser(me, 's\'est connecté');
@@ -100,6 +102,7 @@ io.sockets.on('connection', function(socket) {
         users = GameManager.manageIdentity(users, CoordsManager.shufflePositions);
         users = UserManager.processPlayerOrder(users, CoordsManager.shufflePositions);
 
+        isAGame = true;
         io.sockets.emit('play', {
             me: me,
             users: users,
@@ -381,6 +384,10 @@ io.sockets.on('connection', function(socket) {
         DebugManager.messageForUser(user, 'est mort');
         DebugManager.debugArrayOfObject(users);
 
+        if(users.length === 0){
+            isAGame = false;
+            io.sockets.emit('canConnect', isAGame);
+        }
         if(GameManager.gardienWins(users)){
             io.sockets.emit('gardienWins');
         }
