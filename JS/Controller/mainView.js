@@ -23,7 +23,20 @@ MainView.prototype.manageMultipleGames = function(available, users){
         $('.hideCharacters').css('display', 'none');
     }
     else {
-        $('.hideCharacters p').html('Il y a actuellement déjà une partie qui se joue. Veillez patienter jusqu\'à la fin de celle-ci.');
+        var message = 'Il y a actuellement déjà une partie qui se joue entre ';
+
+        for (var u in users) {
+            if (users.hasOwnProperty(u)) {
+                message += users[u].name;
+
+                if(u === users.length - 2)
+                    message += ' et ';
+                else if(u < users.length - 2)
+                    message += ', ';
+            }
+        }
+        message += '. Veillez patienter jusqu\'à la fin de celle-ci.';
+        $('.hideCharacters p').html(message);
     }
 };
 
