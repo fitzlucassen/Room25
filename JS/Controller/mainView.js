@@ -27,14 +27,20 @@ MainView.prototype.manageMultipleGames = function(available, users){
     else {
         var message = 'Il y a actuellement déjà une partie qui se joue entre ';
 
-        for (var u in users) {
-            if (users.hasOwnProperty(u)) {
-                if(users[u].id != that.Helper.GetCurrentID()){
-                    message += users[u].name;
+        var inAPartyUsers = [];
+        for (var u in users)
+            if (users.hasOwnProperty(u))
+                if(users[u].inAParty)
+                    inAPartyUsers.push(users[u]);
 
-                    if(u === users.length - 2)
+        for (var u in inAPartyUsers) {
+            if (inAPartyUsers.hasOwnProperty(u)) {
+                if(inAPartyUsers[u].id != that.Helper.GetCurrentID()){
+                    message += inAPartyUsers[u].name;
+
+                    if(u === inAPartyUsers.length - 2)
                         message += ' et ';
-                    else if(u < users.length - 2)
+                    else if(u < inAPartyUsers.length - 2)
                         message += ', ';
                 }
             }
