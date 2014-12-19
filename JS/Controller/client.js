@@ -60,6 +60,10 @@ ClientController.prototype.initialize = function() {
         that.view.redirectToGame(object, that.Rtc);
     });
 
+    this.socket.on('canConnect', function(available){
+        that.view.allowGame();
+    });
+
     // On affiche la deuxieme partie de l'action
     this.socket.on('doNextSentence', function(object){
         that.view.nextSentence({

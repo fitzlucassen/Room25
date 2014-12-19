@@ -37,7 +37,12 @@ MainView.prototype.manageMultipleGames = function(available, users){
         }
         message += '. Veillez patienter jusqu\'à la fin de celle-ci.';
         $('.hideCharacters p').html(message);
+        $('.hideCharacters').css('display', 'block');
     }
+};
+
+MainView.prototype.allowGame = function() {
+    $('.hideCharacters').fadeOut('slow');
 };
 
 // On ajoute un user sur un personnage
