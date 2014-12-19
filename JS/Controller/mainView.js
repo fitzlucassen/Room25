@@ -19,6 +19,8 @@ MainView.prototype.appendUserID = function(user) {
 };
 
 MainView.prototype.manageMultipleGames = function(available, users){
+    var that = this;
+
     if(available){
         $('.hideCharacters').css('display', 'none');
     }
@@ -27,12 +29,14 @@ MainView.prototype.manageMultipleGames = function(available, users){
 
         for (var u in users) {
             if (users.hasOwnProperty(u)) {
-                message += users[u].name;
+                if(users[u].id != that.Helper.GetCurrentID()){
+                    message += users[u].name;
 
-                if(u === users.length - 2)
-                    message += ' et ';
-                else if(u < users.length - 2)
-                    message += ', ';
+                    if(u === users.length - 2)
+                        message += ' et ';
+                    else if(u < users.length - 2)
+                        message += ', ';
+                }
             }
         }
         message += '. Veillez patienter jusqu\'à la fin de celle-ci.';
