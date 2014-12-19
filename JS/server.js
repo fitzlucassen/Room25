@@ -47,6 +47,7 @@ var User = function(name) {
     this.action1 = '';
     this.action2 = '';
     this.color = "";
+    this.inAParty = false;
 };
 
 // Au chargement de la page
@@ -384,11 +385,12 @@ io.sockets.on('connection', function(socket) {
         DebugManager.messageForUser(user, 'est mort');
         DebugManager.debugArrayOfObject(users);
 
-        if(users.length === 0){
-            isAGame = false;
-            io.sockets.emit('canConnect', isAGame);
-        }
         if(GameManager.gardienWins(users)){
+            isAGame = false;
+            UserManager.killLastUsers(users);
+            me = null;
+            nbUser = users.length;
+            io.sockets.emit('canConnect', isAGame);
             io.sockets.emit('gardienWins');
         }
     });

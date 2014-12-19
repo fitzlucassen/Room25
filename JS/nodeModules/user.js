@@ -68,6 +68,19 @@ var userManager = function(){
 	    for(var i in users){
 	        if (users.hasOwnProperty(i)) {
 	            users[i].order = i;
+	            users[i].inAParty = true;
+	        }
+	    }
+	    return users;
+	};
+
+	this.killLastUsers = function(users){
+		var that = this;
+	    for(var i in users){
+	        if (users.hasOwnProperty(i)) {
+	            if(users[i].inAParty){
+	            	users.splice(that.getById(users, users[i].id), 1);
+	            }
 	        }
 	    }
 	    return users;
