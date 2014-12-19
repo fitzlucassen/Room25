@@ -234,6 +234,16 @@ span.direction {
 	height: 0;
 	background: rgba(150,150,150,0.4);
 }
+.gameboard .tuile .selectMeToken
+{
+	cursor: pointer;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 0;
+	height: 0;
+	background: rgba(150,150,150,0.4);
+}
 .tmpMessage{
 	position: absolute;
 	top: 0;

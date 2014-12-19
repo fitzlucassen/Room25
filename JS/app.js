@@ -129,4 +129,8 @@ $(document).ready(function() {
 
     	return false;
     });
+
+    $('body').on('click', '.putAToken', function(){
+        View.appendSelectToken();
+    });
 });

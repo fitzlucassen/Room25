@@ -150,9 +150,9 @@ MainView.prototype.showPlayers = function(object) {
     for (var u in object.users) {
         if (object.users.hasOwnProperty(u)) {
             if (object.users[u].id != that.Helper.GetCurrentID().parseInt())
-                $('.gameboard').append('<div class="character character-' + object.users[u].id + '" style="opacity: 0.8;background:' + object.users[u].color + ';">' + object.users[u].name + '</div>');
+                $('.gameboard').append('<div class="character character-' + object.users[u].id + '" data-color="' + object.users[u].color + '" style="opacity: 0.8;background:' + object.users[u].color + ';">' + object.users[u].name + '</div>');
             else
-                $('.gameboard').append('<div class="myCharacter character character-' + object.users[u].id + '" style="opacity: 0.8;background:' + object.users[u].color + ';">' + object.users[u].name + '</div>');
+                $('.gameboard').append('<div class="myCharacter character character-' + object.users[u].id + '" data-color="' + object.users[u].color + '" style="opacity: 0.8;background:' + object.users[u].color + ';">' + object.users[u].name + '</div>');
 
             
             var userDIV = that.Helper.GetCharacterDiv(object.users[u].id);
@@ -523,6 +523,19 @@ MainView.prototype.someoneHere = function(user){
 MainView.prototype.moveUser = function(user){
     var userDIV = this.Helper.GetCharacterDiv(user.id);
     userDIV.css('left', ((userDIV.css('left').substr(0, userDIV.css('left').length - 2).parseInt() + 50) + 'px'));
+};
+
+MainView.prototype.appendSelectToken = function() {
+    var color = this.Helper.GetCharacterDiv().data('color');
+    var coords = this.CoordsProvider.removeVisibleCoords(this.CoordsProvider.getAllCoords(), this.Helper);
+
+    var that = this;
+    for(var c in coords){
+        if(coords.hasOwnProperty(c)){
+            var tuile = that.Helper.GetTuile(coords[c].x, coords[c].y);
+            tuile.append('<div class="selectMeToken" style="background:' + color + ';"></div>');
+        }
+    }
 };
 
 /*************
