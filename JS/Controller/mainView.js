@@ -38,9 +38,9 @@ MainView.prototype.manageMultipleGames = function(available, users){
                 if(inAPartyUsers[u].id != that.Helper.GetCurrentID()){
                     message += inAPartyUsers[u].name;
 
-                    if(u === inAPartyUsers.length - 1)
+                    if(u == inAPartyUsers.length - 2)
                         message += ' et ';
-                    else if(u < inAPartyUsers.length - 1)
+                    else if(u < inAPartyUsers.length - 2)
                         message += ', ';
                 }
             }
