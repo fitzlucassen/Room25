@@ -33,14 +33,14 @@ MainView.prototype.manageMultipleGames = function(available, users){
                 if(users[u].inAParty)
                     inAPartyUsers.push(users[u]);
 
-        for (var u in inAPartyUsers) {
-            if (inAPartyUsers.hasOwnProperty(u)) {
-                if(inAPartyUsers[u].id != that.Helper.GetCurrentID()){
-                    message += inAPartyUsers[u].name;
+        for (var uu in inAPartyUsers) {
+            if (inAPartyUsers.hasOwnProperty(uu)) {
+                if(inAPartyUsers[uu].id != that.Helper.GetCurrentID()){
+                    message += inAPartyUsers[uu].name;
 
-                    if(u == inAPartyUsers.length - 2)
+                    if(uu == inAPartyUsers.length - 2)
                         message += ' et ';
-                    else if(u < inAPartyUsers.length - 2)
+                    else if(uu < inAPartyUsers.length - 2)
                         message += ', ';
                 }
             }
@@ -75,20 +75,26 @@ MainView.prototype.deleteUser = function(user) {
 
 // Un utilisateur arrive en retard --> on met à jours tous les personnage pris
 MainView.prototype.refreshUsers = function(users) {
+    var that = this;
+
     for (var u in users) {
         if (users.hasOwnProperty(u)) {
             if (users[u].character !== '') {
-                $('ul.personnage li').each(function(){
-                	var element = $(this);
-
-				    if (element.children('span').text() == users[u].character) {
-				    	if($('.characterTaken-' + users[u].id).length === 0)
-				        	element.append('<div class="characterTaken characterTaken-' + users[u].id + '" style="background:' + users[u].color + ';opacity:0.6;"><p>' + users[u].name + '</p></div>');
-				    }
-                });
+                that.usersLoop(users, u);
             }
         }
     }
+};
+
+MainView.prototype.usersLoop = function(users, u) {
+    $('ul.personnage li').each(function(){
+        var element = $(this);
+
+        if (element.children('span').text() == users[u].character) {
+            if($('.characterTaken-' + users[u].id).length === 0)
+                element.append('<div class="characterTaken characterTaken-' + users[u].id + '" style="background:' + users[u].color + ';opacity:0.6;"><p>' + users[u].name + '</p></div>');
+        }
+    });
 };
 
 // On redirige, sans rechargement, vers la page du jeu
@@ -229,7 +235,7 @@ MainView.prototype.appendTurnOf = function(u, users, actionNumber) {
                 this.CaseEffect.client.emitDeath(u);
             }
             if(that.Helper.GetCharacterDiv(that.Helper.GetCurrentID()).attr('handicap') === 'deathAfterNextTour'){
-                that.Helper.GetCharacterDiv(that.Helper.GetCurrentID()).attr('handicap', 'deathAfterThisTour')
+                that.Helper.GetCharacterDiv(that.Helper.GetCurrentID()).attr('handicap', 'deathAfterThisTour');
             }
             actionDIV = that.Helper.GetAction(u.action1);
         	actionDIV.parent().fadeIn(100).append('<p>' + actionDIV.parent().attr('data-first-sentence') + '</p>');
@@ -536,6 +542,12 @@ MainView.prototype.appendSelectToken = function() {
             tuile.append('<div class="selectMeToken" style="background:' + color + ';"></div>');
         }
     }
+};
+
+MainView.prototype.appendTokenPut = function(object) {
+    var tuile = this.Helper.GetTuile(object.coords.split('-').first(), object.coords.split('-').last());
+    tuile.css('background-color', object.color);
+    tuile.data('tokenuser', object.userId);
 };
 
 /*************

@@ -148,6 +148,9 @@ ClientController.prototype.initialize = function() {
         if(that.Helper.GetCurrentID() == object.user.id)
             that.socket.emit('nextPlayerOk', object.user);
     });
+    this.socket.on('tokenPut', function(object){
+        that.view.appendTokenPut(object);
+    });
 };
 
 // Nouvel utilisateur avec un pseudo
@@ -283,4 +286,7 @@ ClientController.prototype.emitNextPlayer = function(user, that){
         that.socket.emit('nextPlayerOk', user);
     else
         this.socket.emit('nextPlayerOk', user);
+};
+ClientController.prototype.emitToken = function(color, coords) {
+    this.socket.emit('tokenPut', {color: color, coords: coords, userId: this.Helper.GetCurrentID()});
 };

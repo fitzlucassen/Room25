@@ -376,6 +376,10 @@ io.sockets.on('connection', function(socket) {
         }
     });
 
+    socket.on('tokenPut', function(object){
+        io.sockets.emit('tokenPut', object);
+    });
+
     // Tue quelqu'un
     socket.on('killUser', function(user){
 

@@ -112,6 +112,14 @@ $(document).ready(function() {
         Client.emitAction($(this));
     });
 
+    $('body').on('click', '.tuile .selectMeToken', function(){
+        var color = $(this).css('background-color');
+        var coords = $(this).parent().data('data-position');
+
+        Client.emitToken(color, coords);
+        $('.selectMeToken').remove();
+    });
+
     // Au clique sur une direction
     $('body').on('click', 'span.direction', function(){
     	var element = $(this);
