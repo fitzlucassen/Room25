@@ -240,8 +240,8 @@ span.direction {
 	position: absolute;
 	top: 0;
 	left: 0;
-	width: 0;
-	height: 0;
+	width: 100%;
+	height: 100%;
 	background: rgba(150,150,150,0.4);
 }
 .tmpMessage{
