@@ -269,3 +269,9 @@ span.direction {
 .action1-final img, .action2-final img{
 	width: 70px;
 }
+p.putAToken{
+	margin: 20px 0 20px 20px;
+	color: white;
+	font-family: "Segoe UI";
+	cursor: pointer;
+}
