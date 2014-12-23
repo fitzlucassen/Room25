@@ -377,7 +377,8 @@ io.sockets.on('connection', function(socket) {
     });
 
     socket.on('tokenPut', function(object){
-        DebugManager.messageForUser(user, 'a posé un jeton en ' + object.coords);
+        var u = UserManager.getById(users, object.userId);
+        DebugManager.messageForUser(users[u], 'a posé un jeton en ' + object.coords);
         io.sockets.emit('tokenPut', object);
     });
 
