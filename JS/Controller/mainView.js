@@ -23,10 +23,6 @@ MainView.prototype.manageMultipleGames = function(available, users){
 
     if(available){
         $('.hideCharacters').css('display', 'none');
-
-        setTimeout(function(){
-            $('.characterTaken').remove();
-        }, 1000);
     }
     else {
         var message = 'Il y a actuellement déjà une partie qui se joue entre ';
@@ -57,6 +53,7 @@ MainView.prototype.manageMultipleGames = function(available, users){
 
 MainView.prototype.allowGame = function() {
     $('.hideCharacters').fadeOut('slow');
+    $('.characterTaken').remove();
 };
 
 // On ajoute un user sur un personnage
