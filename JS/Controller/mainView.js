@@ -546,7 +546,7 @@ MainView.prototype.appendSelectToken = function() {
 
 MainView.prototype.appendTokenPut = function(object) {
     var tuile = this.Helper.GetTuile(object.coords.split('-').first(), object.coords.split('-').last());
-    tuile.css('background-color', object.color);
+    tuile.append('<div class="tokenuser" data-token="' + object.userId + '" style="opacity: 0.8;background:' + object.color + ';"></div>');
     tuile.data('tokenuser', object.userId);
 };
 

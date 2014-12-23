@@ -244,6 +244,22 @@ span.direction {
 	height: 100%;
 	background: rgba(150,150,150,0.4);
 }
+.tokenuser
+{
+	float: left;
+	
+	width: 50px;
+	height: 35px;
+	background: rgba(30,30,30,0.8);
+
+	border-radius: 50px;
+	-webkit-border-radius: 50px;
+	-moz-border-radius: 50px;
+	-o-border-radius: 50px;
+	-ms-border-radius: 50px;
+
+	padding-top: 15px;
+}
 .tmpMessage{
 	position: absolute;
 	top: 0;
