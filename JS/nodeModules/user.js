@@ -85,6 +85,20 @@ var userManager = function(){
 	    }
 	    return users;
 	};
+
+	this.isInParty = function(users){
+		var that = this;
+		var inAParty = false;
+		for(var i in users){
+	        if (users.hasOwnProperty(i)) {
+	            if(users[i].inAParty){
+	            	inAParty = true;
+	            	break;
+	            }
+	        }
+	    }
+	    return inAParty;
+	};
 };
 
 exports.userManager = userManager;

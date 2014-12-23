@@ -539,7 +539,7 @@ MainView.prototype.appendSelectToken = function() {
     for(var c in coords){
         if(coords.hasOwnProperty(c)){
             var tuile = that.Helper.GetTuile(coords[c].x, coords[c].y);
-            tuile.append('<div class="selectMeToken" style="background:' + color + ';"></div>');
+            tuile.append('<div class="selectMeToken" style="background:' + color + ';opacity: 0.4;"></div>');
         }
     }
 };

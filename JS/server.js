@@ -377,6 +377,7 @@ io.sockets.on('connection', function(socket) {
     });
 
     socket.on('tokenPut', function(object){
+        DebugManager.messageForUser(user, 'a posé un jeton en ' + object.coords);
         io.sockets.emit('tokenPut', object);
     });
 
@@ -396,6 +397,12 @@ io.sockets.on('connection', function(socket) {
             nbUser = users.length;
             io.sockets.emit('canConnect', isAGame);
             io.sockets.emit('gardienWins');
+        }
+        else if(!UserManager.isInParty(users)){
+            isAGame = false;
+            UserManager.killLastUsers(users);
+            nbUser = users.length;
+            io.sockets.emit('canConnect', isAGame);
         }
     });
 
