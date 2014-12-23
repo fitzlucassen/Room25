@@ -65,7 +65,7 @@ io.sockets.on('connection', function(socket) {
         users.push(me);
 
         // Et on emet le signal pour la personne qui vient de se connecter qu'on l'a bien enregistré
-        console.log(isAGame);
+        console.log("Jeu en cours : " + isAGame);
         socket.emit('connectedUser', {
             me: me,
             users: users,
@@ -501,6 +501,21 @@ io.sockets.on('connection', function(socket) {
         DebugManager.messageForUser(me, 's\'est deconnecté');
         DebugManager.debugArrayOfObject(users);
         console.log(reason);
+
+        if(GameManager.gardienWins(users)){
+            isAGame = false;
+            UserManager.killLastUsers(users);
+            me = null;
+            nbUser = users.length;
+            io.sockets.emit('canConnect', isAGame);
+            io.sockets.emit('gardienWins');
+        }
+        else if(!UserManager.isInParty(users)){
+            isAGame = false;
+            UserManager.killLastUsers(users);
+            nbUser = users.length;
+            io.sockets.emit('canConnect', isAGame);
+        }
 
         // Et on émet à tous les autres joueurs qu'un utilisateur s'est deconnecté
         io.sockets.emit('disconnectedUser', me);
