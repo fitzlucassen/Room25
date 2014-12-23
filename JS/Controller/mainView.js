@@ -23,7 +23,10 @@ MainView.prototype.manageMultipleGames = function(available, users){
 
     if(available){
         $('.hideCharacters').css('display', 'none');
-        $('.characterTaken').remove();
+
+        setTimeout(function(){
+            $('.characterTaken').remove();
+        }, 1000);
     }
     else {
         var message = 'Il y a actuellement déjà une partie qui se joue entre ';

@@ -28,6 +28,7 @@ GameManager = new game.gameManager();
 
 // Tous les utilisateurs
 var users = [];
+var waitingUsers = [];
 var nbUser = -1;
 var nbTourRestant = 10;
 var isAGame = false;
@@ -62,13 +63,13 @@ io.sockets.on('connection', function(socket) {
         // On incrémente son id
         me.id = ++nbUser;
         // On l'ajoute au tableau des user
-        users.push(me);
+        waitingUsers.push(me);
 
         // Et on emet le signal pour la personne qui vient de se connecter qu'on l'a bien enregistré
         console.log("Jeu en cours : " + isAGame);
         socket.emit('connectedUser', {
             me: me,
-            users: users,
+            users: waitingUsers,
             available: !isAGame
         });
 
@@ -401,6 +402,8 @@ io.sockets.on('connection', function(socket) {
             UserManager.killLastUsers(users);
             me = null;
             nbUser = users.length;
+
+            users = waitingUsers;
             io.sockets.emit('canConnect', isAGame);
             io.sockets.emit('gardienWins');
         }
@@ -408,6 +411,8 @@ io.sockets.on('connection', function(socket) {
             isAGame = false;
             UserManager.killLastUsers(users);
             nbUser = users.length;
+
+            users = waitingUsers;
             io.sockets.emit('canConnect', isAGame);
         }
     });
@@ -510,6 +515,8 @@ io.sockets.on('connection', function(socket) {
             isAGame = false;
             UserManager.killLastUsers(users);
             nbUser = users.length;
+
+            users = waitingUsers;
             io.sockets.emit('canConnect', isAGame);
         }
         else if(GameManager.gardienWins(users)){
@@ -517,6 +524,8 @@ io.sockets.on('connection', function(socket) {
             UserManager.killLastUsers(users);
             me = null;
             nbUser = users.length;
+
+            users = waitingUsers;
             io.sockets.emit('canConnect', isAGame);
             io.sockets.emit('gardienWins');
         }
