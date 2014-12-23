@@ -556,8 +556,14 @@ MainView.prototype.appendTokenPut = function(object) {
 
 MainView.prototype.deleteTokens = function(positions) {
     var tuile = this.Helper.GetTuile(positions.x, positions.y);
+    var userId = tuile.data('tokenuser');
+
     tuile.children('.tokenuser').remove();
     tuile.removeAttr('data-tokenuser');
+
+    if(this.Helper.GetCurrentID == userId){
+        $('.putAToken').removeClass('hideToken');
+    }
 };
 
 /*************
