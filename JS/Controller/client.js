@@ -287,6 +287,6 @@ ClientController.prototype.emitNextPlayer = function(user, that){
     else
         this.socket.emit('nextPlayerOk', user);
 };
-ClientController.prototype.emitToken = function(color, coords) {
-    this.socket.emit('tokenPut', {color: color, coords: coords, userId: this.Helper.GetCurrentID()});
+ClientController.prototype.emitToken = function(color, positions) {
+    this.socket.emit('tokenPut', {color: color, coords: positions, userId: this.Helper.GetCurrentID()});
 };

@@ -114,9 +114,9 @@ $(document).ready(function() {
 
     $('body').on('click', '.tuile .selectMeToken', function(){
         var color = $(this).css('background-color');
-        var coords = $(this).parent().data('position');
+        var positions = $(this).parent().data('position');
 
-        Client.emitToken(color, coords);
+        Client.emitToken(color, positions);
         $('.selectMeToken').remove();
     });
 
