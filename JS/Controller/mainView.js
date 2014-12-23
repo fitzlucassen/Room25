@@ -287,6 +287,8 @@ MainView.prototype.deplacer = function(user) {
 	imgs.first().fadeIn('slow');
 	imgs.last().fadeOut('slow');
 
+    that.CaseEffect.client.emitKillToken(user.position);
+
     this.Helper.GetCharacterDiv(user.id).removeAttr('handicap');
     if(user.id == this.Helper.GetCurrentID())
         that.CaseEffect.manageCaseEffect(user, tuile.attr('data-action'));
@@ -305,6 +307,8 @@ MainView.prototype.pousser = function(userTarget, user) {
 	imgs.first().removeClass('ng-hide');
 	imgs.first().fadeIn('slow');
 	imgs.last().fadeOut('slow');
+
+    that.CaseEffect.client.emitKillToken(userTarget.position);
 
     this.Helper.GetCharacterDiv(userTarget.id).removeAttr('handicap');
     if(user.id == this.Helper.GetCurrentID())
@@ -548,6 +552,12 @@ MainView.prototype.appendTokenPut = function(object) {
     var tuile = this.Helper.GetTuile(object.coords.split('-').first(), object.coords.split('-').last());
     tuile.append('<div class="tokenuser" data-token="' + object.userId + '" style="opacity: 0.8;background:' + object.color + ';"></div>');
     tuile.data('tokenuser', object.userId);
+};
+
+MainView.prototype.deleteTokens = function(positions) {
+    var tuile = this.Helper.GetTuile(positions.x, positions.y);
+    tuile.children('.tokenuser').remove();
+    tuile.removeAttr('data-tokenuser');
 };
 
 /*************

@@ -151,6 +151,9 @@ ClientController.prototype.initialize = function() {
     this.socket.on('tokenPut', function(object){
         that.view.appendTokenPut(object);
     });
+    this.socket.on('killToken', function(positions){
+        that.view.deleteTokens(positions);
+    });
 };
 
 // Nouvel utilisateur avec un pseudo
@@ -289,4 +292,7 @@ ClientController.prototype.emitNextPlayer = function(user, that){
 };
 ClientController.prototype.emitToken = function(color, positions) {
     this.socket.emit('tokenPut', {color: color, coords: positions, userId: this.Helper.GetCurrentID()});
+};
+ClientController.prototype.emitKillToken = function(positions) {
+    this.socket.emit('killToken', positions);
 };

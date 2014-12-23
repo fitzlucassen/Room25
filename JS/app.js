@@ -139,6 +139,9 @@ $(document).ready(function() {
     });
 
     $('body').on('click', '.putAToken', function(){
-        View.appendSelectToken();
+        if(!$(this).hasClass('hideToken')){
+            View.appendSelectToken();
+            $(this).addClass('hideToken');
+        }
     });
 });

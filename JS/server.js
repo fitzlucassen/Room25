@@ -383,6 +383,10 @@ io.sockets.on('connection', function(socket) {
         io.sockets.emit('tokenPut', object);
     });
 
+    socket.on('killToken', function(positions){
+        io.sockets.emit('killToken', positions);
+    });
+
     // Tue quelqu'un
     socket.on('killUser', function(user){
 
