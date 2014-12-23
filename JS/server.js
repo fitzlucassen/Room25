@@ -65,6 +65,7 @@ io.sockets.on('connection', function(socket) {
         users.push(me);
 
         // Et on emet le signal pour la personne qui vient de se connecter qu'on l'a bien enregistré
+        console.log(isAGame);
         socket.emit('connectedUser', {
             me: me,
             users: users,
