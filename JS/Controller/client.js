@@ -15,7 +15,9 @@ ClientController.prototype.initialize = function() {
     this.socket.on('connectedUser', function(object) {
         that.view.appendUserID(object.me);
         that.view.refreshUsers(object.users);
-        that.view.manageMultipleGames(object.available, object.users);
+
+        if(object.waitingUsers !== null && object.waitingUsers.length > 0)
+            that.view.manageMultipleGames(object.available, object.users);
     });
     // Lorsqu'un utilisateur s'est deconnecté
     this.socket.on('disconnectedUser', function(user) {

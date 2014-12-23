@@ -66,24 +66,18 @@ io.sockets.on('connection', function(socket) {
         console.log("Jeu en cours : " + isAGame);
 
         // On l'ajoute au tableau des user
-        if(UserManager.isInParty(users)){
+        if(UserManager.isInParty(users))
             waitingUsers.push(me);
-            // Et on emet le signal pour la personne qui vient de se connecter qu'on l'a bien enregistré
-            socket.emit('connectedUser', {
-                me: me,
-                users: waitingUsers,
-                available: !isAGame
-            });
-        }
-        else{
+        else
             users.push(me);
-            // Et on emet le signal pour la personne qui vient de se connecter qu'on l'a bien enregistré
-            socket.emit('connectedUser', {
-                me: me,
-                users: users,
-                available: !isAGame
-            });
-        }
+
+        // Et on emet le signal pour la personne qui vient de se connecter qu'on l'a bien enregistré
+        socket.emit('connectedUser', {
+            me: me,
+            users: users,
+            waitingUsers: waitingUsers,
+            available: !isAGame
+        });
 
         DebugManager.messageForUser(me, 's\'est connecté');
     });
