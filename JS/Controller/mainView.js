@@ -23,6 +23,7 @@ MainView.prototype.manageMultipleGames = function(available, users){
 
     if(available){
         $('.hideCharacters').css('display', 'none');
+        $('.characterTaken').remove();
     }
     else {
         var message = 'Il y a actuellement déjà une partie qui se joue entre ';
@@ -561,7 +562,7 @@ MainView.prototype.deleteTokens = function(positions) {
     tuile.children('.tokenuser').remove();
     tuile.removeAttr('data-tokenuser');
 
-    if(this.Helper.GetCurrentID == userId){
+    if(this.Helper.GetCurrentID() == userId){
         $('.putAToken').removeClass('hideToken');
     }
 };
