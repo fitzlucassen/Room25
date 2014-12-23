@@ -62,16 +62,28 @@ io.sockets.on('connection', function(socket) {
         me = new User(name.name);
         // On incrémente son id
         me.id = ++nbUser;
-        // On l'ajoute au tableau des user
-        waitingUsers.push(me);
 
-        // Et on emet le signal pour la personne qui vient de se connecter qu'on l'a bien enregistré
         console.log("Jeu en cours : " + isAGame);
-        socket.emit('connectedUser', {
-            me: me,
-            users: waitingUsers,
-            available: !isAGame
-        });
+
+        // On l'ajoute au tableau des user
+        if(UserManager.isInParty(users)){
+            waitingUsers.push(me);
+            // Et on emet le signal pour la personne qui vient de se connecter qu'on l'a bien enregistré
+            socket.emit('connectedUser', {
+                me: me,
+                users: waitingUsers,
+                available: !isAGame
+            });
+        }
+        else{
+            users.push(me);
+            // Et on emet le signal pour la personne qui vient de se connecter qu'on l'a bien enregistré
+            socket.emit('connectedUser', {
+                me: me,
+                users: users,
+                available: !isAGame
+            });
+        }
 
         DebugManager.messageForUser(me, 's\'est connecté');
     });
