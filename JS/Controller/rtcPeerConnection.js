@@ -69,6 +69,7 @@ RtcPeerConnection.prototype.initialize = function(){
             //that.RtcPeer.onicecandidate = null;
             // request the other peers ICE candidate
             that.recv(that.ROOM, "candidate:" + otherType, function (candidate) {
+                console.log('candidate received');
                 that.RtcPeer.addIceCandidate(new that.IceCandidate(JSON.parse(candidate)));
             });
             // send our ICE candidate
@@ -88,6 +89,7 @@ RtcPeerConnection.prototype.connect = function(callback){
             that.send(that.ROOM, "offer", JSON.stringify(offer));
             // wait for an answer SDP from FireBase
             that.recv(that.ROOM, "answer", function (answer) {
+                console.log('answer received');
                 that.RtcPeer.setRemoteDescription(
                     new that.SessionDescription(JSON.parse(answer))
                 );
@@ -99,6 +101,8 @@ RtcPeerConnection.prototype.connect = function(callback){
         // answerer needs to wait for an offer before
         // generating the answer SDP
         that.recv(that.ROOM, "offer", function (offer) {
+            console.log('offer received');
+
             that.RtcPeer.setRemoteDescription(
                 new that.SessionDescription(JSON.parse(offer))
             );

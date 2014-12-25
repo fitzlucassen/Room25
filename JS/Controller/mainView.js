@@ -80,8 +80,8 @@ MainView.prototype.redirectToGame = function(object, rtc) {
         video.remove();
 
         if(object.users[0].id != that.Helper.GetCurrentID()){
-            $('#callButton').css('display','none');
-            $('#hangupButton').css('display','none');
+            //$('#callButton').css('display','none');
+            //$('#hangupButton').css('display','none');
         }
 
         rtc.initialize(ids, 'webcam-' + that.Helper.GetCurrentID(), function(){
