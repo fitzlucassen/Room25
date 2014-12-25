@@ -18,11 +18,50 @@ MainView.prototype.appendUserID = function(user) {
     that.Helper.SetCurrentID(user.id);
 };
 
+MainView.prototype.manageMultipleGames = function(available, users){
+    var that = this;
+
+    if(available){
+        $('.hideCharacters').css('display', 'none');
+    }
+    else {
+        var message = 'Il y a actuellement déjà une partie qui se joue entre ';
+
+        var inAPartyUsers = [];
+        for (var u in users)
+            if (users.hasOwnProperty(u))
+                if(users[u].inAParty)
+                    inAPartyUsers.push(users[u]);
+
+        for (var uu in inAPartyUsers) {
+            if (inAPartyUsers.hasOwnProperty(uu)) {
+                if(inAPartyUsers[uu].id != that.Helper.GetCurrentID()){
+                    message += inAPartyUsers[uu].name;
+
+                    if(uu == inAPartyUsers.length - 2)
+                        message += ' et ';
+                    else if(uu < inAPartyUsers.length - 2)
+                        message += ', ';
+                }
+            }
+        }
+        message += '. Veillez patienter jusqu\'à la fin de celle-ci.';
+        $('.hideCharacters p').html(message);
+        $('.hideCharacters').css('display', 'block');
+    }
+};
+
+MainView.prototype.allowGame = function() {
+    $('.hideCharacters').fadeOut('slow');
+    $('.characterTaken').remove();
+};
+
 // On ajoute un user sur un personnage
-MainView.prototype.deleteCharacter = function(id, name, pseudo) {
+MainView.prototype.deleteCharacter = function(id, name, pseudo, color) {
     $('ul.personnage li').each(function() {
         if ($(this).children('span').text() == name) {
-            $(this).append('<div class="characterTaken characterTaken-' + id + '"><p>' + pseudo + '</p></div>');
+            $('.characterTaken-' + id).remove();
+            $(this).append('<div class="characterTaken characterTaken-' + id + '" style="background:' + color + ';opacity:0.6;"><p>' + pseudo + '</p></div>');
         }
     });
 };
@@ -37,20 +76,26 @@ MainView.prototype.deleteUser = function(user) {
 
 // Un utilisateur arrive en retard --> on met à jours tous les personnage pris
 MainView.prototype.refreshUsers = function(users) {
+    var that = this;
+
     for (var u in users) {
         if (users.hasOwnProperty(u)) {
             if (users[u].character !== '') {
-                $('ul.personnage li').each(function(){
-                	var element = $(this);
-
-				    if (element.children('span').text() == users[u].character) {
-				    	if($('.characterTaken-' + users[u].id).length === 0)
-				        	element.append('<div class="characterTaken characterTaken-' + users[u].id + '"><p>' + users[u].name + '</p></div>');
-				    }
-                });
+                that.usersLoop(users, u);
             }
         }
     }
+};
+
+MainView.prototype.usersLoop = function(users, u) {
+    $('ul.personnage li').each(function(){
+        var element = $(this);
+
+        if (element.children('span').text() == users[u].character) {
+            if($('.characterTaken-' + users[u].id).length === 0)
+                element.append('<div class="characterTaken characterTaken-' + users[u].id + '" style="background:' + users[u].color + ';opacity:0.6;"><p>' + users[u].name + '</p></div>');
+        }
+    });
 };
 
 // On redirige, sans rechargement, vers la page du jeu
@@ -112,9 +157,9 @@ MainView.prototype.showPlayers = function(object) {
     for (var u in object.users) {
         if (object.users.hasOwnProperty(u)) {
             if (object.users[u].id != that.Helper.GetCurrentID().parseInt())
-                $('.gameboard').append('<div class="character character-' + object.users[u].id + '">' + object.users[u].name + '</div>');
+                $('.gameboard').append('<div class="character character-' + object.users[u].id + '" data-color="' + object.users[u].color + '" style="opacity: 0.8;background:' + object.users[u].color + ';">' + object.users[u].name + '</div>');
             else
-                $('.gameboard').append('<div class="myCharacter character character-' + object.users[u].id + '">' + object.users[u].name + '</div>');
+                $('.gameboard').append('<div class="myCharacter character character-' + object.users[u].id + '" data-color="' + object.users[u].color + '" style="opacity: 0.8;background:' + object.users[u].color + ';">' + object.users[u].name + '</div>');
 
             
             var userDIV = that.Helper.GetCharacterDiv(object.users[u].id);
@@ -187,6 +232,12 @@ MainView.prototype.appendTurnOf = function(u, users, actionNumber) {
             if(that.Helper.GetCharacterDiv(that.Helper.GetCurrentID()).attr('handicap') === 'noSee' && u.action1 === 'Regarder'){
                 return true;
             }
+            if(that.Helper.GetCharacterDiv(that.Helper.GetCurrentID()).attr('handicap') === 'deathAfterNextAction' && u.action1 !== 'Déplacer'){
+                this.CaseEffect.client.emitDeath(u);
+            }
+            if(that.Helper.GetCharacterDiv(that.Helper.GetCurrentID()).attr('handicap') === 'deathAfterNextTour'){
+                that.Helper.GetCharacterDiv(that.Helper.GetCurrentID()).attr('handicap', 'deathAfterThisTour');
+            }
             actionDIV = that.Helper.GetAction(u.action1);
         	actionDIV.parent().fadeIn(100).append('<p>' + actionDIV.parent().attr('data-first-sentence') + '</p>');
             actionDIV.parent().parent().addClass('extendWidth');
@@ -194,6 +245,12 @@ MainView.prototype.appendTurnOf = function(u, users, actionNumber) {
         else{
             if(that.Helper.GetCharacterDiv(that.Helper.GetCurrentID()).attr('handicap') === 'noSee' && u.action2 === 'Regarder'){
                 return true;
+            }
+            if(that.Helper.GetCharacterDiv(that.Helper.GetCurrentID()).attr('handicap') === 'deathAfterNextAction' && u.action2 !== 'Déplacer'){
+                this.CaseEffect.client.emitDeath(u);
+            }
+            if(that.Helper.GetCharacterDiv(that.Helper.GetCurrentID()).attr('handicap') === 'deathAfterThisTour' && u.action2 !== 'Déplacer'){
+                this.CaseEffect.client.emitDeath(u);
             }
             actionDIV = that.Helper.GetAction(u.action2);
         	actionDIV.parent().fadeIn(100).append('<p>' + actionDIV.parent().attr('data-first-sentence') + '</p>');
@@ -231,6 +288,8 @@ MainView.prototype.deplacer = function(user) {
 	imgs.first().fadeIn('slow');
 	imgs.last().fadeOut('slow');
 
+    that.CaseEffect.client.emitKillToken(user.position);
+
     this.Helper.GetCharacterDiv(user.id).removeAttr('handicap');
     if(user.id == this.Helper.GetCurrentID())
         that.CaseEffect.manageCaseEffect(user, tuile.attr('data-action'));
@@ -249,6 +308,8 @@ MainView.prototype.pousser = function(userTarget, user) {
 	imgs.first().removeClass('ng-hide');
 	imgs.first().fadeIn('slow');
 	imgs.last().fadeOut('slow');
+
+    that.CaseEffect.client.emitKillToken(userTarget.position);
 
     this.Helper.GetCharacterDiv(userTarget.id).removeAttr('handicap');
     if(user.id == this.Helper.GetCurrentID())
@@ -473,6 +534,37 @@ MainView.prototype.someoneHere = function(user){
 MainView.prototype.moveUser = function(user){
     var userDIV = this.Helper.GetCharacterDiv(user.id);
     userDIV.css('left', ((userDIV.css('left').substr(0, userDIV.css('left').length - 2).parseInt() + 50) + 'px'));
+};
+
+MainView.prototype.appendSelectToken = function() {
+    var color = this.Helper.GetCharacterDiv().data('color');
+    var coords = this.CoordsProvider.removeVisibleCoords(this.CoordsProvider.getAllCoords(), this.Helper);
+
+    var that = this;
+    for(var c in coords){
+        if(coords.hasOwnProperty(c)){
+            var tuile = that.Helper.GetTuile(coords[c].x, coords[c].y);
+            tuile.append('<div class="selectMeToken" style="background:' + color + ';opacity: 0.4;"></div>');
+        }
+    }
+};
+
+MainView.prototype.appendTokenPut = function(object) {
+    var tuile = this.Helper.GetTuile(object.coords.split('-').first(), object.coords.split('-').last());
+    tuile.append('<div class="tokenuser" data-token="' + object.userId + '" style="opacity: 0.8;background:' + object.color + ';"></div>');
+    tuile.data('tokenuser', object.userId);
+};
+
+MainView.prototype.deleteTokens = function(positions) {
+    var tuile = this.Helper.GetTuile(positions.x, positions.y);
+    var userId = tuile.data('tokenuser');
+
+    tuile.children('.tokenuser').remove();
+    tuile.removeAttr('data-tokenuser');
+
+    if(this.Helper.GetCurrentID() == userId){
+        $('.putAToken').removeClass('hideToken');
+    }
 };
 
 /*************

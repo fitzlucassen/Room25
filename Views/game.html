@@ -6,9 +6,23 @@
 	<div class="gameboard">
 
 		<div class="tuile" ng-repeat="tuile in tuiles" style="top: {{tuile.position.y * 175}}px;left:{{tuile.position.x * 175}}px" data-position="{{tuile.position.x}}-{{tuile.position.y}}" data-action="{{tuile.action}}">
-			<img id="tuile-{{tuile.id}}" src="{{tuile.image}}" alt="Tuile : {{tuile.name}}" ng-hide="tuile.enable"/>
-			<img src="Images/tuiles/cache.gif" alt="Tuile : {{tuile.name}}" ng-show="tuile.enable"/>
+			<img id="tuile-{{tuile.id}}" src="{{tuile.image}}" alt="Tuile : {{tuile.name}}" ng-show="tuile.enable"/>
+			<img src="Images/tuiles/cache.gif" alt="Tuile : {{tuile.name}}" ng-hide="tuile.enable"/>
 		</div>
+	</div>
+
+	<div class="panel leftPanel">
+		<div class="toggle"></div>
+
+		<div class="camContainer">
+			<video class="webcam" autoplay></video>
+		</div>
+		<div>
+		    <button id="callButton" class="btnClass">Appeler</button>
+		    <button id="hangupButton" class="btnClass speBg">Raccrocher</button>
+	  	</div>
+	  	<br/>
+	  	<p class="putAToken">Poser un jeton</p>
 	</div>
 
 	<div class="panel">
@@ -38,14 +52,6 @@
 		<div class="action2-final">
 			<p>Action n°2 :</p>
 		</div>
-
-		<div class="camContainer">
-			<video class="webcam" autoplay></video>
-		</div>
-		<div>
-		    <button id="callButton" class="btnClass">Appeler</button>
-		    <button id="hangupButton" class="btnClass speBg">Raccrocher</button>
-	  	</div>
 
 		<div class="tourDe">
 			<p></p>

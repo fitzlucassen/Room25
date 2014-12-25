@@ -7,6 +7,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-connect-socket.io');
     grunt.loadNpmTasks('grunt-express');
+    grunt.loadNpmTasks('grunt-img');
 
     var jsDist = 'JS/_built.js';
     var jsSrc = ['JS/**/*.js', '!JS/server.js', '!' + jsDist, '!JS/Base/*.js'];
@@ -41,13 +42,18 @@ module.exports = function(grunt) {
                 tasks: ['scripts:dev']
             },
         },
+        img: {
+            task: {
+                src: ['Images/**/*.jpg', 'Images/**/*.jpeg', 'Images/**/*.png','Images/**/*.gif']
+            }
+        },
         express: {
             roomServer: {
                 options: {
                     server: path.resolve('JS/server'),
                     keepalive: true,
                     port: 1337,
-                    hostname: 'localhost',
+                    hostname: 'room25.thibaultdulon.com',
                     showStack: true
                 }
             }
@@ -57,6 +63,6 @@ module.exports = function(grunt) {
     grunt.registerTask('default', ['scripts', 'watch']);
 
     // J'aime bien avoir des noms génériques
-    grunt.registerTask('scripts', ['jshint', 'uglify:compile', 'cssmin:compile']);
+    grunt.registerTask('scripts', ['jshint', 'uglify:compile', 'cssmin:compile', 'img:task']);
     grunt.registerTask('roomServer', ['express', 'express-keepalive']);
 };

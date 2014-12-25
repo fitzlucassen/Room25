@@ -8,14 +8,16 @@ function ClientController(view, DOMView, helper, rtc) {
 }
 
 ClientController.prototype.initialize = function() {
-    this.socket = io.connect('http://localhost:1337');
-
+    this.socket = io.connect('http://roomsocket.thibaultdulon.com/');
     that = this;
 
     // Lorsqu'un utilisateur s'est connecté
     this.socket.on('connectedUser', function(object) {
         that.view.appendUserID(object.me);
         that.view.refreshUsers(object.users);
+
+        if(object.waitingUsers !== null && object.waitingUsers.length > 0)
+            that.view.manageMultipleGames(object.available, object.users);
     });
     // Lorsqu'un utilisateur s'est deconnecté
     this.socket.on('disconnectedUser', function(user) {
@@ -23,7 +25,7 @@ ClientController.prototype.initialize = function() {
     });
     // Lorsqu'un utilisateur a choisi un personnage
     this.socket.on('newCharacter', function(object) {
-        that.view.deleteCharacter(object.id, object.name, object.pseudo);
+        that.view.deleteCharacter(object.id, object.name, object.pseudo, object.color);
     });
     // Supprime le bouton si tout le monde n'est pas prêt (personnage)
     this.socket.on('cantPlay', function() {
@@ -58,6 +60,10 @@ ClientController.prototype.initialize = function() {
         OtherCoords = object.otherCoords;
 
         that.view.redirectToGame(object, that.Rtc);
+    });
+
+    this.socket.on('canConnect', function(available){
+        that.view.allowGame();
     });
 
     // On affiche la deuxieme partie de l'action
@@ -144,6 +150,12 @@ ClientController.prototype.initialize = function() {
         if(that.Helper.GetCurrentID() == object.user.id)
             that.socket.emit('nextPlayerOk', object.user);
     });
+    this.socket.on('tokenPut', function(object){
+        that.view.appendTokenPut(object);
+    });
+    this.socket.on('killToken', function(positions){
+        that.view.deleteTokens(positions);
+    });
 };
 
 // Nouvel utilisateur avec un pseudo
@@ -163,10 +175,11 @@ ClientController.prototype.validateAction = function(id, action1, action2) {
 };
 
 // Personnage choisi
-ClientController.prototype.characterChoosen = function(name, id) {
+ClientController.prototype.characterChoosen = function(name, id, color) {
     this.socket.emit('characterChoosen', {
         name: name,
-        id: id
+        id: id,
+        color: color
     });
 };
 
@@ -278,4 +291,10 @@ ClientController.prototype.emitNextPlayer = function(user, that){
         that.socket.emit('nextPlayerOk', user);
     else
         this.socket.emit('nextPlayerOk', user);
+};
+ClientController.prototype.emitToken = function(color, positions) {
+    this.socket.emit('tokenPut', {color: color, coords: positions, userId: this.Helper.GetCurrentID()});
+};
+ClientController.prototype.emitKillToken = function(positions) {
+    this.socket.emit('killToken', positions);
 };

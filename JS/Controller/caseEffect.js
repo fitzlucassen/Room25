@@ -17,23 +17,23 @@ CaseEffectController.prototype.manageCaseEffect = function(user, effect, userMai
 		this.client.emitNextPlayer(nextOne);
 	}
 	else if(effect === 'noSecondAction'){
-		var userDiv = this.client.view.Helper.GetCharacterDiv(user.id);
+		var userDiv1 = this.client.view.Helper.GetCharacterDiv(user.id);
 
-		userDiv.attr('handicap', 'noSecondAction');
+		userDiv1.attr('handicap', 'noSecondAction');
 		
 		this.client.emitNextPlayer(nextOne);
 	}
 	else if(effect === 'deathAfterNextAction'){
-		var userDiv = this.client.view.Helper.GetCharacterDiv(user.id);
+		var userDiv2 = this.client.view.Helper.GetCharacterDiv(user.id);
 
-		userDiv.attr('handicap', 'deathAfterNextAction');
+		userDiv2.attr('handicap', 'deathAfterNextAction');
 		
 		this.client.emitNextPlayer(nextOne);
 	}
 	else if(effect === 'deathAfterNextTour'){
-		var userDiv = this.client.view.Helper.GetCharacterDiv(user.id);
+		var userDiv3 = this.client.view.Helper.GetCharacterDiv(user.id);
 
-		userDiv.attr('handicap', 'deathAfterNextTour');
+		userDiv3.attr('handicap', 'deathAfterNextTour');
 		
 		this.client.emitNextPlayer(nextOne);
 	}

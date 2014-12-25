@@ -10,7 +10,7 @@ var game = require('./nodeModules/game');
 
 // Création du serveur
 var app = express();
-var server = http.createServer(app).listen(1337);
+var server = http.createServer(app).listen('1337');
 var io = socketIO.listen(server);
 // End
 
@@ -28,8 +28,10 @@ GameManager = new game.gameManager();
 
 // Tous les utilisateurs
 var users = [];
+var waitingUsers = [];
 var nbUser = -1;
 var nbTourRestant = 10;
+var isAGame = false;
 
 // La classe user
 var User = function(name) {
@@ -45,6 +47,8 @@ var User = function(name) {
     this.order = 0;
     this.action1 = '';
     this.action2 = '';
+    this.color = "";
+    this.inAParty = false;
 };
 
 // Au chargement de la page
@@ -58,13 +62,21 @@ io.sockets.on('connection', function(socket) {
         me = new User(name.name);
         // On incrémente son id
         me.id = ++nbUser;
+
+        console.log("Jeu en cours : " + isAGame);
+
         // On l'ajoute au tableau des user
-        users.push(me);
+        if(UserManager.isInParty(users))
+            waitingUsers.push(me);
+        else
+            users.push(me);
 
         // Et on emet le signal pour la personne qui vient de se connecter qu'on l'a bien enregistré
         socket.emit('connectedUser', {
             me: me,
-            users: users
+            users: users,
+            waitingUsers: waitingUsers,
+            available: !isAGame
         });
 
         DebugManager.messageForUser(me, 's\'est connecté');
@@ -74,6 +86,7 @@ io.sockets.on('connection', function(socket) {
     socket.on('characterChoosen', function(object) {
         // On ajoute le nom du personnage choisi à l'utilisateur actuel
         me.character = object.name;
+        me.color = object.color;
 
         DebugManager.messageForUser(me, 'a choisi le personnage ' + object.name);
 
@@ -81,7 +94,8 @@ io.sockets.on('connection', function(socket) {
         io.sockets.emit('newCharacter', {
             id: object.id,
             name: object.name,
-            pseudo: me.name
+            pseudo: me.name,
+            color: me.color
         });
 
         //if (GameManager.moreThanFourPlayers(users)) {
@@ -97,6 +111,7 @@ io.sockets.on('connection', function(socket) {
         users = GameManager.manageIdentity(users, CoordsManager.shufflePositions);
         users = UserManager.processPlayerOrder(users, CoordsManager.shufflePositions);
 
+        isAGame = true;
         io.sockets.emit('play', {
             me: me,
             users: users,
@@ -369,6 +384,16 @@ io.sockets.on('connection', function(socket) {
         }
     });
 
+    socket.on('tokenPut', function(object){
+        var u = UserManager.getById(users, object.userId);
+        DebugManager.messageForUser(users[u], 'a posé un jeton en ' + object.coords);
+        io.sockets.emit('tokenPut', object);
+    });
+
+    socket.on('killToken', function(positions){
+        io.sockets.emit('killToken', positions);
+    });
+
     // Tue quelqu'un
     socket.on('killUser', function(user){
 
@@ -379,7 +404,22 @@ io.sockets.on('connection', function(socket) {
         DebugManager.debugArrayOfObject(users);
 
         if(GameManager.gardienWins(users)){
+            isAGame = false;
+            UserManager.killLastUsers(users);
+            me = null;
+            nbUser = users.length;
+
+            users = waitingUsers;
+            io.sockets.emit('canConnect', isAGame);
             io.sockets.emit('gardienWins');
+        }
+        else if(!UserManager.isInParty(users)){
+            isAGame = false;
+            UserManager.killLastUsers(users);
+            nbUser = users.length;
+
+            users = waitingUsers;
+            io.sockets.emit('canConnect', isAGame);
         }
     });
 
@@ -476,6 +516,25 @@ io.sockets.on('connection', function(socket) {
         DebugManager.messageForUser(me, 's\'est deconnecté');
         DebugManager.debugArrayOfObject(users);
         console.log(reason);
+
+        if(!UserManager.isInParty(users)){
+            isAGame = false;
+            UserManager.killLastUsers(users);
+            nbUser = users.length;
+
+            users = waitingUsers;
+            io.sockets.emit('canConnect', isAGame);
+        }
+        else if(GameManager.gardienWins(users)){
+            isAGame = false;
+            UserManager.killLastUsers(users);
+            me = null;
+            nbUser = users.length;
+
+            users = waitingUsers;
+            io.sockets.emit('canConnect', isAGame);
+            io.sockets.emit('gardienWins');
+        }
 
         // Et on émet à tous les autres joueurs qu'un utilisateur s'est deconnecté
         io.sockets.emit('disconnectedUser', me);
