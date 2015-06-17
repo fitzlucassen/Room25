@@ -1,7 +1,7 @@
 [{
     "id": 1,
     "name": "salle vide",
-    "image": "Images/tuiles/vide.gif",
+    "image": "Images/Tuiles/vide.gif",
     "enable": "false",
     "position": {
         "x": 0,
@@ -12,7 +12,7 @@
 }, {
     "id": 2,
     "name": "salle vide",
-    "image": "Images/tuiles/vide.gif",
+    "image": "Images/Tuiles/vide.gif",
     "enable": "false",
     "position": {
         "x": 1,
@@ -24,7 +24,7 @@
 }, {
     "id": 3,
     "name": "salle vide",
-    "image": "Images/tuiles/vide.gif",
+    "image": "Images/Tuiles/vide.gif",
     "enable": "false",
     "position": {
         "x": 2,
@@ -35,7 +35,7 @@
 }, {
     "id": 4,
     "name": "salle vide",
-    "image": "Images/tuiles/vide.gif",
+    "image": "Images/Tuiles/vide.gif",
     "enable": "false",
     "position": {
         "x": 3,
@@ -46,7 +46,7 @@
 }, {
     "id": 5,
     "name": "salle vide",
-    "image": "Images/tuiles/vide.gif",
+    "image": "Images/Tuiles/vide.gif",
     "enable": "false",
     "position": {
         "x": 4,
@@ -57,7 +57,7 @@
 }, {
     "id": 6,
     "name": "salle vide",
-    "image": "Images/tuiles/vide.gif",
+    "image": "Images/Tuiles/vide.gif",
     "enable": "false",
     "position": {
         "x": 0,
@@ -68,7 +68,7 @@
 }, {
     "id": 7,
     "name": "chambre noire",
-    "image": "Images/tuiles/noire.gif",
+    "image": "Images/Tuiles/noire.gif",
     "enable": "false",
     "position": {
         "x": 1,
@@ -79,7 +79,7 @@
 }, {
     "id": 8,
     "name": "chambre froide",
-    "image": "Images/tuiles/froide.gif",
+    "image": "Images/Tuiles/froide.gif",
     "enable": "false",
     "position": {
         "x": 2,
@@ -90,7 +90,7 @@
 }, {
     "id": 9,
     "name": "chambre froide",
-    "image": "Images/tuiles/froide.gif",
+    "image": "Images/Tuiles/froide.gif",
     "enable": "false",
     "position": {
         "x": 3,
@@ -101,7 +101,7 @@
 }, {
     "id": 10,
     "name": "salle piégée",
-    "image": "Images/tuiles/piege.gif",
+    "image": "Images/Tuiles/piege.gif",
     "enable": "false",
     "position": {
         "x": 4,
@@ -112,7 +112,7 @@
 }, {
     "id": 11,
     "name": "salle piégée",
-    "image": "Images/tuiles/piege.gif",
+    "image": "Images/Tuiles/piege.gif",
     "enable": "false",
     "position": {
         "x": 0,
@@ -123,7 +123,7 @@
 }, {
     "id": 12,
     "name": "salle inondable",
-    "image": "Images/tuiles/inondable.gif",
+    "image": "Images/Tuiles/inondable.gif",
     "enable": "false",
     "position": {
         "x": 1,
@@ -134,7 +134,7 @@
 }, {
     "id": 13,
     "name": "salle centrale",
-    "image": "Images/tuiles/centrale.gif",
+    "image": "Images/Tuiles/centrale.gif",
     "enable": "true",
     "position": {
         "x": 2,
@@ -145,7 +145,7 @@
 }, {
     "id": 14,
     "name": "salle inondable",
-    "image": "Images/tuiles/inondable.gif",
+    "image": "Images/Tuiles/inondable.gif",
     "enable": "false",
     "position": {
         "x": 3,
@@ -156,7 +156,7 @@
 }, {
     "id": 15,
     "name": "salle d'acide",
-    "image": "Images/tuiles/acide.gif",
+    "image": "Images/Tuiles/acide.gif",
     "enable": "false",
     "position": {
         "x": 4,
@@ -167,7 +167,7 @@
 }, {
     "id": 16,
     "name": "salle d'acide",
-    "image": "Images/tuiles/acide.gif",
+    "image": "Images/Tuiles/acide.gif",
     "enable": "false",
     "position": {
         "x": 0,
@@ -178,7 +178,7 @@
 }, {
     "id": 17,
     "name": "salle mortelle",
-    "image": "Images/tuiles/mortelle.gif",
+    "image": "Images/Tuiles/mortelle.gif",
     "enable": "false",
     "position": {
         "x": 1,
@@ -189,7 +189,7 @@
 }, {
     "id": 18,
     "name": "salle mortelle",
-    "image": "Images/tuiles/mortelle.gif",
+    "image": "Images/Tuiles/mortelle.gif",
     "enable": "false",
     "position": {
         "x": 2,
@@ -200,7 +200,7 @@
 }, {
     "id": 19,
     "name": "salle vortex",
-    "image": "Images/tuiles/vortex.gif",
+    "image": "Images/Tuiles/vortex.gif",
     "enable": "false",
     "position": {
         "x": 3,
@@ -211,7 +211,7 @@
 }, {
     "id": 20,
     "name": "salle de vision",
-    "image": "Images/tuiles/vision.gif",
+    "image": "Images/Tuiles/vision.gif",
     "enable": "false",
     "position": {
         "x": 4,
@@ -222,7 +222,7 @@
 }, {
     "id": 21,
     "name": "salle de contrôle",
-    "image": "Images/tuiles/controle.gif",
+    "image": "Images/Tuiles/controle.gif",
     "enable": "false",
     "position": {
         "x": 0,
@@ -233,7 +233,7 @@
 }, {
     "id": 22,
     "name": "salle illusion",
-    "image": "Images/tuiles/illusion.gif",
+    "image": "Images/Tuiles/illusion.gif",
     "enable": "false",
     "position": {
         "x": 1,
@@ -244,7 +244,7 @@
 }, {
     "id": 23,
     "name": "salle mobile",
-    "image": "Images/tuiles/mobile.gif",
+    "image": "Images/Tuiles/mobile.gif",
     "enable": "false",
     "position": {
         "x": 2,
@@ -255,7 +255,7 @@
 }, {
     "id": 24,
     "name": "room 25",
-    "image": "Images/tuiles/sortie.gif",
+    "image": "Images/Tuiles/sortie.gif",
     "enable": "false",
     "position": {
         "x": 3,
@@ -266,7 +266,7 @@
 }, {
     "id": 25,
     "name": "chambre noire",
-    "image": "Images/tuiles/noire.gif",
+    "image": "Images/Tuiles/noire.gif",
     "enable": "false",
     "position": {
         "x": 4,

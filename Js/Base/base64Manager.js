@@ -98,7 +98,6 @@ var Base64 = {
                 utftext += String.fromCharCode(((c >> 6) & 63) | 128);
                 utftext += String.fromCharCode((c & 63) | 128);
             }
-
         }
 
         return utftext;
@@ -129,7 +128,6 @@ var Base64 = {
                 string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
                 i += 3;
             }
-
         }
 
         return string;

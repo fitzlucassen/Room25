@@ -2,6 +2,7 @@
     'use strict';
 
     var app = angular.module('Room25App', ['ngRoute']);
+    
     app.config(function($routeProvider) {
         $routeProvider
             .when('/', {
@@ -13,6 +14,10 @@
             })
             .when('/game/join', {
                 templateUrl: 'Views/game.html',
+                reloadOnSearch: false
+            })
+            .when('/help', {
+                templateUrl: 'Views/help.html',
                 reloadOnSearch: false
             })
             .otherwise({

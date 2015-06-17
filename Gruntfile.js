@@ -9,11 +9,11 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-express');
     grunt.loadNpmTasks('grunt-img');
 
-    var jsDist = 'JS/_built.js';
-    var jsSrc = ['JS/**/*.js', '!JS/server.js', '!' + jsDist, '!JS/Base/*.js'];
+    var jsDist = 'Js/_built.js';
+    var jsSrc = ['Js/**/*.js', '!Js/server.js', '!' + jsDist, '!Js/Module/*.js'];
 
-    var cssSrc = ['CSS/*.css'];
-    var cssDist = 'CSS/_built.css';
+    var cssDist = 'Css/_built.css';
+    var cssSrc = ['Css/**/*.css'];
 
     // Configuration de Grunt
     grunt.initConfig({
@@ -25,21 +25,21 @@ module.exports = function(grunt) {
                 separator: ';',
                 mangle: false
             },
-            compile: { // On renomme vu qu'on a pas de mode dev/dist. Dist étant une autre tâche : uglify
-                src: jsSrc, // Vu qu'on doit l'utiliser deux fois, autant en faire une variable.
-                dest: jsDist // Il existe des hacks plus intéressants mais ce n'est pas le sujet du post.
+            compile: {
+                src: jsSrc,
+                dest: jsDist
             }
         },
         cssmin: {
-            compile: { // On renomme vu qu'on a pas de mode dev/dist. Dist étant une autre tâche : uglify
-                src: cssSrc, // Vu qu'on doit l'utiliser deux fois, autant en faire une variable.
-                dest: cssDist // Il existe des hacks plus intéressants mais ce n'est pas le sujet du post.
+            compile: {
+                src: cssSrc,
+                dest: cssDist
             }
         },
         watch: {
             scripts: {
-                files: ['Gruntfile.js', jsSrc],
-                tasks: ['scripts:dev']
+                files: ['Gruntfile.js', jsSrc, cssSrc],
+                tasks: ['scripts']
             },
         },
         img: {
@@ -50,7 +50,7 @@ module.exports = function(grunt) {
         express: {
             roomServer: {
                 options: {
-                    server: path.resolve('JS/server'),
+                    server: path.resolve('Js/server'),
                     keepalive: true,
                     port: 1337,
                     hostname: 'room25.thibaultdulon.com',
@@ -61,8 +61,6 @@ module.exports = function(grunt) {
     });
 
     grunt.registerTask('default', ['scripts', 'watch']);
-
-    // J'aime bien avoir des noms génériques
     grunt.registerTask('scripts', ['jshint', 'uglify:compile', 'cssmin:compile', 'img:task']);
     grunt.registerTask('roomServer', ['express', 'express-keepalive']);
 };

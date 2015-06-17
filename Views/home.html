@@ -5,7 +5,7 @@
 	
 	<header id="header">
 		<h1>Room 25</h1>
-    </header>
+	</header>
 	<ul class="personnage">
 		<!--<li ng-repeat="character in characters | filter:{player: -1}" ng-click="registerCharacter(character.name)">-->
 		<li ng-repeat="character in characters" data-color="{{character.color}}">
@@ -21,10 +21,13 @@
 
 	<div id="popin-grayback">
 		<div id="popin" class="yourName">
-			<h2>Bienvenue !<br/>Afin de choisir un personnage, veuillez choisir un pseudo.</h2>
+			<h2>Bienvenue sur Room25 !<br/>Afin de choisir un personnage, veuillez choisir un pseudo.</h2>
 			<br/>
 			<input type="text" placeholder="Votre pseudo" id="newName" autofocus="true"/>
 			<input type="button" value="Valider" id="getMyName"/>
+			<br/>
+			
+			<p>Si vous ne connaissez pas les règles, <a href="/help">je vous les explique ici</a></p>
 		</div>
 	</div>
 </div>

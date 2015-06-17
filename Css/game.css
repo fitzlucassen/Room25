@@ -1,0 +1,294 @@
+.containerBloc{
+    height: 100%;
+}
+.character{
+    position: absolute;
+    top: 0;
+    left: 0;
+    
+    width: 50px;
+    height: 35px;
+    background: rgba(30,30,30,0.8);
+    color: white;
+    font-family: 'Segoe UI';
+    font-size: 12px;
+
+    border-radius: 50px;
+    -webkit-border-radius: 50px;
+    -moz-border-radius: 50px;
+    -o-border-radius: 50px;
+    -ms-border-radius: 50px;
+
+    text-align: center;
+    padding-top: 15px;
+}
+.character .characterSelectMe
+{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    background: rgba(30,30,30,0.8);
+    cursor: pointer;
+
+    border-radius: 30px;
+    -webkit-border-radius: 30px;
+    -moz-border-radius: 30px;
+    -o-border-radius: 30px;
+    -ms-border-radius: 30px;
+}
+/*.myCharacter{
+    background: rgba(150,30,30,0.8);
+}*/
+.identity{
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+.identity img{
+    width: 100px;
+}
+.panel{
+    background: rgba(26, 188, 156, 0.8);
+    width: 200px;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    right: 0;
+
+    border-left: 1px solid rgb(24, 175, 145);
+}
+.leftPanel{
+    left: 0 !important;
+    border-left: none;
+    border-right: 1px solid rgb(24, 175, 145);
+}
+.hiddencontent{
+    width: 0;
+    height: 0;
+    overflow: hidden;
+}
+.panel .toggle{
+    position: absolute;
+    top: 0;
+    left: -41px;
+    width: 40px;
+    height: 40px;
+
+    cursor: pointer;
+
+    background: rgba(26, 188, 156, 0.8) url('../Images/menu.png') center center no-repeat;
+
+    border-top-left-radius: 5px; 
+    border-bottom-left-radius: 5px; 
+    -webkit-border-top-left-radius: 5px; 
+    -webkit-border-bottom-left-radius: 5px; 
+    -moz-border-top-left-radius: 5px; 
+    -moz-border-bottom-left-radius: 5px; 
+    -o-border-top-left-radius: 5px; 
+    -o-border-bottom-left-radius: 5px; 
+}
+.leftPanel .toggle{
+    right: -41px !important;
+    left: initial;
+
+    transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+}
+.pseudo{
+    margin: 20px 0 20px 20px;
+    color: white;
+    font-family: "Segoe UI";
+    
+}
+.tourDe{
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    color: white;
+    font-size: 20px;
+    font-family: "Segoe UI";
+}
+.tourRestant{
+    position: absolute;
+    bottom: 40px;
+    left: 20px;
+    color: white;
+    font-size: 16px;
+    font-family: "Segoe UI";
+}
+.action p{
+    color: white;
+    font-family: "Segoe UI";
+}
+.actions{
+    margin: 20px auto;
+    width: 160px;
+    height: 235px;
+    position: relative;
+}
+.actions .actionContainer{
+    display: inline-block;
+    vertical-align: top;
+    margin: 5px;
+    cursor: pointer;
+    width: 70px;
+}
+.extendWidth{
+    width: 90% !important;
+    margin: auto !important;
+    display: block !important;
+}
+.actions .action img{
+    width: 70px;
+
+}
+.loading{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    background: rgba(250,250,250,0.8);
+
+    text-align: center;
+
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    -o-border-radius: 3px;
+}
+.loading p{
+    margin: 10px auto;
+    font-family: 'Segoe UI';
+    font-size: 18px;
+}
+span.direction:hover {
+    background: rgb(200,200,200);
+}
+span.direction {
+    background: rgb(250,250,250);
+    padding: 5px;
+    text-align: center;
+    color: black;
+    display: block;
+    margin: 5px;
+    cursor: pointer;
+}
+.btnOkContainer{
+    width: 144px;
+    margin: auto;
+}
+.btnOk{
+    background: rgb(231, 76, 60);
+    border: 1px solid rgb(192, 57, 43);
+}
+.btnClass.speBg{
+    background: rgb(231, 76, 60);
+    border: 1px solid rgb(192, 57, 43);
+}
+.btnClass{
+    display: inline-block;
+    font-size: 16px;
+    padding: 5px;
+    min-width: 90px;
+    margin-left: 5px;
+}
+
+/*************/
+/** TUILES ***/
+/*************/
+.gameboard
+{
+    position: relative;
+    width: 875px;
+    height: 875px;
+    margin: auto;
+}
+.gameboard .tuile{
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+.gameboard .tuile img
+{
+    width: 175px;
+    height: 175px;
+}
+.gameboard .tuile img
+{
+    float: left;
+}
+.gameboard .tuile .selectMe
+{
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    background: rgba(150,150,150,0.4);
+}
+.gameboard .tuile .selectMeToken
+{
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(150,150,150,0.4);
+}
+.tokenuser
+{
+    width: 50px;
+    height: 35px;
+    background: rgba(30,30,30,0.8);
+
+    border-radius: 50px;
+    -webkit-border-radius: 50px;
+    -moz-border-radius: 50px;
+    -o-border-radius: 50px;
+    -ms-border-radius: 50px;
+
+    padding-top: 15px;
+}
+.tmpMessage{
+    position: absolute;
+    top: 0;
+    left: 210px;
+    width: 50%;
+    margin: 10px auto;
+    padding: 10px;
+    background: rgba(22, 160, 133,0.6);
+    color: white;
+    text-align: center;
+
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -o-border-radius: 4px;
+    -ms-border-radius: 4px;
+}
+.action1-final, .action2-final{
+    margin: 20px 0 20px 20px;
+    color: white;
+    font-family: "Segoe UI";
+}
+.action1-final img, .action2-final img{
+    width: 70px;
+}
+p.putAToken{
+    margin: 20px 0 20px 20px;
+    color: white;
+    font-family: "Segoe UI";
+    cursor: pointer;
+}
+.hideToken{
+    display: none;
+}

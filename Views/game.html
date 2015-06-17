@@ -1,16 +1,18 @@
 <div ng-controller="GameCtrl" id="containerBloc">
+	<!-- EN HAUT A GAUCHE IDENTITE -->
 	<div class="identity">
 		<img src="" alt="identity"/>
 	</div>
 
+	<!-- EN PLEIN CENTRE, LE PLATEAU DE JEU -->
 	<div class="gameboard">
-
 		<div class="tuile" ng-repeat="tuile in tuiles" style="top: {{tuile.position.y * 175}}px;left:{{tuile.position.x * 175}}px" data-position="{{tuile.position.x}}-{{tuile.position.y}}" data-action="{{tuile.action}}">
 			<img id="tuile-{{tuile.id}}" src="{{tuile.image}}" alt="Tuile : {{tuile.name}}" ng-show="tuile.enable"/>
 			<img src="Images/tuiles/cache.gif" alt="Tuile : {{tuile.name}}" ng-hide="tuile.enable"/>
 		</div>
 	</div>
 
+	<!-- PANEL GAUCHE POUR LES CAM ET LE CHAT -->
 	<div class="panel leftPanel">
 		<div class="toggle"></div>
 
@@ -18,13 +20,15 @@
 			<video class="webcam" autoplay></video>
 		</div>
 		<div>
-		    <button id="callButton" class="btnClass">Appeler</button>
-		    <button id="hangupButton" class="btnClass speBg">Raccrocher</button>
-	  	</div>
-	  	<br/>
-	  	<p class="putAToken">Poser un jeton</p>
+			<input type="button" id="callButton" class="btnClass">Appeler</input>
+			<input type="button" id="hangupButton" class="btnClass speBg">Raccrocher</input>
+		</div>
+		<br/>
+		
+		<p class="putAToken">Poser un jeton</p>
 	</div>
 
+	<!-- PANEL DROIT POUR LES ACTIONS ET LES TOURS DE JEU -->
 	<div class="panel">
 		<div class="toggle"></div>
 
@@ -58,6 +62,7 @@
 		</div>
 		<p class="tourRestant">Il reste 10 tours.</p>
 	</div>
+
 
 	<input type="text" name="userID" value="" class="userID"/>
 	<input type="text" name="coordsReady" value="" ng-model="coordsReady" class="coordsReady"/>

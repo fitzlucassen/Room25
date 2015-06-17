@@ -2,14 +2,12 @@ var LastCoords = [];
 var OtherCoords = [];
 
 $(document).ready(function() {
-    var Udp = new RtcPeerConnection();
-    var Rtc = new RTCController(Udp);
     var Helper = new HelperController();
     var Coords = new CoordsProvider();
     var ErrView = new ErrorView(Helper);
     var DOM = new DOMView(Helper);
     var View = new MainView(Helper, DOM, Coords);
-    var Client = new ClientController(View, DOM, Helper, Rtc);
+    var Client = new ClientController(View, DOM, Helper);
     var CaseEffect = new CaseEffectController(Client);
 
     View.setCaseEffect(CaseEffect);
@@ -28,22 +26,8 @@ $(document).ready(function() {
         }
     });
 
-    // Vérification login + envoi de l'évènement nouveau joueur
-    $('body').on('click', '#getMyName', function() {
-        var patt = /[a-zA-Z\-\']+/;
-
-        if (!patt.test($('#newName').val())) {
-            ErrView.manageLoginError();
-            return false;
-        }
-
-        Client.newUser($('#newName').val());
-        $('#popin-grayback').fadeOut('slow');
-    });
-
     // RollHover d'un personnage (animation)
     $('body').on('mouseover', '.personnage li', function() {
-
         $this = $(this);
         $('.personnage li').each(function() {
             if ($this[0] != $(this)[0]) {
@@ -56,6 +40,20 @@ $(document).ready(function() {
         $('.personnage li').stop().animate({
             'opacity': '1'
         }, 200);
+    });
+
+    // Vérification login + envoi de l'évènement nouveau joueur
+    $('body').on('click', '#getMyName', function() {
+        var patt = /[a-zA-Z\-\'\ ]+/;
+        var name = $('#newName').val();
+
+        if (!patt.test(name)) {
+            ErrView.manageLoginError();
+            return false;
+        }
+
+        Client.newUser(name);
+        $('#popin-grayback').fadeOut('slow');
     });
 
     // Clique sur un personnage. On émet l'évènement
@@ -122,20 +120,20 @@ $(document).ready(function() {
 
     // Au clique sur une direction
     $('body').on('click', 'span.direction', function(){
-    	var element = $(this);
-    	var action = 'Contrôller';
-    	var sens = element.removeClass('direction').attr('class');
-    	var position = element.parent().attr('data-position');
-    	element.addClass('direction');
+        var element = $(this);
+        var action = 'Contrôller';
+        var sens = element.removeClass('direction').attr('class');
+        var position = element.parent().attr('data-position');
+        element.addClass('direction');
 
-    	Client.emitComplexAction({
-    		element: element,
-    		action: action,
-    		sens: sens,
-    		position: position
-    	});
+        Client.emitComplexAction({
+            element: element,
+            action: action,
+            sens: sens,
+            position: position
+        });
 
-    	return false;
+        return false;
     });
 
     $('body').on('click', '.putAToken', function(){
