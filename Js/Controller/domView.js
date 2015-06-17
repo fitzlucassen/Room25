@@ -1,7 +1,11 @@
 function DOMView(helper) {
     this.caseWidth = 175;
     this.caseHeight = 175;
-
+    this.resources = {
+        waiting: "En attente des autres joueurs...",
+        go: 'C\'est parti !',
+        guardiansWins: 'La partie est finie, les gardiens ont gagné !'
+    };
     this.Helper = helper;
 }
 
@@ -32,18 +36,18 @@ DOMView.prototype.hideButtonOk = function() {
 
 // On désactive les actions (loader par dessus)
 DOMView.prototype.disableActions = function() {
-    $('.actions').append('<div class="loading"><p>En attente des autres joueurs...</p><img src="Images/loader.gif" alt="loader"></div>');
+    $('.actions').append('<div class="loading"><p>' + this.resources.waiting + '</p><img src="Images/loader.gif" alt="loader"></div>');
 };
 
 // On desactive le loader (tout le monde est prêt)
 DOMView.prototype.hideActions = function() {
     $('.loading img').remove();
     $('.btnOk').fadeOut('slow');
-    $('.loading p').html('C\'est parti !');
+    $('.loading p').html(this.resources.go);
 };
 
 DOMView.prototype.appendGardienWins = function() {
-    $('.gameboard').append('<p class="tmpMessage">La partie est finie, les gardiens ont gagné !</p>');
+    $('.gameboard').append('<p class="tmpMessage">' + this.resources.guardiansWins + '</p>');
 };
 
 DOMView.prototype.appendTmpMessage = function(message){

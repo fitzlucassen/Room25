@@ -6,6 +6,19 @@ function MainView(helper, DOMView, CoordsProvider) {
     this.CaseEffect = null;
     this.DOMView = DOMView;
     this.CoordsProvider = CoordsProvider;
+
+    this.resources = {
+        alreadyAGame: 'Il y a actuellement déjà une partie qui se joue entre ',
+        waitForEnd: '. Veillez patienter jusqu\'à la fin de celle-ci.',
+        and: ' et ',
+        thePlayerIsDead: 'Le joueur {0} est mort !',
+        itRestTours: 'Il reste {0} tours !',
+        turnOf: 'Tour de ',
+        chooseWhatToSee: 'Choisissez la case que vous souhaitez regarder.',
+        chooseWhatToControl: 'Choisissez la rangée que vous souhaitez contrôller.',
+        chooseWhereToGo: 'Choisissez la case où vous voulez vous rendre.',
+        chooseExchange: 'Choisissez la case à échanger.'
+    };
 }
 
 MainView.prototype.setCaseEffect = function(ce) {
@@ -25,7 +38,7 @@ MainView.prototype.manageMultipleGames = function(available, users){
         $('.hideCharacters').css('display', 'none');
     }
     else {
-        var message = 'Il y a actuellement déjà une partie qui se joue entre ';
+        var message = this.resources.alreadyAGame;
 
         var inAPartyUsers = [];
         for (var u in users)
@@ -39,13 +52,13 @@ MainView.prototype.manageMultipleGames = function(available, users){
                     message += inAPartyUsers[uu].name;
 
                     if(uu == inAPartyUsers.length - 2)
-                        message += ' et ';
+                        message += that.resources.and;
                     else if(uu < inAPartyUsers.length - 2)
                         message += ', ';
                 }
             }
         }
-        message += '. Veillez patienter jusqu\'à la fin de celle-ci.';
+        message += this.resources.waitForEnd;
         $('.hideCharacters p').html(message);
         $('.hideCharacters').css('display', 'block');
     }
@@ -71,7 +84,7 @@ MainView.prototype.deleteUser = function(user) {
     $('.characterTaken-' + user.id).remove();
     this.Helper.GetCharacterDiv(user.id).addClass('dead');
 
-    this.DOMView.appendTmpMessage('Le joueur ' + user.name + ' est mort !');
+    this.DOMView.appendTmpMessage(this.resources.thePlayerIsDead.replace('{0}', user.name));
 };
 
 // Un utilisateur arrive en retard --> on met à jours tous les personnage pris
@@ -99,7 +112,7 @@ MainView.prototype.usersLoop = function(users, u) {
 };
 
 // On redirige, sans rechargement, vers la page du jeu
-MainView.prototype.redirectToGame = function(object, rtc) {
+MainView.prototype.redirectToGame = function(object) {
     var that = this;
     var userId = that.Helper.GetCurrentID();
 
@@ -110,6 +123,7 @@ MainView.prototype.redirectToGame = function(object, rtc) {
         that.Helper.SetCurrentID(userId);
         that.showPlayers(object);
         that.showIdentity(object.users, userId);
+        
         $('.coordsReady').val(1);
         $('.coordsReady').trigger('change');
 
@@ -123,31 +137,22 @@ MainView.prototype.redirectToGame = function(object, rtc) {
             }
         }
         video.remove();
-
-        if(object.users[0].id != that.Helper.GetCurrentID()){
-            //$('#callButton').css('display','none');
-            //$('#hangupButton').css('display','none');
-        }
-
-        rtc.initialize(ids, 'webcam-' + that.Helper.GetCurrentID(), function(){
-
-        });
     }, 500);
 };
 
 // Tour d'après
 MainView.prototype.nextTurn = function(object) {
-    $('.tourRestant').html('Il reste ' + object.nbTourRestant + ' tours.');
+    $('.tourRestant').html(this.resources.itRestTours.replace('{0}', object.nbTourRestant));
     $('.actions .action').fadeIn('slow');
-	this.Helper.GetAction().fadeIn('slow');
-	$('.actions .action').children('p').remove();
+
+    this.Helper.GetAction().fadeIn('slow');
+
+    $('.actions .action').children('p').remove();
     $('.extendWidth').removeClass('extendWidth');
-
     $('.action1-final > img, .action2-final > img').remove();
-
-	$('.actions .action').each(function(){
-		$(this).removeClass('ok').removeClass('actionOk-1').removeClass('actionOk-2');
-	});
+    $('.actions .action').each(function(){
+        $(this).removeClass('ok').removeClass('actionOk-1').removeClass('actionOk-2');
+    });
 };
 
 // On montre tous les joueurs sur la case départ
@@ -180,7 +185,7 @@ MainView.prototype.showIdentity = function(users, meID) {
     for (var u in users) {
         if (users.hasOwnProperty(u)) {
             if (users[u].id == meID) {
-                $('.identity img').attr('src', 'Images/identities/' + users[u].identity + '.gif').attr('title', users[u].identity);
+                $('.identity img').attr('src', 'Images/Identities/' + users[u].identity + '.gif').attr('title', users[u].identity);
                 $('.pseudo p').html(users[u].name);
             }
         }
@@ -203,17 +208,16 @@ MainView.prototype.animateAction = function(element, toggle) {
             return true;
 
         element.children('img').fadeOut('slow');
-
         element.addClass('ok').addClass('actionOk-' + $('.action.ok').length);
     } else {
         var title = element.attr('title');
+
         if(!isAction1)
             element.remove();
         else
             element.remove();
 
         $('.action img[title="' + title + '"]').fadeIn('slow');
-
         $('.action img[title="' + title + '"]').parent().removeClass('actionOk-' + $('.action img[title="' + title + '"]').parent().attr('class').split(' ').last().split('-').last()).removeClass('ok');
     }
 };
@@ -221,39 +225,40 @@ MainView.prototype.animateAction = function(element, toggle) {
 // Affiche le tour de
 MainView.prototype.appendTurnOf = function(u, users, actionNumber) {
     var that = this;
-    $('.tourDe p').html('Tour de ' + u.name);
+    $('.tourDe p').html(this.resources.turnOf + u.name);
 
     if(u.id == $('.userID').val()){
         $('.loading').remove();
         $('.actions .action').fadeOut('slow');
 
         var actionDIV;
+        var idU = that.Helper.GetCurrentID();
+        var characterDiv = that.Helper.GetCharacterDiv(idu);
+
         if(actionNumber == 1){
-            if(that.Helper.GetCharacterDiv(that.Helper.GetCurrentID()).attr('handicap') === 'noSee' && u.action1 === 'Regarder'){
+            if(characterDiv.attr('handicap') === 'noSee' && u.action1 === 'Regarder'){
                 return true;
             }
-            if(that.Helper.GetCharacterDiv(that.Helper.GetCurrentID()).attr('handicap') === 'deathAfterNextAction' && u.action1 !== 'Déplacer'){
+            if(characterDiv.attr('handicap') === 'deathAfterNextAction' && u.action1 !== 'Déplacer'){
                 this.CaseEffect.client.emitDeath(u);
             }
-            if(that.Helper.GetCharacterDiv(that.Helper.GetCurrentID()).attr('handicap') === 'deathAfterNextTour'){
-                that.Helper.GetCharacterDiv(that.Helper.GetCurrentID()).attr('handicap', 'deathAfterThisTour');
+            if(characterDiv.attr('handicap') === 'deathAfterNextTour'){
+                characterDiv.attr('handicap', 'deathAfterThisTour');
             }
             actionDIV = that.Helper.GetAction(u.action1);
-        	actionDIV.parent().fadeIn(100).append('<p>' + actionDIV.parent().attr('data-first-sentence') + '</p>');
+            actionDIV.parent().fadeIn(100).append('<p>' + actionDIV.parent().attr('data-first-sentence') + '</p>');
             actionDIV.parent().parent().addClass('extendWidth');
         }
         else{
-            if(that.Helper.GetCharacterDiv(that.Helper.GetCurrentID()).attr('handicap') === 'noSee' && u.action2 === 'Regarder'){
+            if(characterDiv.attr('handicap') === 'noSee' && u.action2 === 'Regarder'){
                 return true;
             }
-            if(that.Helper.GetCharacterDiv(that.Helper.GetCurrentID()).attr('handicap') === 'deathAfterNextAction' && u.action2 !== 'Déplacer'){
-                this.CaseEffect.client.emitDeath(u);
-            }
-            if(that.Helper.GetCharacterDiv(that.Helper.GetCurrentID()).attr('handicap') === 'deathAfterThisTour' && u.action2 !== 'Déplacer'){
+            if( characterDiv.attr('handicap') === 'deathAfterNextAction' && u.action2 !== 'Déplacer' || 
+                characterDiv.attr('handicap') === 'deathAfterThisTour' && u.action2 !== 'Déplacer'){
                 this.CaseEffect.client.emitDeath(u);
             }
             actionDIV = that.Helper.GetAction(u.action2);
-        	actionDIV.parent().fadeIn(100).append('<p>' + actionDIV.parent().attr('data-first-sentence') + '</p>');
+            actionDIV.parent().fadeIn(100).append('<p>' + actionDIV.parent().attr('data-first-sentence') + '</p>');
             actionDIV.parent().parent().addClass('extendWidth');
         }
 
@@ -265,6 +270,7 @@ MainView.prototype.appendTurnOf = function(u, users, actionNumber) {
 MainView.prototype.nextSentence = function(object) {
     var that = this;
     var actionDIV = that.Helper.GetAction(object.action);
+
     actionDIV.parent().children('p').html(actionDIV.parent().attr('data-second-sentence'));
 
     manageComplexAction(object, this.Helper, this.CoordsProvider);
@@ -272,21 +278,22 @@ MainView.prototype.nextSentence = function(object) {
 
 // action se déplacer
 MainView.prototype.deplacer = function(user) {
-	var that = this;
-	this.Helper.GetCharacterDiv(user.id).animate({
-		top: (that.caseHeight * user.position.y) + 'px',
-		left: (that.caseWidth * user.position.x) + 'px'
-	}, 500, function(){
+    var that = this;
+
+    this.Helper.GetCharacterDiv(user.id).animate({
+        top: (that.caseHeight * user.position.y) + 'px',
+        left: (that.caseWidth * user.position.x) + 'px'
+    }, 500, function(){
         while(that.someoneHere(user)){
             that.moveUser(user);
         }
     });
 
     var tuile = this.Helper.GetTuile(user.position.x, user.position.y);
-	var imgs = tuile.children('img');
-	imgs.first().removeClass('ng-hide');
-	imgs.first().fadeIn('slow');
-	imgs.last().fadeOut('slow');
+    var imgs = tuile.children('img');
+    imgs.first().removeClass('ng-hide');
+    imgs.first().fadeIn('slow');
+    imgs.last().fadeOut('slow');
 
     that.CaseEffect.client.emitKillToken(user.position);
 
@@ -297,17 +304,19 @@ MainView.prototype.deplacer = function(user) {
 
 // Action pousser
 MainView.prototype.pousser = function(userTarget, user) {
-	var that = this;
-	that.Helper.GetCharacterDiv(userTarget.id).animate({
-		top: (that.caseHeight * userTarget.position.y) + 'px',
-		left: (that.caseWidth * userTarget.position.x) + 'px'
-	}, 500);
+    var that = this;
+
+    that.Helper.GetCharacterDiv(userTarget.id).animate({
+        top: (that.caseHeight * userTarget.position.y) + 'px',
+        left: (that.caseWidth * userTarget.position.x) + 'px'
+    }, 500);
 
     var tuile = that.Helper.GetTuile(userTarget.position.x, userTarget.position.y);
-	var imgs = tuile.children('img');
-	imgs.first().removeClass('ng-hide');
-	imgs.first().fadeIn('slow');
-	imgs.last().fadeOut('slow');
+    var imgs = tuile.children('img');
+
+    imgs.first().removeClass('ng-hide');
+    imgs.first().fadeIn('slow');
+    imgs.last().fadeOut('slow');
 
     that.CaseEffect.client.emitKillToken(userTarget.position);
 
@@ -319,32 +328,32 @@ MainView.prototype.pousser = function(userTarget, user) {
 // Action regarder
 MainView.prototype.regarder = function(userId, coords) {
     if(!coords && userId == this.Helper.GetCurrentID()){
-        this.DOMView.appendTmpMessage('Choisissez la case que vous souhaitez regarder.');
+        this.DOMView.appendTmpMessage(this.resources.chooseWhatToSee);
         coords = this.CoordsProvider.getAllCoords();
         appendSelect(coords, 'regarderMaster', this.Helper);
         return true;
     }
-	var that = this;
-	var position = {
-		x: coords.split('-')[0].parseInt(),
-		y: coords.split('-')[1].parseInt()
-	};
+    var that = this;
+    var position = {
+        x: coords.split('-')[0].parseInt(),
+        y: coords.split('-')[1].parseInt()
+    };
 
-	if(userId == that.Helper.GetCurrentID()){
-		var imgs = that.Helper.GetTuile(position.x, position.y).children('img');
+    if(userId == that.Helper.GetCurrentID()){
+        var imgs = that.Helper.GetTuile(position.x, position.y).children('img');
 
-		if(imgs.first().hasClass('ng-hide')){
-			imgs.first().removeClass('ng-hide');
-			imgs.first().fadeIn('slow');
-			imgs.last().fadeOut('slow');
+        if(imgs.first().hasClass('ng-hide')){
+            imgs.first().removeClass('ng-hide');
+            imgs.first().fadeIn('slow');
+            imgs.last().fadeOut('slow');
 
-			setTimeout(function(){
-				imgs.first().addClass('ng-hide');
-				imgs.first().fadeOut('slow');
-				imgs.last().fadeIn('slow');
-			}, 3000);
-		}
-	}
+            setTimeout(function(){
+                imgs.first().addClass('ng-hide');
+                imgs.first().fadeOut('slow');
+                imgs.last().fadeIn('slow');
+            }, 3000);
+        }
+    }
 };
 
 // Action contrôller
@@ -352,7 +361,7 @@ MainView.prototype.controller = function(users, coords, sens) {
     var that = this;
 
     if (!coords && !sens && users.id == that.Helper.GetCurrentID()){
-        this.DOMView.appendTmpMessage('Choisissez la rangée que vous souhaitez contrôller.');
+        this.DOMView.appendTmpMessage(this.resources.chooseWhatToControl);
         coords = this.CoordsProvider.getAllControllerCoords();
         appendSelect(coords, 'controllerMaster', this.Helper);
         return true;
@@ -495,7 +504,7 @@ MainView.prototype.exchangeAndApplyTuileAndUsers = function(users, user, lastCoo
 
 MainView.prototype.exchangeTuile = function(u) {
     if(u.id == this.Helper.GetCurrentID()){
-        this.DOMView.appendTmpMessage('Choisissez la case où vous voulez vous rendre.');
+        this.DOMView.appendTmpMessage(this.resources.chooseWhereToGo);
         coords = this.CoordsProvider.getAllCoords();
         coords = this.CoordsProvider.removeVisibleCoords(coords, this.Helper);
         appendSelect(coords, 'teleporter', this.Helper);
@@ -510,7 +519,7 @@ MainView.prototype.exchangeTuile = function(u) {
 
 MainView.prototype.exchangeAndApplyTuile = function(id) {
     if(id == this.Helper.GetCurrentID()){
-        this.DOMView.appendTmpMessage('Choisissez la case à échanger.');
+        this.DOMView.appendTmpMessage(this.resources.chooseExchange);
         coords = this.CoordsProvider.getAllCoords();
         coords = this.CoordsProvider.removeVisibleCoords(coords, this.Helper);
         appendSelect(coords, 'exchange', this.Helper);
@@ -539,8 +548,8 @@ MainView.prototype.moveUser = function(user){
 MainView.prototype.appendSelectToken = function() {
     var color = this.Helper.GetCharacterDiv().data('color');
     var coords = this.CoordsProvider.removeVisibleCoords(this.CoordsProvider.getAllCoords(), this.Helper);
-
     var that = this;
+
     for(var c in coords){
         if(coords.hasOwnProperty(c)){
             var tuile = that.Helper.GetTuile(coords[c].x, coords[c].y);
@@ -550,7 +559,10 @@ MainView.prototype.appendSelectToken = function() {
 };
 
 MainView.prototype.appendTokenPut = function(object) {
-    var tuile = this.Helper.GetTuile(object.coords.split('-').first(), object.coords.split('-').last());
+    var x = object.coords.split('-').first();
+    var y = object.coords.split('-').last();
+    var tuile = this.Helper.GetTuile(x, y);
+    
     tuile.append('<div class="tokenuser" data-token="' + object.userId + '" style="opacity: 0.8;background:' + object.color + ';"></div>');
     tuile.data('tokenuser', object.userId);
 };
@@ -627,7 +639,7 @@ function manageTurn(u, users, helper, cProvider){
 // gère une action complète
 function manageComplexAction(object, helper, cProvider){
     if(object.action === 'Pousser'){
-    	coords = cProvider.getCoordsDeplacerRegarder(object.user);
+        coords = cProvider.getCoordsDeplacerRegarder(object.user);
         appendSelect(coords, object.action, helper);
     }
     else if(object.action === 'Contrôller'){

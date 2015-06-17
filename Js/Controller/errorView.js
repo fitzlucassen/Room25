@@ -1,6 +1,9 @@
 function ErrorView(helper) {
-	this.Helper = helper;
+    this.Helper = helper;
     this.divError = $('#error-view');
+    this.resources = {
+        errorLogin: 'Requis, lettre uniquement. \' et - autorisés.'
+    };
 }
 
 ErrorView.prototype.manageLoginError = function() {
@@ -11,5 +14,5 @@ ErrorView.prototype.manageLoginError = function() {
         '-moz-box-shadow': '0 0 5px red',
         '-o-box-shadow': '0 0 5px red'
     });
-    $('#newName').attr('placeholder', 'Requis, lettre uniquement. \' et - autorisés.');
+    $('#newName').attr('placeholder', this.resources.errorLogin);
 };

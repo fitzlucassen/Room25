@@ -1,10 +1,12 @@
-function ClientController(view, DOMView, helper, rtc) {
+function ClientController(view, DOMView, helper) {
     this.socket = {};
     this.view = view;
     this.DOMView = DOMView;
-
     this.Helper = helper;
-    this.Rtc = rtc;
+
+    this.resources = {
+        chooseDirection: 'Choisissez le sens dans lequel contrôller la rangée.'
+    };
 }
 
 ClientController.prototype.initialize = function() {
@@ -16,25 +18,31 @@ ClientController.prototype.initialize = function() {
         that.view.appendUserID(object.me);
         that.view.refreshUsers(object.users);
 
-        if(object.waitingUsers !== null && object.waitingUsers.length > 0)
+        if(object.waitingUsers !== null && object.waitingUsers.length > 0){
             that.view.manageMultipleGames(object.available, object.users);
+        }
     });
+    
     // Lorsqu'un utilisateur s'est deconnecté
     this.socket.on('disconnectedUser', function(user) {
         that.view.deleteUser(user);
     });
+
     // Lorsqu'un utilisateur a choisi un personnage
     this.socket.on('newCharacter', function(object) {
         that.view.deleteCharacter(object.id, object.name, object.pseudo, object.color);
     });
+
     // Supprime le bouton si tout le monde n'est pas prêt (personnage)
     this.socket.on('cantPlay', function() {
         that.DOMView.hideButton();
     });
+
     // On fait apparaître le bouton si tout le monde est prêt (personnage)
     this.socket.on('letsPlay', function() {
         that.DOMView.showButton();
     });
+
     // Si tout le monde est ok (actions)
     this.socket.on('everyoneIsOk', function(users) {
         that.DOMView.hideActions();
@@ -49,6 +57,7 @@ ClientController.prototype.initialize = function() {
             }
         }
         that.view.appendTurnOf(u, users, 1);
+
         if($('.selectMe').length === 0 && $('.characterSelectMe').length === 0 && u.id == that.Helper.GetCurrentID()){
             that.socket.emit('noPossibilities', {user: u});
         }
@@ -59,7 +68,7 @@ ClientController.prototype.initialize = function() {
         LastCoords = object.lastCardsCoords;
         OtherCoords = object.otherCoords;
 
-        that.view.redirectToGame(object, that.Rtc);
+        that.view.redirectToGame(object);
     });
 
     this.socket.on('canConnect', function(available){
@@ -88,10 +97,12 @@ ClientController.prototype.initialize = function() {
     this.socket.on('playerDeplacer', function(object){
         that.view.deplacer(object.user);
     });
+
     // On effectue l'action pousser
     this.socket.on('playerPousser', function(object){
         that.view.pousser(object.userTarget, object.user);
     });
+
     // On regarde
     this.socket.on('playerRegarder', function(object){
         that.view.regarder(object.user.id, object.coords);
@@ -99,6 +110,7 @@ ClientController.prototype.initialize = function() {
         if(that.Helper.GetCurrentID() == object.user.id)
             that.socket.emit('nextPlayerOk', object.user);
     });
+
     // On controlle
     this.socket.on('playerController', function(object){
         that.view.controller(object.users, object.coords, object.sens);
@@ -116,6 +128,7 @@ ClientController.prototype.initialize = function() {
             that.socket.emit('noPossibilities', object);
         }
     });
+
     // On passe au joueur suivant pour l'action 2
     this.socket.on('nextPlayer2', function(object){
         that.DOMView.hideActions();
@@ -125,34 +138,41 @@ ClientController.prototype.initialize = function() {
             that.socket.emit('noPossibilities', object);
         }
     });
+
     // On passe au tour suivant
     this.socket.on('nextTurn', function(object){
         that.view.nextTurn(object);
     });
+
     this.socket.on('gardienWins', function(){
         that.DOMView.appendGardienWins();
     });
+
     this.socket.on('userCentral', function(user){
         that.view.deplacer(user);
 
         if(that.Helper.GetCurrentID() == user.id)
             that.socket.emit('nextPlayerOk', object.user);
     });
+
     this.socket.on('exchangeTuile', function(object){
         that.view.exchangeTuileAndUsers(object.users, object.user, object.lastCoords);
 
         if(that.Helper.GetCurrentID() == object.user.id)
             that.socket.emit('nextPlayerOk', object.user);
     });
+
     this.socket.on('exchangeAndApplyTuile', function(object){
         that.view.exchangeAndApplyTuileAndUsers(object.users, object.user, object.lastCoords, object.newCoords);
 
         if(that.Helper.GetCurrentID() == object.user.id)
             that.socket.emit('nextPlayerOk', object.user);
     });
+
     this.socket.on('tokenPut', function(object){
         that.view.appendTokenPut(object);
     });
+
     this.socket.on('killToken', function(positions){
         that.view.deleteTokens(positions);
     });
@@ -225,7 +245,7 @@ ClientController.prototype.emitAction = function(element){
     }
     else if(action === 'controllerMaster'){
 
-        this.DOMView.appendTmpMessage('Choisissez le sens dans lequel contrôller la rangée.');
+        this.DOMView.appendTmpMessage(this.resources.chooseDirection);
         this.socket.emit('getUserAndDoNextSentenceController', {
             id: that.Helper.GetCurrentID(),
             action: 'Contrôller',
@@ -277,24 +297,29 @@ ClientController.prototype.emitComplexAction = function(object){
 ClientController.prototype.emitDeath = function(user) {
     this.socket.emit('killUser', user);
 };
+
 ClientController.prototype.emitGoToCentral = function(user) {
     this.socket.emit('goToCentral', user);
 };
+
 ClientController.prototype.emitDeathForFirstHere = function(user) {
     var that = this;
     this.socket.emit('deathForFirstHere', user);
 
     setTimeout(this.emitNextPlayer, 200, user, this);
 };
+
 ClientController.prototype.emitNextPlayer = function(user, that){
     if(that)
         that.socket.emit('nextPlayerOk', user);
     else
         this.socket.emit('nextPlayerOk', user);
 };
+
 ClientController.prototype.emitToken = function(color, positions) {
     this.socket.emit('tokenPut', {color: color, coords: positions, userId: this.Helper.GetCurrentID()});
 };
+
 ClientController.prototype.emitKillToken = function(positions) {
     this.socket.emit('killToken', positions);
 };

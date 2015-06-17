@@ -2,10 +2,11 @@
 var express = require('express');
 var http = require('http');
 var socketIO = require('socket.io');
-var user = require('./nodeModules/user');
-var debug = require('./nodeModules/debug');
-var coords = require('./nodeModules/coords');
-var game = require('./nodeModules/game');
+
+var user = require('./NodeModules/user');
+var debug = require('./NodeModules/debug');
+var coords = require('./NodeModules/coords');
+var game = require('./NodeModules/game');
 // End
 
 // Création du serveur

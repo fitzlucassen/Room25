@@ -1,7 +1,7 @@
 Room25
 ======
 
-La version online multijoueur du jeu room5
+La version online multijoueur du jeu room25
 
 ToInstall
 ======
@@ -11,10 +11,8 @@ npm install --save grunt-cli -g
 
 --> grunt roomServer
 
-ToDo
+TODO
 ======
-- Case deathAfterNextTour
-- Case deathAfterNextAction
 - Aucune prévision des actions pour gardien révélé
 - Révélation des rôles
 - WebRTC

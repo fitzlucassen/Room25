@@ -52,17 +52,23 @@ $(document).ready(function() {
             return false;
         }
 
-        Client.newUser(name);
         $('#popin-grayback').fadeOut('slow');
+        Client.newUser(name);
     });
 
     // Clique sur un personnage. On émet l'évènement
     $('body').on('click', 'ul.personnage li, .characterTaken', function(e) {
         e.stopPropagation();
 
+        // Si ce personnage n'a pas été déjà prit
         if (!$(this).hasClass('characterTaken')) {
-            $('.characterTaken-' + $('.userID').val()).remove();
-            Client.characterChoosen($(this).children('span').text(), $('.userID').val(), $(this).data('color'));
+            var idU = Helper.GetCurrentID();
+            var characterNameU = $(this).children('span').text()
+            var colorU = $(this).data('color');
+
+            // On supprime son ancien choix s'il y en avait un
+            $('.characterTaken-' + idU).remove();
+            Client.characterChoosen(name, idU, colorU);
         }
     });
 
@@ -73,10 +79,14 @@ $(document).ready(function() {
 
     // Au clique sur une action on la met en avant
     $('body').on('click', '.action', function(e) {
-
+        // Si l'utilisateur n'a pas déjà selectionné ses 2 actions
+        // Ou si le clique est en fait l'annulation d'une action
         if ($('.action.ok').length < 2 || $(this).hasClass('ok')) {
+            // On fait l'animation de l'action
             View.animateAction($(this), !$(this).hasClass('ok'));
 
+            // Et s'il y a au moins une action de validé on montre le bouton de validation
+            // Sinon on le cache
             if ($('.action.ok').length > 0)
                 DOM.showButtonOk();
             else
@@ -84,25 +94,29 @@ $(document).ready(function() {
         }
     });
 
-    // Au clique sur une action on la remet en possibilité
-    $('body').on('click', '.action1-final > img, .action2-final > img', function(e) {
+    // Au clique sur une action choisie on la remet en possibilité
+    $('body').on('click', '.action1-final > img, .action2-final > img', function() {
+        // On replace l'action dans les possibilités
         View.animateAction($(this), false);
 
+        // Et s'il y a au moins une action de validé on montre le bouton de validation
+        // Sinon on le cache
         if ($('.action.ok').length > 0)
-                DOM.showButtonOk();
-            else
-                DOM.hideButtonOk();
+            DOM.showButtonOk();
+        else
+            DOM.hideButtonOk();
     });
 
-    // Au clique sur le bouton des actions on les valide
+    // Au clique sur le bouton validation des actions on les valide
     $('body').on('click', '.btnOk', function(e) {
+        // On fait disparaitre les actions du DOM
         DOM.disableActions();
 
-        var action2 = '';
-        if($('.actionOk-2').length > 0)
-            action2 = $('.actionOk-2').children('img').attr('alt');
+        var idU = Helper.GetCurrentID();
+        var action1 = $('.actionOk-1').children('img').attr('alt')
+        var action2 = $('.actionOk-2').length > 0 ? action2 = $('.actionOk-2').children('img').attr('alt') : '';
         
-        Client.validateAction($('.userID').val(), $('.actionOk-1').children('img').attr('alt'), action2);
+        Client.validateAction(idU, action1, action2);
     });
 
     // Au clique sur une case proposée
@@ -114,8 +128,8 @@ $(document).ready(function() {
         var color = $(this).css('background-color');
         var positions = $(this).parent().data('position');
 
-        Client.emitToken(color, positions);
         $('.selectMeToken').remove();
+        Client.emitToken(color, positions);
     });
 
     // Au clique sur une direction

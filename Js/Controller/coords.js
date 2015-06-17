@@ -100,8 +100,8 @@ CoordsProvider.prototype.getCoordsController = function(u){
         );
     }
     else {
-    	coords.push(
-    		{
+        coords.push(
+            {
                 x: 2,
                 y: 0
             },
@@ -133,7 +133,7 @@ CoordsProvider.prototype.getCoordsController = function(u){
                 x: 4,
                 y: 2
             }
-    	);
+        );
     }
 
     return coords;
