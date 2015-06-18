@@ -385,12 +385,14 @@ io.sockets.on('connection', function(socket) {
         }
     });
 
+    // Signal qu'un joueur a posé un jeton
     socket.on('tokenPut', function(object){
         var u = UserManager.getById(users, object.userId);
         DebugManager.messageForUser(users[u], 'a posé un jeton en ' + object.coords);
         io.sockets.emit('tokenPut', object);
     });
 
+    // Un joeur a supprimé le jeton
     socket.on('killToken', function(positions){
         io.sockets.emit('killToken', positions);
     });

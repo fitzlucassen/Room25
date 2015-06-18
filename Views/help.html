@@ -1,3 +1,200 @@
 <div ng-controller="HelpCtrl">
-	
+	<div id="help">
+		<div id="container">
+			<h1>Room25 - Règles du jeu</h1>
+			<p>Ici vous pourrez apprendre à jouer au jeu Room25. Les règles sont les memes que celle de l'original.</p>
+			
+			<p>&nbsp;</p>
+			<p>&nbsp;</p>
+			
+			<div class="doc">
+				<div class="menu">
+					<ul>
+						<li><a href="#context">Contexte et but du jeu</a></li>
+						<li><a href="#identities">Les identités</a></li>
+						<li><a href="#cards">Les cartes du plateau</a></li>
+						<li><a href="#init">Initialisation du jeu</a></li>
+						<li><a href="#tour">Déroulement d'un tour</a></li>
+						<li><a href="#end">Fin du jeu</a></li>
+					</ul>
+				</div>
+
+
+
+
+				<h2 id="context">Contexte et but du jeu</h2>
+				<p>
+					Dans ce jeu futuriste, vous jouez votre vie. Pris au piège dans une prison de 25 salles, vous devez trouver la sortie, la Room 25. Mais l’un ou plusieurs d’entre vous cachent peut-être leur jeu et pourraient être l’un des perfides gardiens de la prison qui feront tout pour vous empêcher de sortir de là vivant. 
+					Jeu coopératif ou presque... car il y peut y avoir des traître, les mouvements sont pré-programmés par les joueurs ce qui appelle à des discussions, des négociations, mais permet aussi la trahison.
+					<br/><br/>
+
+				</p>
+
+
+
+
+				<h2 id="identities">Les identités</h2>
+				<p>
+					Dans ce jeu il y a donc deux identités différentes. 
+				</p>
+
+				<ul>
+					<li>
+						<img src="Images/Identities/prisonnier.png" alt="Image d'un prisonnier" title="Image d'un prisonnier"/>
+						Les prisoniers qui sont les personnes devant rejoindre la sortie afin de s'echapper de la prison
+					</li>
+					<li>
+						<img src="Images/Identities/gardien.png" alt="Image d'un gardien" title="Image d'un gardien"/>
+						Les gardiens qui doivent empecher les prisonniers de sortir
+					</li>
+				</ul>
+
+				<p>
+					Les identités sont tirées au sort au début du jeu et ne peuvent pas changer. De meme, les identités restent secrètes jusqu'à la phase de révélation ou de fin.
+				</p>
+
+
+
+
+				<h2 id="cards">Les cartes du plateau</h2>
+				<p>
+					Les cartes du plateau sont reparties en trois catégories :
+				</p>
+				<ol>
+					<li>
+						<h3>Les cartes plutot cool</h3>
+						<ul>
+							<li>
+								<img src="Images/Tuiles/vide.png" alt="Image de la tuile vide" title="Image de la tuile vide"/>
+								Cette tuile ne fait strictement rien... Pas cool ? Vous allez voir que si ! (*6)
+							</li>
+							<li>
+								<img src="Images/Tuiles/mobile.png" alt="Image de la tuile mobile" title="Image de la tuile mobile"/>
+								Cette tuile permet de se téléporter (avec la case mobile) à la place d'une autre tuile non révélée. (*1)
+							</li>
+							<li>
+								<img src="Images/Tuiles/vision.png" alt="Image de la tuile vision" title="Image de la tuile vision"/>
+								Cette tuile permet de regarder sous n'importe quelle case non révélée. (*1)
+							</li>
+							<li>
+								<img src="Images/Tuiles/controle.png" alt="Image de la tuile controle" title="Image de la tuile controle"/>
+								Cette tuile permet de controller n'importe qu'elle rangée de case. (*1)
+							</li>
+						</ul>
+					</li>
+					<li>
+						<h3>Les carte chiantes</h3>
+						<ul>
+							<li>
+								<img src="Images/Tuiles/froide.png" alt="Image de la tuile froide" title="Image de la tuile froide"/>
+								Cette tuile vous empeche de prévoir deux action pendant la phase de prévision. Vous n'en avez le droit qu'à une seule... (*2)
+							</li>
+							<li>
+								<img src="Images/Tuiles/noire.png" alt="Image de la tuile noir" title="Image de la tuile noir"/>
+								Cette tuile vous empeche de regarder sous les tuiles adjacentes... (*2)
+							</li>
+							<li>
+								<img src="Images/Tuiles/vortex.png" alt="Image de la tuile vortex" title="Image de la tuile vortex"/>
+								Cette tuile vous ramène immédiatement sur la case départ centrale. (*1)
+							</li>
+						</ul>
+					</li>
+					<li>
+						<h3>Les cartes pas cool du tout du tout</h3>
+						<ul>
+							<li>
+								<img src="Images/Tuiles/acide.png" alt="Image de la tuile acide" title="Image de la tuile acide"/>
+								Cette tuile tue tout ceux qui s'y trouve lors de l'arrivé d'une nouvelle personne. En claire... Mieux vaut ne pas y rester trop longtemps. (*2)
+							</li>
+							<li>
+								<img src="Images/Tuiles/inondable.png" alt="Image de la tuile inondable" title="Image de la tuile inondable"/>
+								Cette tuile vous tue si vous n'en sortez pas avant le prochain tour. De plus, une fois qu'un personne y a été, elle devient inaccessible pour le reste de la partie. (*2)
+							</li>
+							<li>
+								<img src="Images/Tuiles/mortelle.png" alt="Image de la tuile mortelle" title="Image de la tuile mortelle"/>
+								Cette tuile parle d'elle meme... Elle vous tue sur le champs. (*2)
+							</li>
+							<li>
+								<img src="Images/Tuiles/piege.png" alt="Image de la tuile piege" title="Image de la tuile piege"/>
+								Cette tuile vous tue si vous n'en sortez pas à la prochaine action. (*2)
+							</li>
+						</ul>
+					</li>
+				</ol>
+
+
+
+				<h2 id="init">Initialisation du jeu</h2>
+				<p>
+					Tout d'abord vous devez choisir votre pseudo qui permettra aux autres joueurs (et à vous meme) de se repérer sur le plateau.
+					Une fois cela fait, il vous suffit de cliquer sur le personnage de votre choix et d'attendre que les autres joueurs fassent de meme.
+					Dès que vous etes au moins quatre, vous pouvez commencer une partie.
+					<br/><br/>
+					Sachez qu'à 4, il y aura 3 prisonniers pour 1 gardien.<br/>
+					A 5 il y aura, aléatoirement, soit 4 prisonniers et 1 gardien, soit 3 prisonniers et 2 gardiens<br/>
+					A 6 il y aura 4 prisonniers et 2 gardiens.
+					<br/><br/>
+					Votre identité vous est donc attribuée aléatoirement au chargement du plateau (la page qui s'affiche juste après avoir commencé la partie).
+					<br/>
+					Sur le panneau de gauche, vous avez la possibilité de lancer le tchat audio/vidéo, au centre vous avec le plateau et à droite, vous pouvez distinguez toutes les informations propre au déroulement du jeu (vos différentes actions, le nom de la personne qui est en train de joué, le nombre de tour passés...etc.).
+					<br/>
+					Le plateau est généré aléatoirement mais la case de départ sera toujours au centre de celui-ci. De meme, la case sortie sera toujours sur l'extérieur du plateau (bah oui... Sinon ça serait trop facile !).
+				</p>
+
+
+
+				<h2 id="tour">Déroulement d'un tour</h2>
+				<p>
+					Un tour se déroule en 2 étapes.
+					<ul>
+						<li>
+							<b>La phase de prévision</b> est la phase ou chaque joueur doit choisir sa ou ses (1 ou 2) actions qu'il souhaite exécuter au tour qui débutent. Cette phase est asynchrone, c'est à dire que chacun choisit ses actions en meme temps et peut en discuter avec ses partenaires de jeu. Lorsque vous etes pret, cliquez sur "Valider"
+						</li>
+						<li>
+							<b>La phase d'action</b> est la phase où, tour par tour, vous exécutez les actions que vous avez prévues.
+						</li>
+					</ul>
+					Vous avez le choix entre 4 actions.
+					<ul>
+						<li>
+							<img src="Images/Actions/deplacer.png" alt="Image de l'action deplacer'" title="Image de l'action deplacer"/>
+							Cette action vous permet de vous déplacer sur une case adjacente.
+						</li>
+						<li>
+							<img src="Images/Actions/controller.png" alt="Image de l'action controller'" title="Image de l'action controller"/>
+							Cette action vous permet de déplacer toute une rangée du plateau (une rangée dans laquelle vous vous trouvez évidemment...).
+							Cette action n'est pas applicable sur une rangée où se trouve la case départ centrale.
+						</li>
+						<li>
+							<img src="Images/Actions/pousser.png" alt="Image de l'action pousser'" title="Image de l'action pousser"/>
+							Cette action vous permet de pousser une personne étant sur la meme case que vous dans une case adjacente.
+							Cette action n'est pas applicable lorsque vous vous trouvez sur la case départ centrale.
+						</li>
+						<li>
+							<img src="Images/Actions/regarder.png" alt="Image de l'action regarder'" title="Image de l'action regarder"/>
+							Cette action vous permet de regarder discretement (sans que les autres joueurs ne voient) une carte non révélée adjacente.
+						</li>
+					</ul>
+					Dans ces 4 cas, lorsque vous devrez exécuter votre action, un voile opaque s'appliquera sur toutes les cartes du plateau (ou les joueurs de votre case) avec lesquelles vous pourrez interagir.<br/>
+					Si vous avez prévu une action qui n'est pas réalisable (regarder alors qu'il n'y a plus rien à regarder ou que vous etes sur une case noir par exemple), votre action saute automatiquement.<br/>
+					<br/>
+					Sachez qu'à tout moment, vous pouvez poser un jeton sur une carte non révélée afin de vous rappeler de sa position (car oui, le plateau est voué à beaucoup bouger...).
+					Une fois posé, votre seule façon de récupérer ce jeton est que la carte qu'il marque soit dévoilée (par vous ou quelqu'un d'autre).
+					<br/><br/>
+					Une fois que tout le monde a executer ses actions, on passe au tour suivant.
+				</p>
+
+
+
+				<h2 id="end">Fin du jeu</h2>
+				<p>
+					Le jeu peut prendre fin pour deux raisons.
+					<ul>
+						<li>Au moins deux des prisonniers sont mort. Dans ce cas c'est les gardiens qui ont gagnés</li>
+						<li>La totalité des prisonniers vivant se sont retrouvés sur la case sortie et se sont deplacer via l'action controller jusqu'à un bord du plateau pour ensuite en sortir via une dernière action controller.</li>
+					</ul>
+				</p>
+			</div>
+		</div>
+	</div>
 </div>
