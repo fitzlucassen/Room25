@@ -63,12 +63,12 @@ $(document).ready(function() {
         // Si ce personnage n'a pas été déjà prit
         if (!$(this).hasClass('characterTaken')) {
             var idU = Helper.GetCurrentID();
-            var characterNameU = $(this).children('span').text()
+            var characterNameU = $(this).children('span').text();
             var colorU = $(this).data('color');
 
             // On supprime son ancien choix s'il y en avait un
             $('.characterTaken-' + idU).remove();
-            Client.characterChoosen(name, idU, colorU);
+            Client.characterChoosen(characterNameU, idU, colorU);
         }
     });
 
@@ -113,7 +113,7 @@ $(document).ready(function() {
         DOM.disableActions();
 
         var idU = Helper.GetCurrentID();
-        var action1 = $('.actionOk-1').children('img').attr('alt')
+        var action1 = $('.actionOk-1').children('img').attr('alt');
         var action2 = $('.actionOk-2').length > 0 ? action2 = $('.actionOk-2').children('img').attr('alt') : '';
         
         Client.validateAction(idU, action1, action2);

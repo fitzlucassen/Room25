@@ -47,7 +47,7 @@
 		<script type="text/javascript" src="Js/Module/jquery-ui-1.10.custom.min.js"></script>
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular.min.js"></script>
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular-route.min.js"></script> 
-		<script type="text/javascript" src="http://roomsocket.thibaultdulon.com/socket.io/socket.io.js"></script>
+		<script type="text/javascript" src="http://192.168.0.12:1337/socket.io/socket.io.js"></script>
 
 		<!-- INTERNAL HELPERS -->
 		<script type="text/javascript" src="Js/Base/adapter.js"></script>
@@ -83,6 +83,12 @@
 
 		    <footer id="footer">
 		    </footer>
+		</div>
+
+	    <div class="hidden">
+			<input type="hidden" value="" id="my-number"/>
+			<input type="hidden" value="" id="number"/>
+			<a href="#" id="my-link" style="display: none;"></a>
 		</div>
     </body>
 </html>

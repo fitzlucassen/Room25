@@ -29,11 +29,11 @@
                 if (newValue >= 0) {
                     if(newValue == document.getElementById('userID').value){
                         $scope.readyToPlay = newValue;
-                        $location.path('/game');
+                        $location.path('/game/666');
                     }
                     else {
                         $scope.readyToPlay = newValue;
-                        $location.path('/game/join');
+                        $location.path('/game/join/667');
                     }
                 }
             }, true);

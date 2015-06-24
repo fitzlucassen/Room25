@@ -1,4 +1,4 @@
-function HelperController() {
+var HelperController = function() {
 
 }
 

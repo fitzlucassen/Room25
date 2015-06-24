@@ -8,11 +8,11 @@
             .when('/', {
                 templateUrl: 'Views/home.html',
             })
-            .when('/game', {
+            .when('/game/:room', {
                 templateUrl: 'Views/game.html',
                 reloadOnSearch: false
             })
-            .when('/game/join', {
+            .when('/game/join/:room', {
                 templateUrl: 'Views/game.html',
                 reloadOnSearch: false
             })

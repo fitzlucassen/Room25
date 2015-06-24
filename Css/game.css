@@ -292,3 +292,45 @@ p.putAToken{
 .hideToken{
     display: none;
 }
+
+
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= */
+/* Video Display */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= */
+#video-border {
+}
+#video-display {
+    height: 100px;
+    text-align: center;
+    color: #eee;
+    font-size: 50px;
+    line-height: 125px;
+}
+#video-self {
+    position: absolute;
+    height: 50px;
+    width: 100%;
+    top: 0px;
+    left: 0px;
+    text-align: center;
+    font-size: 0px;
+    line-height: 0px;
+}
+#video-display video,
+#video-self img {
+    border-radius: 6px;
+    width: 200px;
+}
+#video-thumbnail {
+    position: absolute;
+    top: 75px;
+}
+#video-thumbnail img {
+    display: inline-block;
+    width: 60px;
+    border-radius: 6px;
+}
+
+.dial-buttons .btn {
+    width: 30%;
+}

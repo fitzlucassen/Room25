@@ -1,4 +1,4 @@
-function MainView(helper, DOMView, CoordsProvider) {
+var MainView = function(helper, DOMView, CoordsProvider) {
     this.caseWidth = 175;
     this.caseHeight = 175;
 
@@ -123,20 +123,12 @@ MainView.prototype.redirectToGame = function(object) {
         that.Helper.SetCurrentID(userId);
         that.showPlayers(object);
         that.showIdentity(object.users, userId);
+
+        url = $(location).attr('href');
+        $('#number').val(url.indexOf('/join') >= 0 ? 666 : 667);
         
         $('.coordsReady').val(1);
         $('.coordsReady').trigger('change');
-
-        var video = $('video.webcam');
-        var ids = [];
-
-        for(var u in object.users){
-            if(object.users.hasOwnProperty(u)){
-                $('.camContainer').append(video.clone().addClass('webcam-' + object.users[u].id));
-                ids.push('webcam-' + object.users[u].id);
-            }
-        }
-        video.remove();
     }, 500);
 };
 
@@ -233,7 +225,7 @@ MainView.prototype.appendTurnOf = function(u, users, actionNumber) {
 
         var actionDIV;
         var idU = that.Helper.GetCurrentID();
-        var characterDiv = that.Helper.GetCharacterDiv(idu);
+        var characterDiv = that.Helper.GetCharacterDiv(idU);
 
         if(actionNumber == 1){
             if(characterDiv.attr('handicap') === 'noSee' && u.action1 === 'Regarder'){
@@ -321,7 +313,7 @@ MainView.prototype.pousser = function(userTarget, user) {
     that.CaseEffect.client.emitKillToken(userTarget.position);
 
     this.Helper.GetCharacterDiv(userTarget.id).removeAttr('handicap');
-    if(user.id == this.Helper.GetCurrentID())
+    if(userTarget.id == this.Helper.GetCurrentID())
         that.CaseEffect.manageCaseEffect(userTarget, tuile.attr('data-action'), user);
 };
 

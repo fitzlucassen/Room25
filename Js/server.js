@@ -428,7 +428,7 @@ io.sockets.on('connection', function(socket) {
 
     // Retourne à la case central
     socket.on('goToCentral', function(user){
-        DebugManager.messageForUser(user, 'est mort');
+        DebugManager.messageForUser(user, ' retourne au centre');
 
         var u = UserManager.getById(users, user.id);
         users[u].position.x = 2;

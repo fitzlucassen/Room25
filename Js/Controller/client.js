@@ -1,4 +1,4 @@
-function ClientController(view, DOMView, helper) {
+var ClientController = function(view, DOMView, helper) {
     this.socket = {};
     this.view = view;
     this.DOMView = DOMView;
@@ -10,7 +10,7 @@ function ClientController(view, DOMView, helper) {
 }
 
 ClientController.prototype.initialize = function() {
-    this.socket = io.connect('http://roomsocket.thibaultdulon.com/');
+    this.socket = io.connect('http://192.168.0.12:1337/');
     that = this;
 
     // Lorsqu'un utilisateur s'est connecté
@@ -152,7 +152,7 @@ ClientController.prototype.initialize = function() {
         that.view.deplacer(user);
 
         if(that.Helper.GetCurrentID() == user.id)
-            that.socket.emit('nextPlayerOk', object.user);
+            that.socket.emit('nextPlayerOk', user);
     });
 
     this.socket.on('exchangeTuile', function(object){

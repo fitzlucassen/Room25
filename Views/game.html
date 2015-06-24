@@ -16,12 +16,24 @@
 	<div class="panel leftPanel">
 		<div class="toggle"></div>
 
-		<div class="camContainer">
-			<video class="webcam" autoplay></video>
+		<div id="video-border">
+			<div class="pubnub-relative">
+				<div id="video-self"></div>
+			</div>
+			<div id="video-display">
+				<span class="glyphicon glyphicon-flash"></span>
+			</div>
+		</div>
+		<div id="pubnub-relative">
+			<div id="video-thumbnail"></div>
+			<div id="pubnub-logo">
+				<div id="pubnub-logo-img"></div>
+			</div>
 		</div>
 		<div>
-			<input type="button" id="callButton" class="btnClass">Appeler</input>
-			<input type="button" id="hangupButton" class="btnClass speBg">Raccrocher</input>
+			<input type="button" id="dial" class="btnClass" value="Appeler">
+			<input type="button" id="hangup" class="btnClass speBg" value="Raccrocher">
+			<input type="hidden" id="snap" class="btn btn-success">
 		</div>
 		<br/>
 		
@@ -66,4 +78,10 @@
 
 	<input type="text" name="userID" value="" class="userID"/>
 	<input type="text" name="coordsReady" value="" ng-model="coordsReady" class="coordsReady"/>
+
+	<link type="text/css" rel="stylesheet" href="Css/Module/bootstrap.min.css" />
+	<script type="text/javascript" src="Js/Module/pubnub.js"></script>
+	<script type="text/javascript" src="Js/Module/webrtc.js"></script>
+	<script type="text/javascript" src="Js/Module/sound.js"></script>
+	<script type="text/javascript" src="Js/Module/rtc.js"></script>
 </div>

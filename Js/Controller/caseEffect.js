@@ -1,4 +1,4 @@
-function CaseEffectController(client){
+var CaseEffectController = function(client){
     this.client = client;
 }
 

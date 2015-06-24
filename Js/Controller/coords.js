@@ -1,4 +1,4 @@
-function CoordsProvider(helper) {
+var CoordsProvider = function(helper) {
 
 }
 

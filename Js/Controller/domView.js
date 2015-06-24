@@ -1,4 +1,4 @@
-function DOMView(helper) {
+var DOMView = function(helper) {
     this.caseWidth = 175;
     this.caseHeight = 175;
     this.resources = {

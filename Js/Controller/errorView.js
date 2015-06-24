@@ -1,4 +1,4 @@
-function ErrorView(helper) {
+var ErrorView = function(helper) {
     this.Helper = helper;
     this.divError = $('#error-view');
     this.resources = {

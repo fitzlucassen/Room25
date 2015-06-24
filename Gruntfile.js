@@ -53,7 +53,7 @@ module.exports = function(grunt) {
                     server: path.resolve('Js/server'),
                     keepalive: true,
                     port: 1337,
-                    hostname: 'room25.thibaultdulon.com',
+                    hostname: '192.168.0.12',
                     showStack: true
                 }
             }
