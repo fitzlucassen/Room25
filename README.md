@@ -1,7 +1,7 @@
 Room25
 ======
 
-La version online multijoueur du jeu room25
+The online version of the multiplayer game room25
 
 Stack
 -----
@@ -16,9 +16,9 @@ ToInstall
 
 TODO
 ----
-* Aucune prévision des actions pour gardien révélé
-* Révélation des rôles
+* No action planning for guardian revealed
+* Revealation of roles
 * WebRTC
-* Contrainte des sens de l'action contrôller
-* Possibilité de sortir pour fin du jeu
-* Graphisme
+* Constraints of controller action sens
+* Possibility to go out to end the game
+* Design
